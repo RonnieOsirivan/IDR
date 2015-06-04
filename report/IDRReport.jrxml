@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="IDRReport" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7420bca3-7e8d-4898-9527-23ca925073ad">
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="212"/>
+	<property name="ireport.y" value="144"/>
 	<parameter name="sequeneReport" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
@@ -10,17 +10,32 @@
 	<title>
 		<band height="181" splitType="Stretch">
 			<image>
-				<reportElement x="226" y="5" width="175" height="133" uuid="933dc243-2496-45b4-9448-63a7e598d9ce"/>
-				<imageExpression><![CDATA["C:\\Users\\Rattasit\\Desktop\\temp\\ตราครุฑ.jpg"]]></imageExpression>
+				<reportElement x="239" y="0" width="106" height="113" uuid="bd361fb7-8849-4a06-8ec1-d31e3375c806"/>
+				<imageExpression><![CDATA["D:\\workspace\\IDR\\img\\ตราครุฑ.jpg"]]></imageExpression>
 			</image>
+			<staticText>
+				<reportElement x="263" y="132" width="59" height="35" uuid="915b67dd-4023-46bb-9948-5c47b0d1c478"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="24" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[ใบรับรอง]]></text>
+			</staticText>
 		</band>
 	</title>
 	<detail>
 		<band height="125" splitType="Stretch">
-			<textField>
-				<reportElement x="0" y="0" width="100" height="20" uuid="a29ab707-3e81-4836-a30b-a637bea5208d"/>
+			<staticText>
+				<reportElement x="399" y="0" width="156" height="52" uuid="dd1da59e-910d-4967-ab71-01e6fc9c9e97"/>
 				<textElement>
-					<font fontName="Angsana New" pdfFontName="angsa.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[มหาวิทยาลัยราชภัฏรำไพพรรณี
+อำเภอเมือง จังหวัดจันทบุรี ๒๒๐๐๐]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="0" width="100" height="20" uuid="8244348d-3e67-4dd5-a22c-089b338d6ac4"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="14" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{sequeneReport}]]></textFieldExpression>
 			</textField>
