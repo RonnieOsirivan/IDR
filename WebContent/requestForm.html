@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+ <meta charset="UTF-8" />
+        <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">  -->
+        <title>Internet Document Request</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+        <meta name="description" content="Internet Document Request" />
+        <meta name="keywords" content="html5, css3, form, switch, animation, :target, pseudo-class" />
+        <meta name="author" content="Codrops" />
+        <link rel="stylesheet" type="text/css" href="css/demo.css" />
+        <link rel="stylesheet" type="text/css" href="css/style.css" />
+		<link rel="stylesheet" type="text/css" href="css/animate-custom.css" />
+		<script type="text/javascript" src="./js/phoneNumberFormat.js"></script>
+</head>
+<body>
+ <div class="container">
+            <div class="codrops-top">
+                <div class="clr"></div>
+            </div><!--/ Codrops top bar -->
+            <header>
+                <h1>Internet Document Request <span>RBRU</span></h1>
+            </header>
+            <section>				
+                <div id="container_demo" >
+                    <!-- hidden anchor to stop jump http://www.css3create.com/Astuce-Empecher-le-scroll-avec-l-utilisation-de-target#wrap4  -->
+                    <a class="hiddenanchor" id="toregister"></a>
+                    <a class="hiddenanchor" id="tologin"></a>
+                    <div id="wrapper">
+                        <div id="login" class="animate form">
+                            <form  action="./LoginController" autocomplete="on" method="post"> 
+                                <h1>Request Form</h1>
+                                <div id="userInfo"></div>
+                                <p>
+                                	<input id="checkType" name="checkType" type="checkbox" value="1"/>request type1
+                                	<input id="checkType" name="checkType" type="checkbox" value="2"/>request type2<br>
+                                	<input id="checkType" name="checkType" type="checkbox" value="3"/>request type3
+                                	<input id="checkType" name="checkType" type="checkbox" value="4"/>request type4
+                                </p> 
+                                <p> 
+                                    <label for="telephone" class="uname" data-icon="u" > Your Telephone Number </label>
+                                    <input id="telephoneNumber" name="telephoneNumber" type="text" onkeydown="backspacerDOWN(this,event);" onkeyup="backspacerUP(this,event);" placeholder="Your Telephone Number"/>
+                                </p>
+                                <p class="login button"> 
+                                    <input type="button" value="request" onclick="valthisform();"/> 
+								</p>
+                                <p class="change_link">
+									<a href="#toregister" class="to_register">Log out</a>
+								</p>
+                            </form>
+                        </div>
+                    </div>
+                </div>  
+            </section>
+        </div>
+        
+        <script type="text/javascript">
+        
+        //get user information
+        var xmlhttp = loadXMLDoc();
+        var json;
+        xmlhttp.onreadystatechange=function(){
+			if (xmlhttp.readyState==4 && xmlhttp.status==200){
+				json = JSON.parse(xmlhttp.responseText);
+				document.getElementById("userInfo").innerHTML= json[0].prefix+json[0].firstName+" "+json[0].lastName+" รหัส "+json[0].studentCode+" คณะ "+json[0].facultyName;
+			}
+        }
+        xmlhttp.open("GET","./RequestController",true);
+        xmlhttp.send();
+	        
+        
+        function valthisform(){
+            var checkboxs=document.getElementsByName("checkType");
+            var requestFlag1=false;
+            var requestFlag2=false;
+            
+            for(var i=0,l=checkboxs.length;i<l;i++)
+            {
+                if(checkboxs[i].checked)
+                {
+                	requestFlag1=true;
+                }
+            }
+            
+            if(!requestFlag1){
+            	alert("Please check a checkbox");
+            }
+            else if(requestFlag1){
+            	var telephoneValue = document.getElementById("telephoneNumber").value;
+            	if((telephoneValue.trim()).length < 1){
+            		alert("Please input telepone number");
+            	}else{
+            		requestFlag2 = true;
+            	}
+            }
+            
+            if(requestFlag1 && requestFlag2){
+            	 var xmlhttp = loadXMLDoc();
+                 
+                 xmlhttp.onreadystatechange=function(){
+         			if (xmlhttp.readyState==4 && xmlhttp.status==200){
+         			}
+                 }
+                 xmlhttp.open("GET","./GenerateReportController?fname="+json[0].prefix + json[0].firstName + "&lname="+json[0].lastName+
+                		 "&studentCode="+json[0].studentCode,true);
+                 xmlhttp.send();
+            }
+        }
+        
+        function loadXMLDoc(){
+	        var xmlhttp;
+	        if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
+				xmlhttp=new XMLHttpRequest();
+	        }
+	        else{// code for IE6, IE5
+	          	xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	        }
+	        return xmlhttp;
+		}
+        
+        </script>
+</body>
+</html>

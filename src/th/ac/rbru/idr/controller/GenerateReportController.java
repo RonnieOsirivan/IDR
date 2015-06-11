@@ -41,7 +41,8 @@ public class GenerateReportController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>GenerateReportController");
+		generateReport(request);
 	}
 
 	/**
@@ -51,21 +52,29 @@ public class GenerateReportController extends HttpServlet {
 		// TODO Auto-generated method stub
 	}
 	
-	private void generateReport(){
+	private void generateReport(HttpServletRequest request){
 		try {
 			Date date = new Date();
 			SimpleDateFormat simpleDateNumber = new SimpleDateFormat("dd",new Locale("th","th"));
 			SimpleDateFormat simpleDateMounth = new SimpleDateFormat("MMMM",new Locale("th","th"));
 			SimpleDateFormat simpleDateYear = new SimpleDateFormat("yyyy",new Locale("th","th"));
 			
-			int dateNumber = Integer.parseInt(simpleDateNumber.format(date));
-			int dateYear = Integer.parseInt(simpleDateYear.format(date));
+			String stdName = request.getParameter("fname")+"  "+request.getParameter("lname");
+			String stdCode = request.getParameter("studentCode");
 			
-			HashMap param = new HashMap();
-			param.put("pSequeneReport", "ที่");
-			JasperReport jasperReport = JasperCompileManager.compileReport("report/IDRReport.jrxml");
+			int dateNumber = Integer.parseInt(simpleDateNumber.format(date));
+			String mounthName = simpleDateMounth.format(date);
+			int dateYear = Integer.parseInt(simpleDateYear.format(date));
+			String dateParam = thaiNumeral(dateNumber)+" "+mounthName+" "+thaiNumeral(dateYear);
+			
+			HashMap<String, Object> param = new HashMap<String, Object>();
+			param.put("sequenceReport", "ที่");
+			param.put("pDate", dateParam);
+			param.put("pStdName", stdName);
+			param.put("pStdCode", stdCode);
+			JasperReport jasperReport = JasperCompileManager.compileReport("D:/workspace/IDR/report/IDRReport.jrxml");
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,param,new JREmptyDataSource());
-			JasperExportManager.exportReportToPdfFile(jasperPrint, "test.pdf");
+			JasperExportManager.exportReportToPdfFile(jasperPrint, "D:/workspace/IDR/report/test.pdf");
 		} catch (JRException e) {
 			e.printStackTrace();
 		}
