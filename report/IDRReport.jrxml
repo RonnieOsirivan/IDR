@@ -57,21 +57,21 @@
 				<text><![CDATA[ขอรับรองว่า]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="103" y="105" width="100" height="20" uuid="6faa0b51-c1f8-4428-b8ae-e6e0689572b7"/>
+				<reportElement x="103" y="105" width="76" height="20" uuid="6faa0b51-c1f8-4428-b8ae-e6e0689572b7"/>
 				<textElement>
 					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{pStdName}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="203" y="105" width="96" height="20" uuid="a5ca7734-b9f7-4f39-8a9d-4eea672d5d96"/>
+				<reportElement x="180" y="105" width="96" height="20" uuid="a5ca7734-b9f7-4f39-8a9d-4eea672d5d96"/>
 				<textElement>
 					<font fontName="TH SarabunPSK" size="16" isBold="false" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[รหัสประจำตัวนักศึกษา]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="299" y="105" width="100" height="20" uuid="6e43f18d-bd02-42f5-ba9f-ceb67ceed9bd"/>
+				<reportElement x="276" y="105" width="100" height="20" uuid="6e43f18d-bd02-42f5-ba9f-ceb67ceed9bd"/>
 				<textElement>
 					<font fontName="TH SarabunPSK" size="16" isBold="false" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>

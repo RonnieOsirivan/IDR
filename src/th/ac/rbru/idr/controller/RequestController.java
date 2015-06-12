@@ -75,7 +75,7 @@ public class RequestController extends HttpServlet {
 				+" 	WHERE STDM.STUDENTCODE LIKE '4623361004'	"
 				+" 	AND STDM.FACULTYID = FAC.FACULTYID	"
 				+" 	AND STDM.PREFIXID = PRE.PREFIXID";
-
+		System.out.println(sql);
 		return getData(sql);
 	}
 	
