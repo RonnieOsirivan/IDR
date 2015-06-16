@@ -103,8 +103,7 @@
          			if (xmlhttp.readyState==4 && xmlhttp.status==200){
          			}
                  }
-                 xmlhttp.open("GET","./GenerateReportController?fname="+json[0].prefix + json[0].firstName + "&lname="+json[0].lastName+
-                		 "&studentCode="+json[0].studentCode,true);
+                 xmlhttp.open("GET","./GenerateReportController?studentCode="+json[0].studentCode,true);
                  xmlhttp.send();
             }
         }

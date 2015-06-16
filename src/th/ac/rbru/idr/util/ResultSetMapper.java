@@ -107,10 +107,10 @@ public class ResultSetMapper<T> {
 //						", rs Type: " + columnValue.getClass().getName());
 				if(columnValue instanceof BigDecimal){
 					BigDecimal bigTmp = (BigDecimal) columnValue;
-					if (field.getType().getTypeParameters().equals("int")){
+					if (field.getType().getName().equals("int")){
 						field.setAccessible(true);
 						field.set(outputBean, bigTmp.intValue());
-					}else if(field.getType().getTypeParameters().equals("double")){
+					}else if(field.getType().getName().equals("double")){
 						field.setAccessible(true);
 						field.set(outputBean, bigTmp.doubleValue());
 						

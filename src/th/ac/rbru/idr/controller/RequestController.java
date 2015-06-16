@@ -69,13 +69,33 @@ public class RequestController extends HttpServlet {
 	}
 	
 	private ResultSet getStudentInfo() throws SQLException{
-		String sql = " 	SELECT STDM.STUDENTCODE AS STUDENTCODE	"
-				+" 	,STDM.STUDENTNAME AS STUDENTNAME, STDM.STUDENTSURNAME , FAC.FACULTYNAME, PRE.PREFIXNAME	"
-				+" 	FROM STUDENTMASTER STDM,FACULTY FAC,PREFIX PRE	"
-				+" 	WHERE STDM.STUDENTCODE LIKE '4623361004'	"
+		String sql = " 	SELECT STDM.STUDENTCODE AS STUDENTCODE ,	"
+				+" 	  STDM.STUDENTNAME      AS STUDENTNAME,	"
+				+" 	  STDM.STUDENTSURNAME ,	"
+				+" 	  FAC.FACULTYNAME,	"
+				+" 	  PRE.PREFIXNAME,	"
+				+" 	  CASE WHEN STDM.STUDYPERIOD = 1 THEN 'ภาคปกติ'	"
+				+" 	       ELSE 'ภาคพิเศษ'	"
+				+" 	  END AS PERIOD,	"
+				+" 	  LE.LEVELNAME AS LEVELNAME,	"
+				+" 	  'หลักสูตร' ||DE.DEGREENAME AS DEGREENAME,	"
+				+" 	  DE.DEGREEABB AS DEGREEABB,	"
+				+" 	  PRO.STUDYYEAR AS STUDYYEAR,	"
+				+" 	  'สาขาวิชา' ||PRO.PROGRAMNAME AS PROGRAMNAME,	"
+				+" 	  STDM.STUDENTYEAR AS STUDENTYEAR	"
+				+" 	FROM STUDENTMASTER STDM,	"
+				+" 	  FACULTY FAC,	"
+				+" 	  PREFIX PRE,	"
+				+" 	  LEVELID LE,	"
+				+" 	  PROGRAM PRO,	"
+				+" 	  DEGREE DE	"
+				+" 	WHERE STDM.STUDENTCODE LIKE '5824851005'	"
 				+" 	AND STDM.FACULTYID = FAC.FACULTYID	"
-				+" 	AND STDM.PREFIXID = PRE.PREFIXID";
-		System.out.println(sql);
+				+" 	AND STDM.PREFIXID  = PRE.PREFIXID	"
+				+" 	AND STDM.LEVELID = LE.LEVELID	"
+				+" 	AND STDM.PROGRAMID = PRO.PROGRAMID	"
+				+" 	AND PRO.DEGREEID = DE.DEGREEID";
+
 		return getData(sql);
 	}
 	

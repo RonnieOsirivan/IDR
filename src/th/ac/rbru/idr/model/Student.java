@@ -16,7 +16,20 @@ public class Student {
 	private String facultyName;
 	@Column(name="STUDENTCODE")
 	private String studentCode;
-	
+	@Column(name="PERIOD")
+	private String period;
+	@Column(name="LEVELCODENAME")
+	private String levelCodeName;
+	@Column(name="DEGREENAME")
+	private String degreeName;
+	@Column(name="DEGREEABB")
+	private String degreeAbb;
+	@Column(name="STUDYYEAR")
+	private int studyYear;
+	@Column(name="PROGRAMNAME")
+	private String programName;
+	@Column(name="STUDENTYEAR")
+	private int studentYear;
 	
 	public String getPrefix() {
 		return prefix;
@@ -47,5 +60,47 @@ public class Student {
 	}
 	public void setStudentCode(String studentCode) {
 		this.studentCode = studentCode;
+	}
+	public String getPeriod() {
+		return period;
+	}
+	public void setPeriod(String period) {
+		this.period = period;
+	}
+	public String getLevelCodeName() {
+		return levelCodeName;
+	}
+	public void setLevelCodeName(String levelCodeName) {
+		this.levelCodeName = levelCodeName;
+	}
+	public String getDegreeName() {
+		return degreeName;
+	}
+	public void setDegreeName(String degreeName) {
+		this.degreeName = degreeName;
+	}
+	public String getDegreeAbb() {
+		return degreeAbb;
+	}
+	public void setDegreeAbb(String degreeAbb) {
+		this.degreeAbb = degreeAbb;
+	}
+	public int getStudyYear() {
+		return studyYear;
+	}
+	public void setStudyYear(int studyYear) {
+		this.studyYear = studyYear;
+	}
+	public String getProgramName() {
+		return programName;
+	}
+	public void setProgramName(String programName) {
+		this.programName = programName;
+	}
+	public int getStudentYear() {
+		return studentYear;
+	}
+	public void setStudentYear(int studentYear) {
+		this.studentYear = studentYear;
 	}
 }
