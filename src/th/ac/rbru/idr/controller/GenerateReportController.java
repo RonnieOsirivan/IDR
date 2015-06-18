@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import th.ac.rbru.idr.model.DocumentNumber;
 import th.ac.rbru.idr.model.Student;
 import th.ac.rbru.idr.util.ConnectionDB;
 import th.ac.rbru.idr.util.ConvertDataType;
@@ -82,6 +83,8 @@ public class GenerateReportController extends HttpServlet {
 			String resultJson = ConvertDataType.getInstance().objectToJasonArray(studentList);
 			System.out.println(resultJson);
 			
+			ResultSetMapper<DocumentNumber> resultSetD = new ResultSetMapper<DocumentNumber>();
+			List<DocumentNumber> documentNumber = resultSetD.mapRersultSetToObject(getDocumentNumber(), DocumentNumber.class);
 			
 			int dateNumber = Integer.parseInt(simpleDateNumber.format(date));
 			String mounthName = simpleDateMounth.format(date);
@@ -89,10 +92,10 @@ public class GenerateReportController extends HttpServlet {
 			String dateParam = thaiNumeral(dateNumber)+" "+mounthName+" "+thaiNumeral(dateYear);
 			
 			HashMap<String, Object> param = new HashMap<String, Object>();
-			param.put("sequenceReport", "ที่");
+			param.put("sequenceReport", "ที่ "+thaiNumeral(documentNumber.get(0).getRunningNumber())+" / "+thaiNumeral(documentNumber.get(0).getAcadyear()));
 			param.put("pDate", dateParam);
 			param.put("pStdName", "ขอรับรองว่า "+student.getPrefix()+student.getFirstName()+" "+student.getLastName());
-			param.put("pStdCode", "รหัสประจำตัวนักศึกษา"+thaiNumeral(Long.parseLong(student.getStudentCode())));
+			param.put("pStdCode", "รหัสประจำตัวนักศึกษา "+thaiNumeral(Long.parseLong(student.getStudentCode())));
 			param.put("pFacultyName", student.getFacultyName());
 			param.put("pPeriod", "เป็นนักศึกษา "+student.getPeriod());
 			param.put("pLevelName", "ระดับ"+student.getLevelCodeName());
@@ -109,12 +112,14 @@ public class GenerateReportController extends HttpServlet {
 		}
 	}
 	
+	//overload method
 	private static String thaiNumeral(int number){
 		DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(new Locale("th","TH","TH"));
 		df.applyPattern("####");
 		return df.format(number);
 	}
 	
+	//overload method
 	private static String thaiNumeral(long number){
 		DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(new Locale("th","TH","TH"));
 		df.applyPattern("##########");
@@ -160,6 +165,20 @@ public class GenerateReportController extends HttpServlet {
 				+" 	AND LE.LEVELCODE = LC.LEVELCODE	"
 				+" 	AND STDM.PROGRAMID = PRO.PROGRAMID	"
 				+" 	AND PRO.DEGREEID = DE.DEGREEID ";
+		return getData(sql);
+	}
+	
+	private ResultSet getDocumentNumber() throws SQLException{
+		String sql = " 	SELECT RE.RUNNINGNUMBER+1 AS RUNNINGNUMBER,	"
+				+" 	  TACADYEAR.ACADYEAR      AS ACADYEAR	"
+				+" 	FROM REQUEST RE,	"
+				+" 	  (SELECT TO_CHAR(sysdate,'YYYY','NLS_CALENDAR=''THAI BUDDHA'' NLS_DATE_LANGUAGE=THAI') - DFS.ACADYEARADJ AS ACADYEAR	"
+				+" 	  FROM DEFAULTSEMESTER DFS	"
+				+" 	  WHERE DFS.SYSAPPID = 25	"
+				+" 	  AND DFS.SYSMONTH   = TO_CHAR(SYSDATE,'MM')	"
+				+" 	  ) TACADYEAR	"
+				+" 	WHERE ROWNUM <= 1	"
+				+" 	ORDER BY RE.REQUESTID DESC";
 		return getData(sql);
 	}
 	
