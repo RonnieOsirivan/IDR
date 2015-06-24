@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import th.ac.rbru.idr.model.DocumentNumber;
 import th.ac.rbru.idr.model.Student;
+import th.ac.rbru.idr.model.StudentEng;
 import th.ac.rbru.idr.util.ConnectionDB;
 import th.ac.rbru.idr.util.ConvertDataType;
 import th.ac.rbru.idr.util.ResultSetMapper;
@@ -54,9 +55,18 @@ public class GenerateReportController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,IOException{
 		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>GenerateReportController");
+		System.out.println("request------>"+request.getParameter("lang0"));
+		System.out.println("request------>"+request.getParameter("lang1"));
 		try {
-			generateReport(request);
-		} catch (SQLException e) {
+			if(request.getParameter("lang0") != null && request.getParameter("lang1") != null){
+				generateReportThai(request);
+				generateReportEng(request);
+			}else if(request.getParameter("lang0") != null){
+				generateReportThai(request);
+			}else{
+				generateReportEng(request);
+			}
+		} catch (SQLException | JRException e) {
 			e.printStackTrace();
 		}
 	}
@@ -68,7 +78,30 @@ public class GenerateReportController extends HttpServlet {
 		// TODO Auto-generated method stub
 	}
 	
-	private void generateReport(HttpServletRequest request)throws SQLException{
+	private void generateReportEng(HttpServletRequest request) throws SQLException, JRException{
+		Date date = new Date();
+		SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy",Locale.US);
+		ResultSetMapper<StudentEng> studentResult = new ResultSetMapper<StudentEng>();
+		StudentEng studentEng = (studentResult.mapRersultSetToObject(getStudentInfoEng(request.getParameter("studentCode")), StudentEng.class)).get(0);
+		System.out.println(ConvertDataType.getInstance().objectToJasonArray(studentEng));
+		
+		ResultSetMapper<DocumentNumber> resultSetD = new ResultSetMapper<DocumentNumber>();
+		DocumentNumber documentNumber = (resultSetD.mapRersultSetToObject(getDocumentNumber(), DocumentNumber.class)).get(0);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		param.put("sequenceReport", "No. "+documentNumber.getRunningNumber()+" / "+documentNumber.getAcadyear());
+		param.put("pDate", formatter.format(date));
+		param.put("pStdName", "This is to cerify that "+studentEng.getPrefixName()+studentEng.getStudentName()+" "+studentEng.getStudentSurname()+",");
+		param.put("pStdCode", "student code number "+studentEng.getStudnetCode()+" ");
+		param.put("pDegreeName", "is currently a student of the "+studentEng.getDegreeCerificate());
+		param.put("pProgramName", "Faculty of "+studentEng.getProgramName());
+		param.put("pFacultyName", "in "+studentEng.getFacultyName()+",");
+		JasperReport jasperReport = JasperCompileManager.compileReport("/Users/rattasit/workspace/IDR/report/IDRReportEng.jrxml");
+		JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,param,new JREmptyDataSource());
+		JasperExportManager.exportReportToPdfFile(jasperPrint, "/Users/rattasit/workspace/IDR/report/testEng.pdf");
+	}
+	
+	private void generateReportThai(HttpServletRequest request)throws SQLException{
 		try {
 			Date date = new Date();
 			SimpleDateFormat simpleDateNumber = new SimpleDateFormat("dd",new Locale("th","th"));
@@ -78,7 +111,7 @@ public class GenerateReportController extends HttpServlet {
 			String stdCode = request.getParameter("studentCode");
 			
 			ResultSetMapper<Student> resultSet = new ResultSetMapper<Student>();
-			List<Student> studentList = resultSet.mapRersultSetToObject(getStudentInfo(stdCode), Student.class);
+			List<Student> studentList = resultSet.mapRersultSetToObject(getStudentInfoThai(stdCode), Student.class);
 			Student student = studentList.get(0);
 			String resultJson = ConvertDataType.getInstance().objectToJasonArray(studentList);
 			System.out.println(resultJson);
@@ -104,9 +137,9 @@ public class GenerateReportController extends HttpServlet {
 			param.put("pStudyYear", thaiNumeral(student.getStudyYear()));
 			param.put("pProgramName", student.getProgramName());
 			param.put("pStudentYear", "กำลังศึกษาอยู่ปี "+thaiNumeral(student.getStudentYear()));
-			JasperReport jasperReport = JasperCompileManager.compileReport("D:/workspace/IDR/report/IDRReport.jrxml");
+			JasperReport jasperReport = JasperCompileManager.compileReport("/Users/rattasit/workspace/IDR/report/IDRReport.jrxml");
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,param,new JREmptyDataSource());
-			JasperExportManager.exportReportToPdfFile(jasperPrint, "D:/workspace/IDR/report/test.pdf");
+			JasperExportManager.exportReportToPdfFile(jasperPrint, "/Users/rattasit/workspace/IDR/report/test.pdf");
 		} catch (JRException e) {
 			e.printStackTrace();
 		}
@@ -136,7 +169,7 @@ public class GenerateReportController extends HttpServlet {
 		releaseConnection();
 	}
 	
-	private ResultSet getStudentInfo(String stdCode) throws SQLException{
+	private ResultSet getStudentInfoThai(String stdCode) throws SQLException{
 		String sql = " 	SELECT STDM.STUDENTCODE AS STUDENTCODE ,	"
 				+" 	  STDM.STUDENTNAME      AS STUDENTNAME,	"
 				+" 	  STDM.STUDENTSURNAME ,	"
@@ -146,7 +179,7 @@ public class GenerateReportController extends HttpServlet {
 				+" 	       ELSE 'ภาคพิเศษ'	"
 				+" 	  END AS PERIOD,	"
 				+" 	  LC.LEVELCODENAME AS LEVELCODENAME,	"
-				+" 	  'หลักสูตร' ||DE.DEGREENAME AS DEGREENAME,	"
+				+" 	  'หลักสูตร' ||DE.DEGREECERTIFICATE AS DEGREECERTIFICATE,	"
 				+" 	  DE.DEGREEABB AS DEGREEABB,	"
 				+" 	  PRO.STUDYYEAR AS STUDYYEAR,	"
 				+" 	  'สาขาวิชา' ||PRO.PROGRAMNAME AS PROGRAMNAME,	"
@@ -165,6 +198,27 @@ public class GenerateReportController extends HttpServlet {
 				+" 	AND LE.LEVELCODE = LC.LEVELCODE	"
 				+" 	AND STDM.PROGRAMID = PRO.PROGRAMID	"
 				+" 	AND PRO.DEGREEID = DE.DEGREEID ";
+		return getData(sql);
+	}
+	
+	private ResultSet getStudentInfoEng(String stdCode) throws SQLException{
+		String sql = "	SELECT PRE.PREFIXNAMEENG AS PREFIXNAMEENG,	"+
+				"	NVL(STDM.STUDENTNAMEENG,'NOT SHOW') AS STUDENTNAMEENG,	"+
+				"	NVL(STDM.STUDENTSURNAMEENG,'NOT SHOW') AS STUDENTSURNAMEENG,	"+
+				"	STDM.STUDENTCODE AS STUDENTCODE,	"+
+				"	DE.DEGREECERTIFICATEENG AS DEGREECERTIFICATEENG,	"+
+				"	PRO.PROGRAMNAMEENG AS PROGRAMNAMEENG,	"+
+				"	'Hummanities and Socail Science' AS FACULTYNAMEENG	"+
+				"	FROM STUDENTMASTER STDM,	"+
+				"	FACULTY FAC,	"+
+				"	  PREFIX PRE,	"+
+				"	  PROGRAM PRO,	"+
+				"	  DEGREE DE	"+
+				"	WHERE STDM.STUDENTCODE LIKE "+stdCode+
+				"	AND STDM.FACULTYID = FAC.FACULTYID	"+
+				"	AND STDM.PREFIXID  = PRE.PREFIXID	"+
+				"	AND STDM.PROGRAMID = PRO.PROGRAMID	"+
+				"	AND PRO.DEGREEID   = DE.DEGREEID ";
 		return getData(sql);
 	}
 	

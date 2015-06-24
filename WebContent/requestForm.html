@@ -39,9 +39,18 @@
                                 	<input id="checkType" name="checkType" type="checkbox" value="3"/>request type3
                                 	<input id="checkType" name="checkType" type="checkbox" value="4"/>request type4
                                 </p> 
+                                <p>
+                                	<label>Select Language</label><br>
+                                	<input id="checkTypeLang" name="checkTypeLang" type="checkbox" value="thai"/>Thai
+                                	<input id="checkTypeLang" name="checkTypeLang" type="checkbox" value="eng"/>English
+                                </p>
                                 <p> 
-                                    <label for="telephone" class="uname" data-icon="u" > Your Telephone Number </label>
+                                    <label for="telephone" class="uname" > Your Telephone Number </label>
                                     <input id="telephoneNumber" name="telephoneNumber" type="text" onkeydown="backspacerDOWN(this,event);" onkeyup="backspacerUP(this,event);" placeholder="Your Telephone Number"/>
+                                </p>
+                                <p>
+                                	<label for="reason" class="uname" > Use for </label>
+                                	<input id="reason" name="reason" type="text" placeholder="Use for">
                                 </p>
                                 <p class="login button"> 
                                     <input type="button" value="request" onclick="valthisform();"/> 
@@ -72,41 +81,53 @@
 	        
         
         function valthisform(){
-            var checkboxs=document.getElementsByName("checkType");
+            var checkType=document.getElementsByName("checkType");
+            var langParam="";
             var requestFlag1=false;
             var requestFlag2=false;
+            var requestFlag3=false;
             
-            for(var i=0,l=checkboxs.length;i<l;i++)
-            {
-                if(checkboxs[i].checked)
-                {
+            for(var i=0,l=checkType.length;i<l;i++){
+                if(checkType[i].checked){
                 	requestFlag1=true;
                 }
             }
             
             if(!requestFlag1){
-            	alert("Please check a checkbox");
+            	alert("Please select report type");
+            }else if(requestFlag1){
+            	var checkTypeLang = document.getElementsByName("checkTypeLang");
+            	for(var i=0,l=checkTypeLang.length;i<l;i++){
+                    if(checkTypeLang[i].checked){
+                    	requestFlag2=true;
+                    	langParam += "&lang"+i+"="+checkTypeLang[i].value;
+                    }
+                }
+            	if(!requestFlag2){
+            		alert("Please select language");
+            	}
             }
-            else if(requestFlag1){
+            
+            if(requestFlag2){
             	var telephoneValue = document.getElementById("telephoneNumber").value;
             	if((telephoneValue.trim()).length < 1){
             		alert("Please input telepone number");
             	}else{
-            		requestFlag2 = true;
+            		requestFlag3 = true;
             	}
             }
             
-            if(requestFlag1 && requestFlag2){
+            if(requestFlag1 && requestFlag2 && requestFlag3){
             	 var xmlhttp = loadXMLDoc();
                  
                  xmlhttp.onreadystatechange=function(){
          			if (xmlhttp.readyState==4 && xmlhttp.status==200){
          			}
                  }
-                 xmlhttp.open("GET","./GenerateReportController?studentCode="+json[0].studentCode,true);
+                 xmlhttp.open("GET","./GenerateReportController?studentCode="+json[0].studentCode+langParam,true);
                  xmlhttp.send();
             }
-        }
+        }//valthisform()
         
         function loadXMLDoc(){
 	        var xmlhttp;

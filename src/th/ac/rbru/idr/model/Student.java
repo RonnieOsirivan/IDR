@@ -20,7 +20,7 @@ public class Student {
 	private String period;
 	@Column(name="LEVELCODENAME")
 	private String levelCodeName;
-	@Column(name="DEGREENAME")
+	@Column(name="DEGREECERTIFICATE")
 	private String degreeName;
 	@Column(name="DEGREEABB")
 	private String degreeAbb;

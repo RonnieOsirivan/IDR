@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="IDRReport" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7420bca3-7e8d-4898-9527-23ca925073ad">
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="393"/>
 	<parameter name="sequenceReport" class="java.lang.String"/>
 	<parameter name="pDate" class="java.lang.String"/>
 	<parameter name="pStdName" class="java.lang.String"/>
@@ -13,17 +13,18 @@
 	<parameter name="pProgramName" class="java.lang.String"/>
 	<parameter name="pStudentYear" class="java.lang.String"/>
 	<parameter name="pDegreeName" class="java.lang.String"/>
+	<parameter name="pFacultyName" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
 		<band height="181" splitType="Stretch">
 			<staticText>
-				<reportElement x="263" y="132" width="59" height="35" uuid="915b67dd-4023-46bb-9948-5c47b0d1c478"/>
+				<reportElement x="174" y="117" width="263" height="35" uuid="915b67dd-4023-46bb-9948-5c47b0d1c478"/>
 				<textElement>
 					<font fontName="TH SarabunPSK" size="24" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[ใบรับรอง]]></text>
+				<text><![CDATA[A STATEMENT OF STUDENT STATUS]]></text>
 			</staticText>
 			<image>
 				<reportElement x="258" y="10" width="74" height="73" uuid="3ea29c6c-9b5e-4c58-a69d-618d03a76eea"/>
@@ -34,15 +35,15 @@
 	<detail>
 		<band height="503" splitType="Stretch">
 			<staticText>
-				<reportElement x="399" y="0" width="156" height="52" uuid="dd1da59e-910d-4967-ab71-01e6fc9c9e97"/>
+				<reportElement x="378" y="0" width="177" height="41" uuid="dd1da59e-910d-4967-ab71-01e6fc9c9e97"/>
 				<textElement>
 					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[มหาวิทยาลัยราชภัฏรำไพพรรณี
-อำเภอเมือง จังหวัดจันทบุรี ๒๒๐๐๐]]></text>
+				<text><![CDATA[Rambhai Barni Rajabhat University,
+Muang, Chanthaburi, Thailand]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="37" y="0" width="74" height="23" uuid="40d60ebb-8297-42ae-9580-b3dfbdeec593"/>
+				<reportElement x="37" y="0" width="100" height="23" uuid="40d60ebb-8297-42ae-9580-b3dfbdeec593"/>
 				<textElement>
 					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
@@ -63,79 +64,58 @@
 				<textFieldExpression><![CDATA[$P{pStdName}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="288" y="105" width="175" height="20" uuid="6e43f18d-bd02-42f5-ba9f-ceb67ceed9bd"/>
+				<reportElement x="288" y="105" width="253" height="20" uuid="6e43f18d-bd02-42f5-ba9f-ceb67ceed9bd"/>
 				<textElement>
 					<font fontName="TH SarabunPSK" size="16" isBold="false" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{pStdCode}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="37" y="125" width="100" height="20" uuid="bc1cf2f9-0a15-43b5-85bc-425e18ed50b3"/>
-				<textElement>
-					<font fontName="TH SarabunPSK" size="16" isBold="false" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{pPeriod}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="138" y="125" width="88" height="20" uuid="3379c61d-40b1-45b7-be8d-e6579e06277d"/>
-				<textElement>
-					<font fontName="TH SarabunPSK" size="16" isBold="false" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{pLevelName}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="345" y="125" width="90" height="20" uuid="b932b382-2182-44a0-a1e7-265950c63c42"/>
-				<textElement>
-					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{pDegreeAbb}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="436" y="125" width="100" height="20" uuid="1e9f67e1-b6a7-4978-993d-f72c61c4329b"/>
+				<reportElement x="198" y="125" width="110" height="20" uuid="1e9f67e1-b6a7-4978-993d-f72c61c4329b"/>
 				<textElement>
 					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{pProgramName}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="37" y="145" width="100" height="20" uuid="c6dfb5f7-9cdf-4c89-b77f-7d280e57e7a2"/>
-				<textElement>
-					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{pStudentYear}]]></textFieldExpression>
-			</textField>
 			<staticText>
-				<reportElement x="137" y="145" width="161" height="20" uuid="8be3caac-833e-42df-96d7-7ad7d88a8cb8"/>
+				<reportElement x="37" y="145" width="161" height="20" uuid="8be3caac-833e-42df-96d7-7ad7d88a8cb8"/>
 				<textElement>
 					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[ที่มหาวิทยาลัยราชภัฏรำไพพรรณี จริง]]></text>
+				<text><![CDATA[Rambhai Barni Rajabhat University.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="288" y="218" width="211" height="61" uuid="858af82b-86f3-490b-ac52-3af55bcf591a"/>
+				<reportElement x="288" y="218" width="213" height="61" uuid="858af82b-86f3-490b-ac52-3af55bcf591a"/>
 				<textElement textAlignment="Center">
 					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[(ผู้ช่วยศาสตราจารย์ ดร.นาคนิมิตร อรรคศรีวร
-ผู้ช่วยอธิการบดี ปฏิบัติราชการแทน
-รองอธิการบดีมหาวิทยาลัยราชภัฏรำไพพรรณี
-]]></text>
+				<text><![CDATA[(Associate Professor Porphan Suttiwattana)
+Vice President for Academic Affairs
+Rambhai Barni Rajabhat University]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="37" y="441" width="241" height="62" uuid="b689887e-11ea-44dd-b20c-6e59e530b68f"/>
+				<reportElement x="37" y="428" width="241" height="75" uuid="b689887e-11ea-44dd-b20c-6e59e530b68f"/>
 				<textElement>
 					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[หน่วยงานทะเบียนและประมวลผล
-โทร ๐-๓๔๗-๑๐๗๐ และ ๐-๓๙๓๑-๙๑๑๑ ต่อ ๘๔๐๔-๕
-โทรสาร ๐-๓๙๔๗-๑๐๗๐]]></text>
+				<text><![CDATA[Registry Division
+Office of Academic Service
+Tel 039-319111 Ext. 8404-5
+Fax 039-471070]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="226" y="125" width="117" height="20" uuid="84e06a52-2a81-4f8c-8acb-14b5da3da108"/>
+				<reportElement x="37" y="125" width="161" height="20" uuid="81d4684c-cf9c-465c-b743-8a46d3dc42e4"/>
 				<textElement>
-					<font fontName="TH SarabunPSK" size="16" isUnderline="false" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{pDegreeName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="308" y="125" width="233" height="20" uuid="d8e74df3-6731-4070-8842-f5fff74be1ca"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{pFacultyName}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
