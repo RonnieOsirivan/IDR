@@ -12,6 +12,10 @@ public class Student {
 	private String firstName;
 	@Column(name="STUDENTSURNAME")
 	private String lastName;
+	@Column(name="STUDENTNAMEENG")
+	private String firstNameEng;
+	@Column(name="STUDENTSURNAMEENG")
+	private String surNameEng;
 	@Column(name="FACULTYNAME")
 	private String facultyName;
 	@Column(name="STUDENTCODE")
@@ -48,6 +52,18 @@ public class Student {
 	}
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+	public String getFirstNameEng() {
+		return firstNameEng;
+	}
+	public void setFirstNameEng(String firstNameEng) {
+		this.firstNameEng = firstNameEng;
+	}
+	public String getSurNameEng() {
+		return surNameEng;
+	}
+	public void setSurNameEng(String surNameEng) {
+		this.surNameEng = surNameEng;
 	}
 	public String getFacultyName() {
 		return facultyName;

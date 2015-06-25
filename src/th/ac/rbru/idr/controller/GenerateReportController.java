@@ -55,8 +55,6 @@ public class GenerateReportController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,IOException{
 		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>GenerateReportController");
-		System.out.println("request------>"+request.getParameter("lang0"));
-		System.out.println("request------>"+request.getParameter("lang1"));
 		try {
 			if(request.getParameter("lang0") != null && request.getParameter("lang1") != null){
 				generateReportThai(request);
@@ -91,7 +89,7 @@ public class GenerateReportController extends HttpServlet {
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		param.put("sequenceReport", "No. "+documentNumber.getRunningNumber()+" / "+documentNumber.getAcadyear());
 		param.put("pDate", formatter.format(date));
-		param.put("pStdName", "This is to cerify that "+studentEng.getPrefixName()+studentEng.getStudentName()+" "+studentEng.getStudentSurname()+",");
+		param.put("pStdName", "This is to cerify that "+NameFormat(studentEng.getPrefixName())+" "+NameFormat(request.getParameter("firstName"))+" "+NameFormat(request.getParameter("surName"))+",");
 		param.put("pStdCode", "student code number "+studentEng.getStudnetCode()+" ");
 		param.put("pDegreeName", "is currently a student of the "+studentEng.getDegreeCerificate());
 		param.put("pProgramName", "Faculty of "+studentEng.getProgramName());
@@ -146,17 +144,24 @@ public class GenerateReportController extends HttpServlet {
 	}
 	
 	//overload method
-	private static String thaiNumeral(int number){
+	private String thaiNumeral(int number){
 		DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(new Locale("th","TH","TH"));
 		df.applyPattern("####");
 		return df.format(number);
 	}
 	
 	//overload method
-	private static String thaiNumeral(long number){
+	private String thaiNumeral(long number){
 		DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(new Locale("th","TH","TH"));
 		df.applyPattern("##########");
 		return df.format(number);
+	}
+	
+	private String NameFormat(String str){
+		str = str.toLowerCase();
+		str = str.replaceFirst(str.substring(0, 1), str.substring(0, 1).toUpperCase());
+		System.out.println(str);
+		return str;
 	}
 	
 	private void sendResponse(HttpServletRequest request,HttpServletResponse response,String resultJson) throws IOException{

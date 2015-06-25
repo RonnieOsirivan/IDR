@@ -72,6 +72,8 @@ public class RequestController extends HttpServlet {
 		String sql = " 	SELECT STDM.STUDENTCODE AS STUDENTCODE ,	"
 				+" 	  STDM.STUDENTNAME      AS STUDENTNAME,	"
 				+" 	  STDM.STUDENTSURNAME ,	"
+				+"	  STDM.STUDENTNAMEENG AS STUDENTNAMEENG,"
+				+"	  STDM.STUDENTSURNAMEENG AS STUDENTSURNAMEENG,"
 				+" 	  FAC.FACULTYNAME,	"
 				+" 	  PRE.PREFIXNAME,	"
 				+" 	  CASE WHEN STDM.STUDYPERIOD = 1 THEN 'ภาคปกติ'	"
@@ -89,13 +91,12 @@ public class RequestController extends HttpServlet {
 				+" 	  LEVELID LE,	"
 				+" 	  PROGRAM PRO,	"
 				+" 	  DEGREE DE	"
-				+" 	WHERE STDM.STUDENTCODE LIKE '5824851005'	"
+				+" 	WHERE STDM.STUDENTCODE LIKE '5724442074'	"
 				+" 	AND STDM.FACULTYID = FAC.FACULTYID	"
 				+" 	AND STDM.PREFIXID  = PRE.PREFIXID	"
 				+" 	AND STDM.LEVELID = LE.LEVELID	"
 				+" 	AND STDM.PROGRAMID = PRO.PROGRAMID	"
 				+" 	AND PRO.DEGREEID = DE.DEGREEID";
-
 		return getData(sql);
 	}
 	

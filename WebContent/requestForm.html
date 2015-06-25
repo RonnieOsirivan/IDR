@@ -41,9 +41,12 @@
                                 </p> 
                                 <p>
                                 	<label>Select Language</label><br>
-                                	<input id="checkTypeLang" name="checkTypeLang" type="checkbox" value="thai"/>Thai
-                                	<input id="checkTypeLang" name="checkTypeLang" type="checkbox" value="eng"/>English
+                                	<input id="checkTypeLangThai" name="checkTypeLang" type="checkbox" value="thai"/>Thai
+                                	<input id="checkTypeLangEng" name="checkTypeLang" type="checkbox" value="eng" onchange="onCheckBoxChange(this)"/>English
                                 </p>
+                                
+                                <div id="inputName"></div>
+                                
                                 <p> 
                                     <label for="telephone" class="uname" > Your Telephone Number </label>
                                     <input id="telephoneNumber" name="telephoneNumber" type="text" onkeydown="backspacerDOWN(this,event);" onkeyup="backspacerUP(this,event);" placeholder="Your Telephone Number"/>
@@ -83,9 +86,11 @@
         function valthisform(){
             var checkType=document.getElementsByName("checkType");
             var langParam="";
+            var nameParam="";
             var requestFlag1=false;
             var requestFlag2=false;
             var requestFlag3=false;
+            var requestFlag4=false;
             
             for(var i=0,l=checkType.length;i<l;i++){
                 if(checkType[i].checked){
@@ -108,23 +113,36 @@
             	}
             }
             
-            if(requestFlag2){
+            if(document.getElementById("checkTypeLangEng").checked && requestFlag2){
+            	if(((document.getElementById("firstName").value).trim()).length < 1){
+            		alert("Please input your firstname");
+            	}else if(((document.getElementById("surName").value).trim()).length < 1){
+            		alert("Please input your surname");
+            	}else{
+            		nameParam = "&firstName="+(document.getElementById("firstName").value).trim()+"&surName="+(document.getElementById("surName").value).trim();
+            		requestFlag3 = true;
+            	}
+            }else if(requestFlag2){
+            	requestFlag3 = true;
+            }
+            
+            if(requestFlag3){
             	var telephoneValue = document.getElementById("telephoneNumber").value;
             	if((telephoneValue.trim()).length < 1){
             		alert("Please input telepone number");
             	}else{
-            		requestFlag3 = true;
+            		requestFlag4 = true;
             	}
             }
             
-            if(requestFlag1 && requestFlag2 && requestFlag3){
+            if(requestFlag1 && requestFlag2 && requestFlag3 && requestFlag4){
             	 var xmlhttp = loadXMLDoc();
                  
                  xmlhttp.onreadystatechange=function(){
          			if (xmlhttp.readyState==4 && xmlhttp.status==200){
          			}
                  }
-                 xmlhttp.open("GET","./GenerateReportController?studentCode="+json[0].studentCode+langParam,true);
+                 xmlhttp.open("GET","./GenerateReportController?studentCode="+json[0].studentCode+langParam+nameParam,true);
                  xmlhttp.send();
             }
         }//valthisform()
@@ -139,6 +157,28 @@
 	        }
 	        return xmlhttp;
 		}
+        
+        function onCheckBoxChange(e){
+        	if(e.checked){
+        		var firstName;
+            	var surName;
+        		if(json[0].firstNameEng){
+        			firstName = json[0].firstNameEng;
+        		}else{
+        			firstName = " ";
+        		}
+        		
+        		if(json[0].surNameEng){
+        			surName = json[0].surNameEng;
+        		}else{
+        			surName= " ";
+        		}
+        		document.getElementById("inputName").innerHTML="<p> <label for='firstName' class='uname' > First name </label> <input id='firstName' name='firstName' type='text' placeholder='Enter your first name' value='"+firstName+"' /> </p> "+
+        			"<p> <label for='lastName' class='uname' > Last name </label> <input id='surName' name='lastName' type='text' placeholder='Enter your last name' value='"+surName+"' /> </p>"
+        	}else{
+        		document.getElementById("inputName").innerHTML="";
+        	}
+        }
         
         </script>
 </body>
