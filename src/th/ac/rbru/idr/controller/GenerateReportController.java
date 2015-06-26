@@ -59,11 +59,11 @@ public class GenerateReportController extends HttpServlet {
 		try {
 			if(request.getParameter("lang0") != null && request.getParameter("lang1") != null){
 				generateReportThai(request);
-				generateReportEng(request);
+				generateReportEng(request,response);
 			}else if(request.getParameter("lang0") != null){
 				generateReportThai(request);
 			}else{
-				generateReportEng(request);
+				generateReportEng(request,response);
 			}
 		} catch (SQLException | JRException e) {
 			e.printStackTrace();
@@ -77,7 +77,7 @@ public class GenerateReportController extends HttpServlet {
 		// TODO Auto-generated method stub
 	}
 	
-	private void generateReportEng(HttpServletRequest request) throws SQLException, JRException{
+	private void generateReportEng(HttpServletRequest request,HttpServletResponse response) throws SQLException, JRException, IOException{
 		Date date = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy",Locale.US);
 		ResultSetMapper<StudentEng> studentResult = new ResultSetMapper<StudentEng>();
@@ -102,6 +102,7 @@ public class GenerateReportController extends HttpServlet {
 		JasperReport jasperReport = JasperCompileManager.compileReport("/Users/rattasit/workspace/IDR/report/IDRReportEng.jrxml");
 		JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,param,new JREmptyDataSource());
 		JasperExportManager.exportReportToPdfFile(jasperPrint, "/Users/rattasit/workspace/IDR/report/testEng.pdf");
+		sendResponse(request, response, "Done!");
 	}
 	
 	private void generateReportThai(HttpServletRequest request)throws SQLException{

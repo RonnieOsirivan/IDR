@@ -13,7 +13,9 @@
         <link rel="stylesheet" type="text/css" href="css/demo.css" />
         <link rel="stylesheet" type="text/css" href="css/style.css" />
 		<link rel="stylesheet" type="text/css" href="css/animate-custom.css" />
+		<link rel="stylesheet" type="text/css" href="css/sweetalert.css" />
 		<script type="text/javascript" src="./js/phoneNumberFormat.js"></script>
+		<script type="text/javascript" src="./js/sweetalert-dev.js"></script>
 </head>
 <body>
  <div class="container">
@@ -76,6 +78,9 @@
         //get user information
         var xmlhttp = loadXMLDoc();
         var json;
+        var langParam="";
+        var nameParam="";
+        
         xmlhttp.onreadystatechange=function(){
 			if (xmlhttp.readyState==4 && xmlhttp.status==200){
 				json = JSON.parse(xmlhttp.responseText);
@@ -88,8 +93,6 @@
         
         function valthisform(){
             var checkType=document.getElementsByName("checkType");
-            var langParam="";
-            var nameParam="";
             var requestFlag1=false;
             var requestFlag2=false;
             var requestFlag3=false;
@@ -102,7 +105,7 @@
             }
             
             if(!requestFlag1){
-            	alert("Please select report type");
+            	swal("Please select report type", "", "error");
             }else if(requestFlag1){
             	var checkTypeLang = document.getElementsByName("checkTypeLang");
             	for(var i=0,l=checkTypeLang.length;i<l;i++){
@@ -112,15 +115,15 @@
                     }
                 }
             	if(!requestFlag2){
-            		alert("Please select language");
+            		swal("Please select language", "", "error");
             	}
             }
             
             if(document.getElementById("checkTypeLangEng").checked && requestFlag2){
             	if(((document.getElementById("firstName").value).trim()).length < 1){
-            		alert("Please input your firstname");
+            		swal("Please input your firstname", "", "error");
             	}else if(((document.getElementById("surName").value).trim()).length < 1){
-            		alert("Please input your surname");
+            		swal("Please input your surname", "", "error");
             	}else{
             		nameParam = "&firstName="+(document.getElementById("firstName").value).trim()+"&surName="+(document.getElementById("surName").value).trim();
             		requestFlag3 = true;
@@ -132,23 +135,28 @@
             if(requestFlag3){
             	var telephoneValue = document.getElementById("telephoneNumber").value;
             	if((telephoneValue.trim()).length < 1){
-            		alert("Please input telepone number");
+            		swal("Please input telepone number", "", "error");
             	}else{
             		requestFlag4 = true;
             	}
             }
             
             if(requestFlag1 && requestFlag2 && requestFlag3 && requestFlag4){
-            	 var xmlhttp = loadXMLDoc();
-                 
-                 xmlhttp.onreadystatechange=function(){
-         			if (xmlhttp.readyState==4 && xmlhttp.status==200){
-         			}
-                 }
-                 xmlhttp.open("GET","./GenerateReportController?studentCode="+json[0].studentCode+langParam+nameParam,true);
-                 xmlhttp.send();
+            	sendRequestGenerateReport(json);
             }
         }//valthisform()
+        
+        function sendRequestGenerateReport(json){
+        	var xmlhttp = loadXMLDoc();
+            
+            xmlhttp.onreadystatechange=function(){
+    			if (xmlhttp.readyState==4 && xmlhttp.status==200){
+    				swal("Success", "You clicked the button!", "success");
+    			}
+            }
+            xmlhttp.open("GET","./GenerateReportController?studentCode="+json[0].studentCode+langParam+nameParam,true);
+            xmlhttp.send();
+        }
         
         function loadXMLDoc(){
 	        var xmlhttp;
