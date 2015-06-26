@@ -2,17 +2,10 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="IDRReport" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7420bca3-7e8d-4898-9527-23ca925073ad">
 	<property name="ireport.zoom" value="2.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
-	<parameter name="sequenceReport" class="java.lang.String"/>
+	<property name="ireport.y" value="1213"/>
+	<parameter name="pSequenceReport" class="java.lang.String"/>
 	<parameter name="pDate" class="java.lang.String"/>
-	<parameter name="pStdName" class="java.lang.String"/>
-	<parameter name="pStdCode" class="java.lang.String"/>
-	<parameter name="pPeriod" class="java.lang.String"/>
-	<parameter name="pLevelName" class="java.lang.String"/>
-	<parameter name="pDegreeAbb" class="java.lang.String"/>
-	<parameter name="pProgramName" class="java.lang.String"/>
-	<parameter name="pStudentYear" class="java.lang.String"/>
-	<parameter name="pDegreeName" class="java.lang.String"/>
+	<parameter name="pDetail" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -32,7 +25,7 @@
 		</band>
 	</title>
 	<detail>
-		<band height="503" splitType="Stretch">
+		<band height="585" splitType="Stretch">
 			<staticText>
 				<reportElement x="399" y="0" width="156" height="52" uuid="dd1da59e-910d-4967-ab71-01e6fc9c9e97"/>
 				<textElement>
@@ -42,11 +35,11 @@
 อำเภอเมือง จังหวัดจันทบุรี ๒๒๐๐๐]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="37" y="0" width="74" height="23" uuid="40d60ebb-8297-42ae-9580-b3dfbdeec593"/>
+				<reportElement x="37" y="0" width="102" height="23" uuid="40d60ebb-8297-42ae-9580-b3dfbdeec593"/>
 				<textElement>
 					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{sequenceReport}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{pSequenceReport}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="288" y="64" width="100" height="20" uuid="c4d656d1-fe77-4db4-9e35-2949c83f06d8"/>
@@ -55,64 +48,8 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$P{pDate}]]></textFieldExpression>
 			</textField>
-			<textField>
-				<reportElement x="74" y="105" width="214" height="20" uuid="6faa0b51-c1f8-4428-b8ae-e6e0689572b7"/>
-				<textElement>
-					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{pStdName}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="288" y="105" width="175" height="20" uuid="6e43f18d-bd02-42f5-ba9f-ceb67ceed9bd"/>
-				<textElement>
-					<font fontName="TH SarabunPSK" size="16" isBold="false" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{pStdCode}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="37" y="125" width="100" height="20" uuid="bc1cf2f9-0a15-43b5-85bc-425e18ed50b3"/>
-				<textElement>
-					<font fontName="TH SarabunPSK" size="16" isBold="false" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{pPeriod}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="138" y="125" width="88" height="20" uuid="3379c61d-40b1-45b7-be8d-e6579e06277d"/>
-				<textElement>
-					<font fontName="TH SarabunPSK" size="16" isBold="false" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{pLevelName}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="345" y="125" width="90" height="20" uuid="b932b382-2182-44a0-a1e7-265950c63c42"/>
-				<textElement>
-					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{pDegreeAbb}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="436" y="125" width="100" height="20" uuid="1e9f67e1-b6a7-4978-993d-f72c61c4329b"/>
-				<textElement>
-					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{pProgramName}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="37" y="145" width="100" height="20" uuid="c6dfb5f7-9cdf-4c89-b77f-7d280e57e7a2"/>
-				<textElement>
-					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{pStudentYear}]]></textFieldExpression>
-			</textField>
 			<staticText>
-				<reportElement x="137" y="145" width="161" height="20" uuid="8be3caac-833e-42df-96d7-7ad7d88a8cb8"/>
-				<textElement>
-					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[ที่มหาวิทยาลัยราชภัฏรำไพพรรณี จริง]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="288" y="218" width="211" height="61" uuid="858af82b-86f3-490b-ac52-3af55bcf591a"/>
+				<reportElement x="288" y="339" width="211" height="61" uuid="858af82b-86f3-490b-ac52-3af55bcf591a"/>
 				<textElement textAlignment="Center">
 					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
@@ -122,7 +59,7 @@
 ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="37" y="441" width="241" height="62" uuid="b689887e-11ea-44dd-b20c-6e59e530b68f"/>
+				<reportElement x="37" y="523" width="241" height="62" uuid="b689887e-11ea-44dd-b20c-6e59e530b68f"/>
 				<textElement>
 					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
@@ -131,12 +68,26 @@
 โทรสาร ๐-๓๙๔๗-๑๐๗๐]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="226" y="125" width="117" height="20" uuid="84e06a52-2a81-4f8c-8acb-14b5da3da108"/>
+				<reportElement x="37" y="105" width="499" height="187" uuid="ffcbb07d-3a9f-4270-8889-fecd8c60710f"/>
 				<textElement>
-					<font fontName="TH SarabunPSK" size="16" isUnderline="false" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{pDegreeName}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$P{pDetail}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement x="399" y="523" width="156" height="20" uuid="b740b5cd-48d9-4764-bad2-711112bcb072"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="16" isBold="false" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[ผู้ตรวจ..........................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="399" y="543" width="156" height="20" uuid="9d702b7d-59b3-4aef-ae50-905a119d62d4"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="16" isBold="false" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[ผู้ทาน............................................]]></text>
+			</staticText>
 		</band>
 	</detail>
 </jasperReport>

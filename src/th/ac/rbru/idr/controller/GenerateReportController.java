@@ -39,6 +39,7 @@ import net.sf.jasperreports.engine.JasperReport;
  */
 @WebServlet("/GenerateReportController")
 public class GenerateReportController extends HttpServlet {
+
 	private static final long serialVersionUID = 1L;
 	private Connection con = null;
        
@@ -87,13 +88,17 @@ public class GenerateReportController extends HttpServlet {
 		DocumentNumber documentNumber = (resultSetD.mapRersultSetToObject(getDocumentNumber(), DocumentNumber.class)).get(0);
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		param.put("sequenceReport", "No. "+documentNumber.getRunningNumber()+" / "+documentNumber.getAcadyear());
+		String detailParam = "	This is to cerify that "+NameFormat(studentEng.getPrefixName())+" "
+				+NameFormat(request.getParameter("firstName"))+" "
+				+NameFormat(request.getParameter("surName"))+","
+				+" student code number "+studentEng.getStudnetCode()+" "
+				+"is currently a student of the "
+				+studentEng.getDegreeCerificate()
+				+" Faculty of "+studentEng.getProgramName()+" in "
+				+studentEng.getFacultyName()+","+" Rambhai Barni Rajabhat University.";
+		param.put("pSequenceReport", "No. "+documentNumber.getRunningNumber()+" / "+documentNumber.getAcadyear());
 		param.put("pDate", formatter.format(date));
-		param.put("pStdName", "This is to cerify that "+NameFormat(studentEng.getPrefixName())+" "+NameFormat(request.getParameter("firstName"))+" "+NameFormat(request.getParameter("surName"))+",");
-		param.put("pStdCode", "student code number "+studentEng.getStudnetCode()+" ");
-		param.put("pDegreeName", "is currently a student of the "+studentEng.getDegreeCerificate());
-		param.put("pProgramName", "Faculty of "+studentEng.getProgramName());
-		param.put("pFacultyName", "in "+studentEng.getFacultyName()+",");
+		param.put("pDetail", detailParam);
 		JasperReport jasperReport = JasperCompileManager.compileReport("/Users/rattasit/workspace/IDR/report/IDRReportEng.jrxml");
 		JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,param,new JREmptyDataSource());
 		JasperExportManager.exportReportToPdfFile(jasperPrint, "/Users/rattasit/workspace/IDR/report/testEng.pdf");
@@ -123,8 +128,20 @@ public class GenerateReportController extends HttpServlet {
 			String dateParam = thaiNumeral(dateNumber)+" "+mounthName+" "+thaiNumeral(dateYear);
 			
 			HashMap<String, Object> param = new HashMap<String, Object>();
+			String pDetail = "	ขอรับรองว่า "+student.getPrefix()+student.getFirstName()+" "+student.getLastName()
+					+ " รหัสประจำตัวนักศึกษา "+thaiNumeral(Long.parseLong(student.getStudentCode()))
+					+ " เป็นนักศึกษา "+student.getPeriod()
+					+ " ระดับ"+student.getLevelCodeName()
+					+ " "+student.getDegreeName()
+					+ " ("+student.getDegreeAbb()+" "+thaiNumeral(student.getStudyYear())+" ปี)"
+					+ " "+student.getProgramName();
+			if(student.getStudyYear() >= student.getStudentYear()){
+				pDetail += " กำลังศึกษาอยู่ปี "+thaiNumeral(student.getStudentYear());
+			}
+			pDetail += " ที่มหาวิทยาลัยราชภัฏรำไพพรรณี จริง";
 			param.put("sequenceReport", "ที่ "+thaiNumeral(documentNumber.get(0).getRunningNumber())+" / "+thaiNumeral(documentNumber.get(0).getAcadyear()));
 			param.put("pDate", dateParam);
+			param.put("pDetail", pDetail);
 			param.put("pStdName", "ขอรับรองว่า "+student.getPrefix()+student.getFirstName()+" "+student.getLastName());
 			param.put("pStdCode", "รหัสประจำตัวนักศึกษา "+thaiNumeral(Long.parseLong(student.getStudentCode())));
 			param.put("pFacultyName", student.getFacultyName());
@@ -213,7 +230,7 @@ public class GenerateReportController extends HttpServlet {
 				"	STDM.STUDENTCODE AS STUDENTCODE,	"+
 				"	DE.DEGREECERTIFICATEENG AS DEGREECERTIFICATEENG,	"+
 				"	PRO.PROGRAMNAMEENG AS PROGRAMNAMEENG,	"+
-				"	'Hummanities and Socail Science' AS FACULTYNAMEENG	"+
+				"	'Hummanities and Social Science' AS FACULTYNAMEENG	"+
 				"	FROM STUDENTMASTER STDM,	"+
 				"	FACULTY FAC,	"+
 				"	  PREFIX PRE,	"+
