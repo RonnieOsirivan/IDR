@@ -58,5 +58,34 @@
               password="jaychou"
               driverClassName="oracle.jdbc.driver.OracleDriver"
               url="jdbc:oracle:thin:@10.5.1.202:1521:RBRU"/>
+              
+	<Resource name="jdbc/IDR"
+              auth="Container"
+              type="javax.sql.DataSource"
+              factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+              defaultReadOnly="false"
+              fairQueue="true"
+              testWhileIdle="true"
+              testOnBorrow="true"
+              testOnReturn="false"
+              validationQuery="SELECT 1"
+              validationInterval="30000"
+              timeBetweenEvictionRunsMillis="5000"
+              maxActive="10"
+              minIdle="3"
+              maxIdle="5"
+              maxWait="10000"
+              initialSize="2"
+              removeAbandoned="true"
+              removeAbandonedTimeout="10"
+              logAbandoned="false"
+              minEvictableIdleTimeMillis="5000"
+              jmxEnabled="true"
+              jdbcInterceptors="org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;
+            org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer"
+              username="rattasit.s"
+              password="rattasit.s"
+              driverClassName="com.mysql.jdbc.Driver"
+              url="jdbc:mysql://jwsdev01.rbru.ac.th:3306/IDR?characterEncoding=UTF-8"/>
              
 </Context>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script type="text/javascript" src="./bootstrap/jquery/dist/jquery.js"></script>
+	<script type="text/javascript" src="./bootstrap/bootstrap/dist/js/bootstrap.js"></script>
+	<script type="text/javascript" src="./bootstrap/bootstrap-table/js/bootstrap-table.js"></script>
+	<script type="text/javascript" src="./bootstrap/bootstrap-table/js/bootstrap-table-th-TH.js"></script>
+	<script type="text/javascript" src="./js/sweetalert-dev.js"></script>
+	<link href="./bootstrap/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+	<link href="./bootstrap/bootstrap-table/css/bootstrap-table.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="css/sweetalert.css" />		
+<title>Bootstrap test</title>
+</head>
+<body>
+
+	<div id="toolbar" class="btn-group">
+		<button id="home" type="button" class="btn btn-default">
+	        <i class="glyphicon glyphicon-home"></i>
+	    </button>
+	    <button id="remove" type="button" class="btn btn-default" disabled>
+	        <i class="glyphicon glyphicon-trash"></i>
+	    </button>
+	</div>
+	<div class="container">
+		<table  id="table"
+				data-toggle="table"
+				data-select-item-name="selectItem"
+				data-maintain-selected="true"
+				data-search="true"
+				data-show-columns="true"
+				data-pagination="true"
+				data-page-list="[5,10,20,25]"
+				data-toolbar="#toolbar"
+				data-cache="false"
+				data-url="./ManagementReportController">
+		    <thead>
+		    <tr>
+		    	<th data-field="state" data-checkbox="true"></th>
+		        <th data-field="reportId" data-visible="false">report ID</th>
+		        <th data-field="studentCode" data-sortable="true">Student Code</th>
+		        <th data-field="studentName" data-sortable="true">Name</th>
+		        <th data-field="reportName" data-sortable="true">Report Type</th>
+		        <th data-field="createDate" data-sortable="true">Date</th>
+		    </tr>
+		    </thead>
+		</table>
+	</div>
+	
+	<script type="text/javascript">
+		var $table = $('#table');
+	    $(function () {
+	    	//enable delete button
+	    	$table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+	    		$('#remove').prop('disabled', !$table.bootstrapTable('getSelections').length);
+	        });
+	    	
+	    	$('#home').click(function(){
+	    		window.location.assign("./requestForm.html");
+	    	});
+	    	
+			$('#remove').click(function () {
+				swal({title: "Are you sure?",
+						text: "You will not be able to recover this file!",
+						type: "warning",   showCancelButton: true,   confirmButtonColor: "#DD6B55",
+						confirmButtonText: "Yes, delete it!",
+						closeOnConfirm: false 
+						},
+						function(){
+							var param = "";
+							var check = $table.bootstrapTable('getSelections');
+							check.forEach(function(element){
+								param += element.reportId+",";
+							});
+							console.log(param.substring(0,param.length-1));
+							param = param.substring(0,param.length-1);
+							
+							$.post("./ManagementReportController",{
+								method : "delete",
+								reportId : param
+							},function(data,status){
+								//swal("Deleted!", "Your imaginary file has been deleted.","success");
+								swal({type:"success",
+									title: "Deleted!",
+									confirmButtonText: "ok"
+								},
+								function(){
+									$table.bootstrapTable('removeAll');
+									//$table.bootstrapTable('load', {silent:true});
+									$table.bootstrapTable('refresh', {url: "./ManagementReportController"});
+									$('#remove').prop('disabled',true);
+								});
+							});
+						}
+				);
+				
+				/*var index = [];
+				$('input[name="selectItem"]:checked').each(function () {
+					index.push($(this).data('index'));
+				});
+				alert('Checked row index: ' + index.join(', ')); */
+			});
+	    });
+	</script>
+</body>
+</html>

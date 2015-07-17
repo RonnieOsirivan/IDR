@@ -40,7 +40,6 @@ public class RequestController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,IOException {
-		System.out.println("doget!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		ResultSetMapper<Student> student = new ResultSetMapper<Student>();
 		try {
 			List<Student> studentList = student.mapRersultSetToObject(getStudentInfo(), Student.class);
@@ -55,7 +54,6 @@ public class RequestController extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("dopostttttttttttttttttttttttttttttttttttttttttttttttttttttttt");
 	}
 	
 	private void sendResponse(HttpServletRequest request,HttpServletResponse response,String resultJson) throws IOException{

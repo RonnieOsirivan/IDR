@@ -69,14 +69,15 @@ public class ConnectionDB {
 	    
 	    public static Connection getRBRUMySQL(){
 	    	try {
-	    		if(! registeredDs.containsKey("jdbc/research_determine")){
+	    		if(! registeredDs.containsKey("jdbc/IDR")){
 //	    			registeredDs.putIfAbsent("jdbc/research_determine", (DataSource) envDbContext.lookup("jdbc/research_determine"));
-	    			registeredDs.put("jdbc/research_determine", (DataSource) envDbContext.lookup("jdbc/research_determine"));
+	    			registeredDs.put("jdbc/IDR", (DataSource) envDbContext.lookup("jdbc/IDR"));
 	    		}
 	    		/*if(researchDs == null){
 	    			researchDs = (DataSource) envDbContext.lookup("jdbc/research_determine");
 	    		}*/
-	    		return registeredDs.get("jdbc/research_determine").getConnection();
+	    		System.out.println("MY SQL Connecttion success");
+	    		return registeredDs.get("jdbc/IDR").getConnection();
 			} catch (Exception e) {
 				System.err.println("Cannot get connection: " + e.getMessage());
 				return null;

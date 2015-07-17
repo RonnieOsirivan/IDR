@@ -115,6 +115,9 @@ public class ResultSetMapper<T> {
 						field.set(outputBean, bigTmp.doubleValue());
 						
 					}
+				}else if(columnValue instanceof Integer){
+					field.setAccessible(true);
+					field.set(outputBean, ((Integer) columnValue).intValue());
 				}
 				// Task: there are Java Object that wait for primitive type conversion to long, char, byte, float, short 
 			}else{

@@ -3,6 +3,7 @@ package th.ac.rbru.idr.controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -20,19 +21,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import net.sf.jasperreports.engine.JRException;
 import th.ac.rbru.idr.model.DocumentNumber;
 import th.ac.rbru.idr.model.Student;
 import th.ac.rbru.idr.model.StudentEng;
 import th.ac.rbru.idr.util.ConnectionDB;
-import th.ac.rbru.idr.util.ConvertDataType;
+import th.ac.rbru.idr.util.GenerateReport;
 import th.ac.rbru.idr.util.ResultSetMapper;
-import net.sf.jasperreports.engine.JREmptyDataSource;
-import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperCompileManager;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
+import th.ac.rbru.idr.util.StaticValue;
 
 /**
  * Servlet implementation class GenerateReportController
@@ -55,17 +51,20 @@ public class GenerateReportController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,IOException{
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>GenerateReportController");
+		String[] langArray = (request.getParameter("lang")).split(",");
 		try {
-			if(request.getParameter("lang0") != null && request.getParameter("lang1") != null){
-				generateReportThai(request);
-				generateReportEng(request,response);
-			}else if(request.getParameter("lang0") != null){
-				generateReportThai(request);
-			}else{
-				generateReportEng(request,response);
+			if("studentStatus".equals(request.getParameter("reportTypeParam"))){
+				for (String lang : langArray) {
+					if("thai".equals(lang)){
+						generateReportThai(request, response);
+					}else{
+						generateReportEng(request, response);
+					}
+				}
 			}
-		} catch (SQLException | JRException e) {
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}catch (JRException e) {
 			e.printStackTrace();
 		}
 	}
@@ -82,7 +81,6 @@ public class GenerateReportController extends HttpServlet {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy",Locale.US);
 		ResultSetMapper<StudentEng> studentResult = new ResultSetMapper<StudentEng>();
 		StudentEng studentEng = (studentResult.mapRersultSetToObject(getStudentInfoEng(request.getParameter("studentCode")), StudentEng.class)).get(0);
-		System.out.println(ConvertDataType.getInstance().objectToJasonArray(studentEng));
 		
 		ResultSetMapper<DocumentNumber> resultSetD = new ResultSetMapper<DocumentNumber>();
 		DocumentNumber documentNumber = (resultSetD.mapRersultSetToObject(getDocumentNumber(), DocumentNumber.class)).get(0);
@@ -91,7 +89,7 @@ public class GenerateReportController extends HttpServlet {
 		String detailParam = "	This is to cerify that "+NameFormat(studentEng.getPrefixName())+" "
 				+NameFormat(request.getParameter("firstName"))+" "
 				+NameFormat(request.getParameter("surName"))+","
-				+" student code number "+studentEng.getStudnetCode()+" "
+				+" student code number "+studentEng.getStudentCode()+" "
 				+"is currently a student of the "
 				+studentEng.getDegreeCerificate()
 				+" Faculty of "+studentEng.getProgramName()+" in "
@@ -99,66 +97,111 @@ public class GenerateReportController extends HttpServlet {
 		param.put("pSequenceReport", "No. "+documentNumber.getRunningNumber()+" / "+documentNumber.getAcadyear());
 		param.put("pDate", formatter.format(date));
 		param.put("pDetail", detailParam);
-		JasperReport jasperReport = JasperCompileManager.compileReport("/Users/rattasit/workspace/IDR/report/IDRReportEng.jrxml");
-		JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,param,new JREmptyDataSource());
-		JasperExportManager.exportReportToPdfFile(jasperPrint, "/Users/rattasit/workspace/IDR/report/testEng.pdf");
+		
+		int reportId = insertReport(studentEng.getStudentCode(),studentEng.getPrefixName()+studentEng.getStudentName()+" "+studentEng.getStudentSurname(),
+				request.getParameter("telephoneParam"),request.getParameter("useforParam"));
+		GenerateReport genReport = new GenerateReport();
+		genReport.generarteReport("studentStatusEng",reportId, param);
 		sendResponse(request, response, "Done!");
 	}
 	
-	private void generateReportThai(HttpServletRequest request)throws SQLException{
+	private void generateReportThai(HttpServletRequest request,HttpServletResponse response)throws SQLException, IOException{
+		Date date = new Date();
+		SimpleDateFormat simpleDateNumber = new SimpleDateFormat("dd",new Locale("th","th"));
+		SimpleDateFormat simpleDateMounth = new SimpleDateFormat("MMMM",new Locale("th","th"));
+		SimpleDateFormat simpleDateYear = new SimpleDateFormat("yyyy",new Locale("th","th"));
+		
+		String stdCode = request.getParameter("studentCode");
+		
+		ResultSetMapper<Student> resultSet = new ResultSetMapper<Student>();
+		List<Student> studentList = resultSet.mapRersultSetToObject(getStudentInfoThai(stdCode), Student.class);
+		Student student = studentList.get(0);
+		
+		ResultSetMapper<DocumentNumber> resultSetD = new ResultSetMapper<DocumentNumber>();
+		List<DocumentNumber> documentNumber = resultSetD.mapRersultSetToObject(getDocumentNumber(), DocumentNumber.class);
+		
+		int dateNumber = Integer.parseInt(simpleDateNumber.format(date));
+		String mounthName = simpleDateMounth.format(date);
+		int dateYear = Integer.parseInt(simpleDateYear.format(date));
+		String dateParam = thaiNumeral(dateNumber)+" "+mounthName+" "+thaiNumeral(dateYear);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		String pDetail = "	ขอรับรองว่า "+student.getPrefix()+student.getFirstName()+" "+student.getLastName()
+				+ " รหัสประจำตัวนักศึกษา "+thaiNumeral(Long.parseLong(student.getStudentCode()))
+				+ " เป็นนักศึกษา "+student.getPeriod()
+				+ " ระดับ"+student.getLevelCodeName()
+				+ " "+student.getDegreeName()
+				+ " ("+student.getDegreeAbb()+" "+thaiNumeral(student.getStudyYear())+" ปี)"
+				+ " "+student.getProgramName();
+		if(student.getStudyYear() >= student.getStudentYear()){
+			pDetail += " กำลังศึกษาอยู่ปี "+thaiNumeral(student.getStudentYear());
+		}
+		pDetail += " ที่มหาวิทยาลัยราชภัฏรำไพพรรณี จริง";
+		param.put("pSequenceReport", "ที่ "+thaiNumeral(documentNumber.get(0).getRunningNumber())+" / "+thaiNumeral(documentNumber.get(0).getAcadyear()));
+		param.put("pDate", dateParam);
+		param.put("pDetail", pDetail);
+		
+		int reportId = insertReport(student.getStudentCode(),student.getPrefix()+student.getFirstName()+" "+student.getLastName(),
+				request.getParameter("telephoneParam"),request.getParameter("useforParam"));
+		GenerateReport genReport = new GenerateReport();
+		genReport.generarteReport("studentStatusThai", reportId,param);
+//		FileInputStream pdfStream = convertPdfToBinary("/Users/rattasit/workspace/IDR/WebContent/reportFile/test.pdf");
+		sendResponse(request, response, "Done!");
+	}
+	
+//	private FileInputStream convertPdfToBinary(String path){
+//		File pdfFile = new File(path);
+//		FileInputStream inputStream = null;
+//		try {
+//			inputStream = new FileInputStream(pdfFile);
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return inputStream;
+//	}
+	
+	private int insertReport(String stdCode,String stdName,String telephoneNum,String usefor){
+		String stdInsertSql = "INSERT IGNORE INTO STUDENT(STUDENTCODE,STUDENTNAME,TELEPHONENUMBER) VALUES (?,?,?)";
+		String pdfInsertSql = "INSERT INTO REPORT(STUDENTCODE,REPORTTYPEID,USEFOR,REPORTFILE) VALUES(?,?,?,?)";
+		String reportPathSql = "";
+		PreparedStatement stmt = null;
+		ConnectionDB.getInstance();
+		int reportId = 0;
+		con = ConnectionDB.getRBRUMySQL();
 		try {
-			Date date = new Date();
-			SimpleDateFormat simpleDateNumber = new SimpleDateFormat("dd",new Locale("th","th"));
-			SimpleDateFormat simpleDateMounth = new SimpleDateFormat("MMMM",new Locale("th","th"));
-			SimpleDateFormat simpleDateYear = new SimpleDateFormat("yyyy",new Locale("th","th"));
+			stmt = con.prepareStatement(stdInsertSql);
+			stmt.setString(1, stdCode);
+			stmt.setString(2, stdName);
+			stmt.setString(3, telephoneNum);
+			stmt.execute();
+			stmt.close();
 			
-			String stdCode = request.getParameter("studentCode");
+			stmt = con.prepareStatement(pdfInsertSql,Statement.RETURN_GENERATED_KEYS);
+			stmt.setString(1, stdCode);
+			stmt.setInt(2, 0);
+			stmt.setString(3,usefor);
+			stmt.setString(4, "");
+			stmt.executeUpdate();
 			
-			ResultSetMapper<Student> resultSet = new ResultSetMapper<Student>();
-			List<Student> studentList = resultSet.mapRersultSetToObject(getStudentInfoThai(stdCode), Student.class);
-			Student student = studentList.get(0);
-			String resultJson = ConvertDataType.getInstance().objectToJasonArray(studentList);
-			System.out.println(resultJson);
-			
-			ResultSetMapper<DocumentNumber> resultSetD = new ResultSetMapper<DocumentNumber>();
-			List<DocumentNumber> documentNumber = resultSetD.mapRersultSetToObject(getDocumentNumber(), DocumentNumber.class);
-			
-			int dateNumber = Integer.parseInt(simpleDateNumber.format(date));
-			String mounthName = simpleDateMounth.format(date);
-			int dateYear = Integer.parseInt(simpleDateYear.format(date));
-			String dateParam = thaiNumeral(dateNumber)+" "+mounthName+" "+thaiNumeral(dateYear);
-			
-			HashMap<String, Object> param = new HashMap<String, Object>();
-			String pDetail = "	ขอรับรองว่า "+student.getPrefix()+student.getFirstName()+" "+student.getLastName()
-					+ " รหัสประจำตัวนักศึกษา "+thaiNumeral(Long.parseLong(student.getStudentCode()))
-					+ " เป็นนักศึกษา "+student.getPeriod()
-					+ " ระดับ"+student.getLevelCodeName()
-					+ " "+student.getDegreeName()
-					+ " ("+student.getDegreeAbb()+" "+thaiNumeral(student.getStudyYear())+" ปี)"
-					+ " "+student.getProgramName();
-			if(student.getStudyYear() >= student.getStudentYear()){
-				pDetail += " กำลังศึกษาอยู่ปี "+thaiNumeral(student.getStudentYear());
+			ResultSet rs = stmt.getGeneratedKeys();
+			if(rs.next()){
+				reportId = rs.getInt(1);
 			}
-			pDetail += " ที่มหาวิทยาลัยราชภัฏรำไพพรรณี จริง";
-			param.put("sequenceReport", "ที่ "+thaiNumeral(documentNumber.get(0).getRunningNumber())+" / "+thaiNumeral(documentNumber.get(0).getAcadyear()));
-			param.put("pDate", dateParam);
-			param.put("pDetail", pDetail);
-			param.put("pStdName", "ขอรับรองว่า "+student.getPrefix()+student.getFirstName()+" "+student.getLastName());
-			param.put("pStdCode", "รหัสประจำตัวนักศึกษา "+thaiNumeral(Long.parseLong(student.getStudentCode())));
-			param.put("pFacultyName", student.getFacultyName());
-			param.put("pPeriod", "เป็นนักศึกษา "+student.getPeriod());
-			param.put("pLevelName", "ระดับ"+student.getLevelCodeName());
-			param.put("pDegreeName", student.getDegreeName());
-			param.put("pDegreeAbb", "("+student.getDegreeAbb()+" "+thaiNumeral(student.getStudyYear())+" ปี)");
-			param.put("pStudyYear", thaiNumeral(student.getStudyYear()));
-			param.put("pProgramName", student.getProgramName());
-			param.put("pStudentYear", "กำลังศึกษาอยู่ปี "+thaiNumeral(student.getStudentYear()));
-			JasperReport jasperReport = JasperCompileManager.compileReport("/Users/rattasit/workspace/IDR/report/IDRReport.jrxml");
-			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,param,new JREmptyDataSource());
-			JasperExportManager.exportReportToPdfFile(jasperPrint, "/Users/rattasit/workspace/IDR/report/test.pdf");
-		} catch (JRException e) {
+			
+			reportPathSql = "UPDATE REPORT SET REPORTFILE = ? WHERE REPORTID = ?";
+			String reportPath = StaticValue.REPORT_FILE_DIRECTORY+reportId+".pdf";
+			stmt = con.prepareStatement(reportPathSql);
+			stmt.setString(1, reportPath);
+			stmt.setInt(2, reportId);
+			stmt.execute();
+			stmt.close();
+			
+			releaseConnection();
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return reportId;
 	}
 	
 	//overload method
@@ -178,7 +221,6 @@ public class GenerateReportController extends HttpServlet {
 	private String NameFormat(String str){
 		str = str.toLowerCase();
 		str = str.replaceFirst(str.substring(0, 1), str.substring(0, 1).toUpperCase());
-		System.out.println(str);
 		return str;
 	}
 	
@@ -274,12 +316,27 @@ public class GenerateReportController extends HttpServlet {
 		return result;
 	}
 	
+	private ResultSet getDataMySql(String sql){
+		ResultSet result = null;
+		
+		try {
+			ConnectionDB.getInstance();
+			con = ConnectionDB.getRBRUMySQL();
+			Statement statement = con.createStatement();
+			result = statement.executeQuery(sql);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+		
+	}
+	
 	private void releaseConnection(){
 		if(con != null){
 			try {
 				con.close();
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace(System.err);
 			}
 		}

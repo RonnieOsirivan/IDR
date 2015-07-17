@@ -12,7 +12,7 @@ public class StudentEng {
 	@Column(name="STUDENTSURNAMEENG")
 	private String studentSurname;
 	@Column(name="STUDENTCODE")
-	private String studnetCode;
+	private String studentCode;
 	@Column(name="DEGREECERTIFICATEENG")
 	private String degreeCerificate;
 	@Column(name="PROGRAMNAMEENG")
@@ -37,11 +37,11 @@ public class StudentEng {
 	public void setStudentSurname(String studentSurname) {
 		this.studentSurname = studentSurname;
 	}
-	public String getStudnetCode() {
-		return studnetCode;
+	public String getStudentCode() {
+		return studentCode;
 	}
-	public void setStudnetCode(String studnetCode) {
-		this.studnetCode = studnetCode;
+	public void setStudentCode(String studentCode) {
+		this.studentCode = studentCode;
 	}
 	public String getDegreeCerificate() {
 		return degreeCerificate;
