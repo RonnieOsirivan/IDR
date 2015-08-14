@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security" 
+	xmlns:beans="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/security 
+						http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+			
+	<http pattern="/favicon/**" security="none" />
+	<http pattern="/font-face/**" security="none" />
+	<http pattern="/images/**" security="none" />
+	<http pattern="/css/**" security="none" />
+	<http pattern="/js/**" security="none" />
+	<!--<http pattern="/login**" security="none" />-->
+	
+	<http use-expressions="true" create-session="always">
+			<intercept-url pattern="/management_Admin.html" access="hasRole('ROLE_ADMIN')" />
+			<intercept-url pattern="/requestForm.html" access="hasRole('ROLE_STUDENT')" />
+	 		<access-denied-handler error-page="/403.html" />
+
+	 		<form-login login-page="/login.html"
+	 			default-target-url="/LoginController"
+	 			authentication-failure-url="/login.html?error=true"
+	 			username-parameter="username" password-parameter="password"
+	 			always-use-default-target="true" />
+
+	 		<logout logout-success-url="/login.html"
+	 			invalidate-session="true" logout-url="/logout"
+	 			 />
+	 		<remember-me />
+		<headers>
+			<cache-control />
+			<xss-protection/>
+		</headers>	
+		<session-management>
+			<concurrency-control max-sessions="2" error-if-maximum-exceeded="true"/>
+		</session-management>
+	</http>		
+	
+	<authentication-manager>
+		<authentication-provider >
+			<jdbc-user-service data-source-ref="testDataSource"
+				users-by-username-query="select USERNAME,value AS PASSWORD,1 AS enabled from radcheck where USERNAME = ?"
+				authorities-by-username-query="SELECT RAD.username AS USERNAME,
+												IFNULL(R.ROLE,'ROLE_STUDENT') AS AUTHORITY
+												FROM radcheck RAD 
+												LEFT JOIN ROLE R ON RAD.username = R.USERNAME
+												WHERE RAD.username = ?" />
+		</authentication-provider>
+	</authentication-manager>	
+</beans:beans>

@@ -14,15 +14,18 @@
 <title>Bootstrap test</title>
 </head>
 <body>
-
+	
 	<div id="toolbar" class="btn-group">
-		<button id="home" type="button" class="btn btn-default">
-	        <i class="glyphicon glyphicon-home"></i>
-	    </button>
-	    <button id="remove" type="button" class="btn btn-default" disabled>
-	        <i class="glyphicon glyphicon-trash"></i>
-	    </button>
+		<form action="/IDR/logout" method="get" id="logoutForm">
+			<button id="home" type="button" class="btn btn-default">
+	        	<i class="glyphicon glyphicon-off"></i>
+	    	</button>
+			<button id="remove" type="button" class="btn btn-default" disabled>
+				<i class="glyphicon glyphicon-trash"></i>
+			</button>
+		</form>
 	</div>
+	
 	<div class="container">
 		<table  id="table"
 				data-toggle="table"
@@ -57,7 +60,7 @@
 	        });
 	    	
 	    	$('#home').click(function(){
-	    		window.location.assign("./requestForm.html");
+	    		$('#logoutForm').submit();
 	    	});
 	    	
 			$('#remove').click(function () {

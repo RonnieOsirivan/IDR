@@ -2,6 +2,7 @@ package th.ac.rbru.idr.controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.Principal;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -42,7 +43,9 @@ public class RequestController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,IOException {
 		ResultSetMapper<Student> student = new ResultSetMapper<Student>();
 		try {
-			List<Student> studentList = student.mapRersultSetToObject(getStudentInfo(), Student.class);
+			
+			Principal principal = request.getUserPrincipal();
+			List<Student> studentList = student.mapRersultSetToObject(getStudentInfo(principal.getName()), Student.class);
 			String resultJson = ConvertDataType.getInstance().objectToJasonArray(studentList);
 			sendResponse(request, response, resultJson);
 		} catch (SQLException e) {
@@ -66,7 +69,7 @@ public class RequestController extends HttpServlet {
 		releaseConnection();
 	}
 	
-	private ResultSet getStudentInfo() throws SQLException{
+	private ResultSet getStudentInfo(String userName) throws SQLException{
 		String sql = " 	SELECT STDM.STUDENTCODE AS STUDENTCODE ,	"
 				+" 	  STDM.STUDENTNAME      AS STUDENTNAME,	"
 				+" 	  STDM.STUDENTSURNAME ,	"
@@ -89,7 +92,7 @@ public class RequestController extends HttpServlet {
 				+" 	  LEVELID LE,	"
 				+" 	  PROGRAM PRO,	"
 				+" 	  DEGREE DE	"
-				+" 	WHERE STDM.STUDENTCODE LIKE '5724442074'	"
+				+" 	WHERE STDM.STUDENTCODE LIKE '"+userName+"'"
 				+" 	AND STDM.FACULTYID = FAC.FACULTYID	"
 				+" 	AND STDM.PREFIXID  = PRE.PREFIXID	"
 				+" 	AND STDM.LEVELID = LE.LEVELID	"

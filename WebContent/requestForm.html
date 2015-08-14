@@ -14,9 +14,11 @@
         <link rel="stylesheet" type="text/css" href="css/style.css" />
 		<link rel="stylesheet" type="text/css" href="css/animate-custom.css" />
 		<link rel="stylesheet" type="text/css" href="css/sweetalert.css" />
+		<link rel="stylesheet" type="text/css" href="./js/pace/themes/macOSX.css"/>
 		<script type="text/javascript" src="./js/phoneNumberFormat.js"></script>
 		<script type="text/javascript" src="./bootstrap/jquery/dist/jquery.js"></script>
 		<script type="text/javascript" src="./js/sweetalert-dev.js"></script>
+		<script type="text/javascript" src="./js/pace/pace.js"></script>
 </head>
 <body>
  <div class="container">
@@ -42,7 +44,6 @@
                                 <p>
                                 	<select id="reportType">
                                 		<option value="studentStatus" selected="selected">ใบรับรองการเป็นนักศึกษา</option>
-                                		<option value="type2">type2</option>
                                 	</select>
                                 	<!--<input id="checkType" name="checkType" type="checkbox" value="1"/>แบบฟอร์มรับรองการเป็นนักศึกษา
                                 	<input id="checkType" name="checkType" type="checkbox" value="2"/>request type2<br>  -->
@@ -75,8 +76,10 @@
                                 <p class="login button"> 
                                     <input type="button" value="request" onclick="valthisform();"/> 
 								</p>
-                                <p class="change_link">
-									<a href="#toregister" class="to_register">Log out</a>
+                            </form>
+                            <form action="/IDR/logout" method="get" id="logoutForm">
+                            	<p class="change_link">
+									<a href="javascript:formSubmit()" class="to_register">Log out</a>
 								</p>
                             </form>
                         </div>
@@ -86,7 +89,9 @@
         </div>
         
         <script type="text/javascript">
-        
+        function formSubmit(){
+        	document.getElementById("logoutForm").submit();
+        }
         //get user information
         var xmlhttp = loadXMLDoc();
         var json;
@@ -180,7 +185,7 @@
     					confirmButtonText: "ok"
     					},
     					function(){
-    						window.location.assign("./management.html");
+    						window.location.assign("./management_Student.html");
     					});
     			}
             }

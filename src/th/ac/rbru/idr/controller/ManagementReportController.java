@@ -15,10 +15,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+
 import th.ac.rbru.idr.model.Report;
 import th.ac.rbru.idr.util.ConnectionDB;
 import th.ac.rbru.idr.util.ConvertDataType;
 import th.ac.rbru.idr.util.ResultSetMapper;
+import th.ac.rbru.idr.util.RoleCheck;
 import th.ac.rbru.idr.util.StaticValue;
 
 /**
@@ -41,10 +45,18 @@ public class ManagementReportController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String userName = ((User)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+		RoleCheck roleCheck = new RoleCheck();
 		if(request.getParameter("reportId")!=null){
+			//view file report type pdf
 			getReportPdf(request,response);
 		}else{
-			getReportList("5724442074",request,response);
+			//view report list for management page
+			if(roleCheck.hasRole("ROLE_ADMIN")){
+				getReportListForAdmin(request, response);
+			}else{
+				getReportListForStudent(userName,request,response);
+			}
 		}
 	}
 
@@ -59,9 +71,20 @@ public class ManagementReportController extends HttpServlet {
 		}
 	}
 	
-	private void getReportList(String studentCode,HttpServletRequest request, HttpServletResponse response) throws IOException{
+	private void getReportListForStudent(String studentCode,HttpServletRequest request, HttpServletResponse response) throws IOException{
 		ResultSetMapper<Report> reportResult = new ResultSetMapper<Report>();
-		List<Report> reportList = reportResult.mapRersultSetToObject(getReportListSql(studentCode), Report.class);
+		List<Report> reportList = reportResult.mapRersultSetToObject(getReportListForStudentSql(studentCode), Report.class);
+		reportList = addLinkPdf(reportList);
+		String resultJson = "";
+		if(reportList != null){
+			resultJson = ConvertDataType.getInstance().objectToJasonArray(reportList);
+		}
+		sendResponse(request, response, resultJson);
+	}
+	
+	private void getReportListForAdmin(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		ResultSetMapper<Report> reportResult = new ResultSetMapper<Report>();
+		List<Report> reportList = reportResult.mapRersultSetToObject(getReportListForAdminSql(), Report.class);
 		reportList = addLinkPdf(reportList);
 		String resultJson = "";
 		if(reportList != null){
@@ -137,7 +160,7 @@ public class ManagementReportController extends HttpServlet {
 		return reportList;
 	}
 	
-	private ResultSet getReportListSql(String studentCode){
+	private ResultSet getReportListForStudentSql(String studentCode){
 		String sql = "	SELECT RP.REPORTID AS REPORTID ,	"+
 				"	STD.STUDENTCODE    AS STUDENTCODE,"+
 				"	STD.STUDENTNAME    AS STUDENTNAME,"+
@@ -146,6 +169,18 @@ public class ManagementReportController extends HttpServlet {
 				"	FROM STUDENT AS STD ,REPORT AS RP , REPORTTYPE AS RPT	"+
 				"	WHERE STD.STUDENTCODE = "+studentCode+
 				"	AND STD.STUDENTCODE = RP.STUDENTCODE	"+
+				"	AND RP.REPORTTYPEID = RPT.REPORTTYPEID";
+		return getDataMySql(sql);
+	}
+	
+	private ResultSet getReportListForAdminSql(){
+		String sql = "	SELECT RP.REPORTID AS REPORTID ,	"+
+				"	STD.STUDENTCODE    AS STUDENTCODE,	"+
+				"	STD.STUDENTNAME    AS STUDENTNAME,	"+
+				"	RPT.REPORTNAMETHAI AS REPORTNAMETHAI,	"+
+				"	RP.CREATEDATE AS CREATEDATE	"+
+				"	FROM STUDENT AS STD ,REPORT AS RP , REPORTTYPE AS RPT	"+
+				"	WHERE STD.STUDENTCODE = RP.STUDENTCODE	"+
 				"	AND RP.REPORTTYPEID = RPT.REPORTTYPEID";
 		return getDataMySql(sql);
 	}

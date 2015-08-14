@@ -32,10 +32,11 @@
                     <a class="hiddenanchor" id="tologin"></a>
                     <div id="wrapper">
                         <div id="login" class="animate form">
-                            <form  action="./LoginController" autocomplete="on" method="post"> 
+                            <form  name="j" action="/IDR/j_spring_security_check" autocomplete="on" method="post"> 
                                 <h1>Log in</h1> 
+                                <div id="logInFailure" style="color:#FF0000"></div>
                                 <p> 
-                                    <label for="username" class="uname" data-icon="u" > Your username </label>
+                                    <label for="username" class="uname" data-icon="u"> Your username </label>
                                     <input id="username" name="username" required="required" type="text" placeholder="username"/>
                                 </p>
                                 <p> 
@@ -43,7 +44,7 @@
                                     <input id="password" name="password" required="required" type="password" placeholder="eg. X8df!90EO" /> 
                                 </p>
                                 <p class="login button"> 
-                                    <input type="submit" value="Login" /> 
+                                    <input type="submit" name="submit" value="Login" /> 
 								</p>
                                 <p class="change_link">
 									forgot password?
@@ -57,4 +58,10 @@
             </section>
         </div>
     </body>
+    <script type="text/javascript">
+    	var myParam = location.search.split('error=')[1];
+    	if(myParam){
+    		document.getElementById("logInFailure").innerHTML = "Incorrect username or password";
+    	}
+    </script>
 </html>

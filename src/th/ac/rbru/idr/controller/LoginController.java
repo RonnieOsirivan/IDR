@@ -1,11 +1,19 @@
 package th.ac.rbru.idr.controller;
 
 import java.io.IOException;
+import java.util.Collection;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import th.ac.rbru.idr.util.RoleCheck;
 
 /**
  * Servlet implementation class LoginController
@@ -26,7 +34,15 @@ public class LoginController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		RoleCheck roleCheck = new RoleCheck();
+		if(roleCheck.hasRole("ROLE_ADMIN")){
+			response.sendRedirect("./management_Admin.html");
+		}else if(roleCheck.hasRole("ROLE_STUDENT")){
+			System.out.println("Role studenttttttttttt");
+			response.sendRedirect("./requestForm.html");
+		}else{
+			response.sendRedirect("./403.html");
+		}
 	}
 
 	/**
@@ -34,6 +50,5 @@ public class LoginController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println(request.getParameter("username"));
-		response.sendRedirect("./requestForm.html?username="+request.getParameter("username"));
 	}
 }
