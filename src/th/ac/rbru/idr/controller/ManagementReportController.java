@@ -4,10 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -74,7 +77,9 @@ public class ManagementReportController extends HttpServlet {
 	private void getReportListForStudent(String studentCode,HttpServletRequest request, HttpServletResponse response) throws IOException{
 		ResultSetMapper<Report> reportResult = new ResultSetMapper<Report>();
 		List<Report> reportList = reportResult.mapRersultSetToObject(getReportListForStudentSql(studentCode), Report.class);
-		reportList = addLinkPdf(reportList);
+		reportList = addReportNameLang(reportList);
+//		reportList = addLinkPdf(reportList);
+		reportList = convertToBuddhistDate(reportList);
 		String resultJson = "";
 		if(reportList != null){
 			resultJson = ConvertDataType.getInstance().objectToJasonArray(reportList);
@@ -85,7 +90,9 @@ public class ManagementReportController extends HttpServlet {
 	private void getReportListForAdmin(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		ResultSetMapper<Report> reportResult = new ResultSetMapper<Report>();
 		List<Report> reportList = reportResult.mapRersultSetToObject(getReportListForAdminSql(), Report.class);
+		reportList = addReportNameLang(reportList);
 		reportList = addLinkPdf(reportList);
+		reportList = convertToBuddhistDate(reportList);
 		String resultJson = "";
 		if(reportList != null){
 			resultJson = ConvertDataType.getInstance().objectToJasonArray(reportList);
@@ -151,10 +158,35 @@ public class ManagementReportController extends HttpServlet {
 		response.sendRedirect("./reportFile/"+request.getParameter("reportId")+".pdf");
 	}
 	
+	private List<Report> addReportNameLang(List<Report> reportList){
+		if(reportList != null){
+			for (Report report : reportList) {
+				if(("TH").equalsIgnoreCase(report.getLanguage())){
+					report.setReportName(report.getReportName()+"(ไทย)");
+				}else{
+					report.setReportName(report.getReportName()+"(ENG)");
+				}
+			}
+		}
+		return reportList;
+	}
+	
 	private List<Report> addLinkPdf(List<Report> reportList){
 		if(reportList !=null){
 			for (Report report : reportList) {
 				report.setReportName("<a href=./ManagementReportController?reportId="+report.getReportId()+" target=_blank>"+report.getReportName()+"</a>");
+			}
+		}
+		return reportList;
+	}
+	
+	private List<Report> convertToBuddhistDate(List<Report> reportList){
+		Date date;
+		SimpleDateFormat sFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm",new Locale("th","th"));
+		if(reportList != null){
+			for (Report report : reportList) {
+				date = new Date((report.getCreateDate()).getTime());
+				report.setCreateDateString(sFormat.format(date));
 			}
 		}
 		return reportList;
@@ -165,6 +197,7 @@ public class ManagementReportController extends HttpServlet {
 				"	STD.STUDENTCODE    AS STUDENTCODE,"+
 				"	STD.STUDENTNAME    AS STUDENTNAME,"+
 				"	RPT.REPORTNAMETHAI AS REPORTNAMETHAI,	"+
+				"	RP.LANGUAGE AS LANGUAGE , "+
 				"	RP.CREATEDATE AS CREATEDATE	"+
 				"	FROM STUDENT AS STD ,REPORT AS RP , REPORTTYPE AS RPT	"+
 				"	WHERE STD.STUDENTCODE = "+studentCode+
@@ -178,6 +211,7 @@ public class ManagementReportController extends HttpServlet {
 				"	STD.STUDENTCODE    AS STUDENTCODE,	"+
 				"	STD.STUDENTNAME    AS STUDENTNAME,	"+
 				"	RPT.REPORTNAMETHAI AS REPORTNAMETHAI,	"+
+				"	RP.LANGUAGE AS LANGUAGE , "+
 				"	RP.CREATEDATE AS CREATEDATE	"+
 				"	FROM STUDENT AS STD ,REPORT AS RP , REPORTTYPE AS RPT	"+
 				"	WHERE STD.STUDENTCODE = RP.STUDENTCODE	"+
@@ -205,11 +239,7 @@ public class ManagementReportController extends HttpServlet {
 		File afile;
 		for (String id : reportIdArray) {
 			afile = new File(StaticValue.REPORT_FILE_DIRECTORY+id+".pdf");
-			if(afile.renameTo(new File(StaticValue.REPORT_TRASH_DIRECTORY+afile.getName()))){
-				System.out.println("File is moved successful !");
-			}else{
-				System.out.println("File is failed to move!");
-			}
+			afile.renameTo(new File(StaticValue.REPORT_TRASH_DIRECTORY+afile.getName()));
 		}
 	}
 	

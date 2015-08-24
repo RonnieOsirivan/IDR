@@ -49,28 +49,28 @@
                                 	<input id="checkType" name="checkType" type="checkbox" value="2"/>request type2<br>  -->
                                 </p> 
                                 <p>
-                                	<label>เลือกภาษา</label><br>
-                                	<input id="checkTypeLangThai" name="checkTypeLang" type="checkbox" value="thai"/>ภาษาไทย
-                                	<input id="checkTypeLangEng" name="checkTypeLang" type="checkbox" value="english" onchange="onCheckBoxChange(this)"/>ภาษาอังกฤษ
+                                	<label>*Select Language</label><br>
+                                	<input id="checkTypeLangThai" name="checkTypeLang" type="checkbox" value="thai"/>Thai
+                                	<input id="checkTypeLangEng" name="checkTypeLang" type="checkbox" value="english" onchange="onCheckBoxChange(this)"/>English
                                 </p>
                                 
                                 <div id="inputName" style="display:none">
                                 	<p>
-	                                	<label for="firstName" class="uname"> First name </label>
+	                                	<label for="firstName" class="uname"> *First name </label>
 	                                	<input id="firstName" name="firstName" type="text" placeholder="Enter your first name">
                                 	</p>
                                 	<p>
-                                		<label for="lastName" class="uname"> Last name </label>
+                                		<label for="lastName" class="uname"> *Last name </label>
                                 		<input id="surName" name="lastName" type="text" placeholder="Enter your last name">
                                 	</p>
                                 </div>
                                 
                                 <p> 
-                                    <label for="telephone" class="uname" >เบอร์โทรศัพท์</label>
+                                    <label for="telephone" class="uname" >*Telephone Number</label>
                                     <input id="telephoneNumber" name="telephoneNumber" type="text" onkeydown="backspacerDOWN(this,event);" onkeyup="backspacerUP(this,event);" placeholder="Your Telephone Number"/>
                                 </p>
                                 <p>
-                                	<label for="reason" class="uname" >นำไปใช้เพื่อ</label>
+                                	<label for="reason" class="uname" >Use For</label>
                                 	<input id="reason" name="reason" type="text" placeholder="Use for">
                                 </p>
                                 <p class="login button"> 
@@ -79,6 +79,7 @@
                             </form>
                             <form action="/IDR/logout" method="get" id="logoutForm">
                             	<p class="change_link">
+                            		<a href="./main.html" class="to_register">back</a>
 									<a href="javascript:formSubmit()" class="to_register">Log out</a>
 								</p>
                             </form>

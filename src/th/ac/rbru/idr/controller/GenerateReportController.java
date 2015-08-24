@@ -22,11 +22,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.sf.jasperreports.engine.JRException;
-import th.ac.rbru.idr.model.DocumentNumber;
 import th.ac.rbru.idr.model.Student;
 import th.ac.rbru.idr.model.StudentEng;
 import th.ac.rbru.idr.util.ConnectionDB;
 import th.ac.rbru.idr.util.GenerateReport;
+import th.ac.rbru.idr.util.GennerateDocumentNum;
 import th.ac.rbru.idr.util.ResultSetMapper;
 import th.ac.rbru.idr.util.StaticValue;
 
@@ -81,9 +81,7 @@ public class GenerateReportController extends HttpServlet {
 		SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy",Locale.US);
 		ResultSetMapper<StudentEng> studentResult = new ResultSetMapper<StudentEng>();
 		StudentEng studentEng = (studentResult.mapRersultSetToObject(getStudentInfoEng(request.getParameter("studentCode")), StudentEng.class)).get(0);
-		
-		ResultSetMapper<DocumentNumber> resultSetD = new ResultSetMapper<DocumentNumber>();
-		DocumentNumber documentNumber = (resultSetD.mapRersultSetToObject(getDocumentNumber(), DocumentNumber.class)).get(0);
+		HashMap<String, Integer> map = new GennerateDocumentNum().getDocumentNum();
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		String detailParam = "	This is to cerify that "+NameFormat(studentEng.getPrefixName())+" "
@@ -94,12 +92,12 @@ public class GenerateReportController extends HttpServlet {
 				+studentEng.getDegreeCerificate()
 				+" Faculty of "+studentEng.getProgramName()+" in "
 				+studentEng.getFacultyName()+","+" Rambhai Barni Rajabhat University.";
-		param.put("pSequenceReport", "No. "+documentNumber.getRunningNumber()+" / "+documentNumber.getAcadyear());
+		param.put("pSequenceReport", "No. "+map.get("runningNum")+" / "+map.get("acadYear"));
 		param.put("pDate", formatter.format(date));
 		param.put("pDetail", detailParam);
 		
 		int reportId = insertReport(studentEng.getStudentCode(),studentEng.getPrefixName()+studentEng.getStudentName()+" "+studentEng.getStudentSurname(),
-				request.getParameter("telephoneParam"),request.getParameter("useforParam"));
+				request.getParameter("telephoneParam"),request.getParameter("useforParam"),"EN",map.get("docId"));
 		GenerateReport genReport = new GenerateReport();
 		genReport.generarteReport("studentStatusEng",reportId, param);
 		sendResponse(request, response, "Done!");
@@ -117,13 +115,11 @@ public class GenerateReportController extends HttpServlet {
 		List<Student> studentList = resultSet.mapRersultSetToObject(getStudentInfoThai(stdCode), Student.class);
 		Student student = studentList.get(0);
 		
-		ResultSetMapper<DocumentNumber> resultSetD = new ResultSetMapper<DocumentNumber>();
-		List<DocumentNumber> documentNumber = resultSetD.mapRersultSetToObject(getDocumentNumber(), DocumentNumber.class);
-		
 		int dateNumber = Integer.parseInt(simpleDateNumber.format(date));
 		String mounthName = simpleDateMounth.format(date);
 		int dateYear = Integer.parseInt(simpleDateYear.format(date));
 		String dateParam = thaiNumeral(dateNumber)+" "+mounthName+" "+thaiNumeral(dateYear);
+		HashMap<String, Integer> map = new GennerateDocumentNum().getDocumentNum();
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		String pDetail = "	ขอรับรองว่า "+student.getPrefix()+student.getFirstName()+" "+student.getLastName()
@@ -137,12 +133,12 @@ public class GenerateReportController extends HttpServlet {
 			pDetail += " กำลังศึกษาอยู่ปี "+thaiNumeral(student.getStudentYear());
 		}
 		pDetail += " ที่มหาวิทยาลัยราชภัฏรำไพพรรณี จริง";
-		param.put("pSequenceReport", "ที่ "+thaiNumeral(documentNumber.get(0).getRunningNumber())+" / "+thaiNumeral(documentNumber.get(0).getAcadyear()));
+		param.put("pSequenceReport", "ที่ "+thaiNumeral((map.get("runningNum")).intValue())+" / "+thaiNumeral((map.get("acadYear")).intValue()));
 		param.put("pDate", dateParam);
 		param.put("pDetail", pDetail);
 		
 		int reportId = insertReport(student.getStudentCode(),student.getPrefix()+student.getFirstName()+" "+student.getLastName(),
-				request.getParameter("telephoneParam"),request.getParameter("useforParam"));
+				request.getParameter("telephoneParam"),request.getParameter("useforParam"),"TH",map.get("docId"));
 		GenerateReport genReport = new GenerateReport();
 		genReport.generarteReport("studentStatusThai", reportId,param);
 //		FileInputStream pdfStream = convertPdfToBinary("/Users/rattasit/workspace/IDR/WebContent/reportFile/test.pdf");
@@ -161,9 +157,9 @@ public class GenerateReportController extends HttpServlet {
 //		return inputStream;
 //	}
 	
-	private int insertReport(String stdCode,String stdName,String telephoneNum,String usefor){
+	private int insertReport(String stdCode,String stdName,String telephoneNum,String usefor,String language,int docId){
 		String stdInsertSql = "INSERT IGNORE INTO STUDENT(STUDENTCODE,STUDENTNAME,TELEPHONENUMBER) VALUES (?,?,?)";
-		String pdfInsertSql = "INSERT INTO REPORT(STUDENTCODE,REPORTTYPEID,USEFOR,REPORTFILE) VALUES(?,?,?,?)";
+		String pdfInsertSql = "INSERT INTO REPORT(STUDENTCODE,REPORTTYPEID,USEFOR,REPORTFILE,LANGUAGE,DOCUMENTID) VALUES(?,?,?,?,?,?)";
 		String reportPathSql = "";
 		PreparedStatement stmt = null;
 		ConnectionDB.getInstance();
@@ -182,6 +178,8 @@ public class GenerateReportController extends HttpServlet {
 			stmt.setInt(2, 0);
 			stmt.setString(3,usefor);
 			stmt.setString(4, "");
+			stmt.setString(5, language);
+			stmt.setInt(6, docId);
 			stmt.executeUpdate();
 			
 			ResultSet rs = stmt.getGeneratedKeys();
@@ -287,19 +285,20 @@ public class GenerateReportController extends HttpServlet {
 		return getData(sql);
 	}
 	
-	private ResultSet getDocumentNumber() throws SQLException{
-		String sql = " 	SELECT RE.RUNNINGNUMBER+1 AS RUNNINGNUMBER,	"
-				+" 	  TACADYEAR.ACADYEAR      AS ACADYEAR	"
-				+" 	FROM REQUEST RE,	"
-				+" 	  (SELECT TO_CHAR(sysdate,'YYYY','NLS_CALENDAR=''THAI BUDDHA'' NLS_DATE_LANGUAGE=THAI') - DFS.ACADYEARADJ AS ACADYEAR	"
-				+" 	  FROM DEFAULTSEMESTER DFS	"
-				+" 	  WHERE DFS.SYSAPPID = 25	"
-				+" 	  AND DFS.SYSMONTH   = TO_CHAR(SYSDATE,'MM')	"
-				+" 	  ) TACADYEAR	"
-				+" 	WHERE ROWNUM <= 1	"
-				+" 	ORDER BY RE.REQUESTID DESC";
-		return getData(sql);
-	}
+//	private ResultSet getDocumentNumber() throws SQLException{
+//		String sql = " 	SELECT RE.RUNNINGNUMBER+1 AS RUNNINGNUMBER,	"
+//				+" 	  TACADYEAR.ACADYEAR      AS ACADYEAR	"
+//				+" 	FROM REQUEST RE,	"
+//				+" 	  (SELECT TO_CHAR(sysdate,'YYYY','NLS_CALENDAR=''THAI BUDDHA'' NLS_DATE_LANGUAGE=THAI') - DFS.ACADYEARADJ AS ACADYEAR	"
+//				+" 	  FROM DEFAULTSEMESTER DFS	"
+//				+" 	  WHERE DFS.SYSAPPID = 25	"
+//				+" 	  AND DFS.SYSMONTH   = TO_CHAR(SYSDATE,'MM')	"
+//				+" 	  ) TACADYEAR	"
+//				+" 	WHERE ROWNUM <= 1	"
+//				+" 	ORDER BY RE.REQUESTID DESC";
+//		System.out.println(sql);
+//		return getData(sql);
+//	}
 	
 	private ResultSet getData(String sql) throws SQLException {
 		ResultSet result = null;
@@ -316,21 +315,6 @@ public class GenerateReportController extends HttpServlet {
 		return result;
 	}
 	
-	private ResultSet getDataMySql(String sql){
-		ResultSet result = null;
-		
-		try {
-			ConnectionDB.getInstance();
-			con = ConnectionDB.getRBRUMySQL();
-			Statement statement = con.createStatement();
-			result = statement.executeQuery(sql);
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return result;
-		
-	}
 	
 	private void releaseConnection(){
 		if(con != null){

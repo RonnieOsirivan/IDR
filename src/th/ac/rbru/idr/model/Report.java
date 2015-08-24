@@ -16,8 +16,11 @@ public class Report {
 	private String studentName;
 	@Column(name="REPORTNAMETHAI")
 	private String reportName;
+	@Column(name="LANGUAGE")
+	private String language;
 	@Column(name="CREATEDATE")
 	private Timestamp createDate;
+	private String createDateString;
 	
 	public int getReportId() {
 		return reportId;
@@ -43,10 +46,22 @@ public class Report {
 	public void setReportName(String reportName) {
 		this.reportName = reportName;
 	}
+	public String getLanguage() {
+		return language;
+	}
+	public void setLanguage(String language) {
+		this.language = language;
+	}
 	public Timestamp getCreateDate() {
 		return createDate;
 	}
 	public void setCreateDate(Timestamp createDate) {
 		this.createDate = createDate;
+	}
+	public String getCreateDateString() {
+		return createDateString;
+	}
+	public void setCreateDateString(String createDateString) {
+		this.createDateString = createDateString;
 	}
 }

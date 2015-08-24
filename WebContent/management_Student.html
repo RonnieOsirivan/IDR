@@ -11,12 +11,15 @@
 	<link href="./bootstrap/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
 	<link href="./bootstrap/bootstrap-table/css/bootstrap-table.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="css/sweetalert.css" />		
-<title>Bootstrap test</title>
+<title>Management</title>
 </head>
 <body>
 	
 	<div id="toolbar" class="btn-group">
 		<form action="/IDR/logout" method="get" id="logoutForm">
+			<button id="back" type="button" class="btn btn-default">
+	        	<i class="glyphicon glyphicon-chevron-left"></i>
+	    	</button>
 			<button id="home" type="button" class="btn btn-default">
 	        	<i class="glyphicon glyphicon-off"></i>
 	    	</button>
@@ -26,8 +29,6 @@
 	<div class="container">
 		<table  id="table"
 				data-toggle="table"
-				data-select-item-name="selectItem"
-				data-maintain-selected="true"
 				data-search="true"
 				data-show-columns="true"
 				data-pagination="true"
@@ -37,12 +38,11 @@
 				data-url="./ManagementReportController">
 		    <thead>
 		    <tr>
-		    	<th data-field="state" data-checkbox="true"></th>
 		        <th data-field="reportId" data-visible="false">report ID</th>
 		        <th data-field="studentCode" data-sortable="true">Student Code</th>
 		        <th data-field="studentName" data-sortable="true">Name</th>
 		        <th data-field="reportName" data-sortable="true">Report Type</th>
-		        <th data-field="createDate" data-sortable="true">Date</th>
+		        <th data-field="createDateString" data-sortable="true">Date</th>
 		    </tr>
 		    </thead>
 		</table>
@@ -54,6 +54,9 @@
 	    	$('#home').click(function(){
 	    		$('#logoutForm').submit();
 	    	});
+	    	$('#back').click(function(){
+	    		window.location.assign("./main.html");
+	    	})
 	    });
 	</script>
 </body>

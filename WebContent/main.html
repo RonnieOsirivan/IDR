@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+    <head>
+        <meta charset="UTF-8" />
+        <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">  -->
+        <title>Internet Document Request</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+        <meta name="description" content="Internet Document Request" />
+        <meta name="keywords" content="html5, css3, form, switch, animation, :target, pseudo-class" />
+        <meta name="author" content="Codrops" />
+        <link rel="stylesheet" type="text/css" href="css/demo.css" />
+        <link rel="stylesheet" type="text/css" href="css/style.css" />
+		<link rel="stylesheet" type="text/css" href="css/animate-custom.css" />
+    </head>
+    <body>
+        <div class="container">
+            <!-- Codrops top bar -->
+            <div class="codrops-top">
+                <div class="clr"></div>
+            </div><!--/ Codrops top bar -->
+            <header>
+                <h1>Internet Document Request <span>RBRU</span></h1>
+            </header>
+            <section>				
+                <div id="container_demo" >
+                    <!-- hidden anchor to stop jump http://www.css3create.com/Astuce-Empecher-le-scroll-avec-l-utilisation-de-target#wrap4  -->
+                    <a class="hiddenanchor" id="toregister"></a>
+                    <a class="hiddenanchor" id="tologin"></a>
+                    <div id="wrapper">
+                        <div id="login" class="animate form">
+                        	<h1>Main Menu</h1>
+							<input type="button" value="Request Menu" onclick="redirect('request')" style="font-size: 250%;font-family: 'FranchiseRegular'">
+							<br>
+							<br>
+							<input type="button" value="Managment Menu" onclick="redirect('management')" style="font-size: 250%;font-family: 'FranchiseRegular'">
+							<br>
+							<br>
+							<br>
+							<form action="/IDR/logout" method="get" id="logoutForm">
+								<p class="change_link">
+									<a href="javascript:formSubmit()" class="to_register">Log out</a>
+								</p>
+							</form>
+                        </div>
+                    </div>
+                </div>  
+            </section>
+        </div>
+        
+        <script type="text/javascript">
+        	function redirect(menu){
+        		if("request" == menu){
+        			window.location.assign("./requestForm.html");
+        		}else{
+        			window.location.assign("./management_Student.html");
+        		}
+        	}
+        	
+        	function formSubmit(){
+            	document.getElementById("logoutForm").submit();
+            }
+        	
+        </script>
+    </body>
+</html>
