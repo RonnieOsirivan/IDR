@@ -16,9 +16,10 @@
 	
 	<http use-expressions="true" create-session="always">
 			<intercept-url pattern="/management_Admin.html" access="hasRole('ROLE_ADMIN')" />
+			<intercept-url pattern="/reportFile/**" access="hasRole('ROLE_ADMIN')" />
 			<intercept-url pattern="/main.html" access="hasRole('ROLE_STUDENT')" />
 			<intercept-url pattern="/management_Student.html" access="hasRole('ROLE_STUDENT')" />
-			<intercept-url pattern="/requestForm.html" access="hasRole('ROLE_STUDENT')" />
+			<intercept-url pattern="/requestForm.html" access="hasAnyRole('ROLE_STUDENT','ROLE_ADMIN')" />
 	 		<access-denied-handler error-page="/403.html" />
 
 	 		<form-login login-page="/login.html"
@@ -34,7 +35,7 @@
 			<cache-control />
 			<xss-protection/>
 		</headers>	
-		<session-management>
+		<session-management invalid-session-url="/login.html">
 			<concurrency-control max-sessions="1" error-if-maximum-exceeded="true"/>
 		</session-management>
 	</http>		

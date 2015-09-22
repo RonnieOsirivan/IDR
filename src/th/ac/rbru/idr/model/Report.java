@@ -20,6 +20,8 @@ public class Report {
 	private String language;
 	@Column(name="CREATEDATE")
 	private Timestamp createDate;
+	@Column(name="REPORTPRINTSTATUS")
+	private int reportPrintStatus;
 	private String createDateString;
 	
 	public int getReportId() {
@@ -57,6 +59,12 @@ public class Report {
 	}
 	public void setCreateDate(Timestamp createDate) {
 		this.createDate = createDate;
+	}
+	public int getReportPrintStatus() {
+		return reportPrintStatus;
+	}
+	public void setReportPrintStatus(int reportPrintStatus) {
+		this.reportPrintStatus = reportPrintStatus;
 	}
 	public String getCreateDateString() {
 		return createDateString;

@@ -1,7 +1,6 @@
 package th.ac.rbru.idr.util;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -54,17 +53,17 @@ public class ResetDocNumScheduler implements ServletContextListener{
 			}
 			
 			if(oldAcadYear != newAcadYear){
+				String sql = "	INSERT INTO DOCUMENTNUM(REPORTTYPEID,DOCUMENTRUNNINGNUM,ACADYEAR,DOCUMENTNUMBER)	"+
+						"	SELECT REPORTTYPEID,0,ACADYEAR+1,'0'	"+
+						"	FROM DOCUMENTNUM	"+
+						"	GROUP BY REPORTTYPEID	";
 				ConnectionDB.getInstance();
 				con = ConnectionDB.getRBRUMySQL();
-				PreparedStatement psmt = con.prepareStatement("INSERT INTO DOCUMENTNUM (DOCUMENTRUNNINGNUM,ACADYEAR) VALUES(?,?)"); 
-				psmt.setInt(1, 0);
-				psmt.setInt(2, newAcadYear);
-				psmt.executeUpdate();
-				psmt.close();
+				Statement stmt = con.createStatement();
+				stmt.executeUpdate(sql);
 			}
 			releaseConnection();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

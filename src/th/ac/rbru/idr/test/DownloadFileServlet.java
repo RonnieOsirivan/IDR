@@ -13,7 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 
 public class DownloadFileServlet extends HttpServlet {
 	 
-    protected void doGet(HttpServletRequest request,
+	private static final long serialVersionUID = -154385784970391892L;
+
+	protected void doGet(HttpServletRequest request,
             HttpServletResponse response) throws ServletException, IOException {
         // reads input file from an absolute path
         String filePath = "E:/Test/Download/MYPIC.JPG";

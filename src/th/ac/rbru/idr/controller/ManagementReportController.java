@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -48,6 +49,7 @@ public class ManagementReportController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal().getClass());
 		String userName = ((User)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
 		RoleCheck roleCheck = new RoleCheck();
 		if(request.getParameter("reportId")!=null){
@@ -155,7 +157,20 @@ public class ManagementReportController extends HttpServlet {
 //			e.printStackTrace();
 //		} 
 //		response.sendRedirect("./reportFile/"+request.getParameter("reportId")+"after.pdf");
+		markPrint(request.getParameter("reportId"));
 		response.sendRedirect("./reportFile/"+request.getParameter("reportId")+".pdf");
+	}
+	
+	private void markPrint(String reportId){
+		connecctionRBRUMySQL();
+		String sql = "UPDATE REPORT SET REPORTPRINTSTATUS = 1 WHERE REPORTID = ?";
+		try {
+			PreparedStatement stmt = con.prepareStatement(sql);
+			stmt.setInt(1, Integer.parseInt(reportId));
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private List<Report> addReportNameLang(List<Report> reportList){
@@ -174,7 +189,7 @@ public class ManagementReportController extends HttpServlet {
 	private List<Report> addLinkPdf(List<Report> reportList){
 		if(reportList !=null){
 			for (Report report : reportList) {
-				report.setReportName("<a href=./ManagementReportController?reportId="+report.getReportId()+" target=_blank>"+report.getReportName()+"</a>");
+				report.setReportName("<a class='markPrint' href=./ManagementReportController?reportId="+report.getReportId()+" target=_blank>"+report.getReportName()+"</a>");
 			}
 		}
 		return reportList;
@@ -212,6 +227,7 @@ public class ManagementReportController extends HttpServlet {
 				"	STD.STUDENTNAME    AS STUDENTNAME,	"+
 				"	RPT.REPORTNAMETHAI AS REPORTNAMETHAI,	"+
 				"	RP.LANGUAGE AS LANGUAGE , "+
+				"	RP.REPORTPRINTSTATUS AS REPORTPRINTSTATUS,	"+
 				"	RP.CREATEDATE AS CREATEDATE	"+
 				"	FROM STUDENT AS STD ,REPORT AS RP , REPORTTYPE AS RPT	"+
 				"	WHERE STD.STUDENTCODE = RP.STUDENTCODE	"+
@@ -238,8 +254,12 @@ public class ManagementReportController extends HttpServlet {
 		String reportIdArray [] = reportId.split(",");
 		File afile;
 		for (String id : reportIdArray) {
-			afile = new File(StaticValue.REPORT_FILE_DIRECTORY+id+".pdf");
-			afile.renameTo(new File(StaticValue.REPORT_TRASH_DIRECTORY+afile.getName()));
+			// for test
+			afile = new File("/Users/rattasit/workspace/IDR/WebContent/"+StaticValue.REPORT_FILE_DIRECTORY+id+".pdf");
+			afile.renameTo(new File("/Users/rattasit/workspace/IDR/WebContent/"+StaticValue.REPORT_TRASH_DIRECTORY+afile.getName()));
+			
+//			afile = new File(getAbsulutePath()+StaticValue.REPORT_FILE_DIRECTORY+id+".pdf");
+//			afile.renameTo(new File(getAbsulutePath()+StaticValue.REPORT_TRASH_DIRECTORY+afile.getName()));
 		}
 	}
 	
@@ -252,6 +272,11 @@ public class ManagementReportController extends HttpServlet {
 		// Release JDBC pool connection after sent result to client
 		releaseConnection();
 	}
+	
+	 private String getAbsulutePath(){
+	    	String abPath = getServletContext().getRealPath("/");
+	    	return abPath;
+	 }
 	
 	private ResultSet getDataMySql(String sql){
 		ResultSet result = null;
@@ -266,7 +291,11 @@ public class ManagementReportController extends HttpServlet {
 			e.printStackTrace();
 		}
 		return result;
-		
+	}
+	
+	private void connecctionRBRUMySQL(){
+		ConnectionDB.getInstance();
+		con = ConnectionDB.getRBRUMySQL();
 	}
 	
 	private Connection getConnectionMySQLDB(){

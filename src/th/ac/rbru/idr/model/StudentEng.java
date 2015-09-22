@@ -1,5 +1,7 @@
 package th.ac.rbru.idr.model;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
@@ -13,6 +15,8 @@ public class StudentEng {
 	private String studentSurname;
 	@Column(name="STUDENTCODE")
 	private String studentCode;
+	@Column(name="BIRTHDATE")
+	private Date birtDate;
 	@Column(name="DEGREECERTIFICATEENG")
 	private String degreeCerificate;
 	@Column(name="PROGRAMNAMEENG")
@@ -42,6 +46,12 @@ public class StudentEng {
 	}
 	public void setStudentCode(String studentCode) {
 		this.studentCode = studentCode;
+	}
+	public Date getBirtDate() {
+		return birtDate;
+	}
+	public void setBirtDate(Date birtDate) {
+		this.birtDate = birtDate;
 	}
 	public String getDegreeCerificate() {
 		return degreeCerificate;

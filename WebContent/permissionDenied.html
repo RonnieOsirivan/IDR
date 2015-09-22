@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+	<script type="text/javascript" src="./bootstrap/jquery/dist/jquery.js"></script>
+	<script type="text/javascript" src="./bootstrap/bootstrap/dist/js/bootstrap.js"></script>
+	<link href="./bootstrap/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+<title>Permission denied</title>
+</head>
+<body>
+	<style>
+		.text_center{
+			text-align: center;
+		}
+	</style>
+	<div class="text_center">
+		<H2> Permission denied please contract office of the registrar</H2>
+		You will be redirected to login page in <span id="timer">10</span> seconds...
+	</div>
+	
+	<script type="text/javascript">
+		var redirectURL = "./login.html";
+		window.onload = function() { setInterval(countdown, 1000); }
+		function countdown() {
+			var num = parseInt(document.getElementById('timer').innerHTML);
+			if(--num < 0) window.location = redirectURL;
+			else document.getElementById('timer').innerHTML = num;
+		}
+	</script>
+	
+</body>
+</html>

@@ -68,7 +68,7 @@
               testWhileIdle="true"
               testOnBorrow="true"
               testOnReturn="false"
-              validationQuery="SELECT 1"
+              validationQuery="SELECT * FROM IDR.radcheck where USERNAME like 'test%'"
               validationInterval="30000"
               timeBetweenEvictionRunsMillis="5000"
               maxActive="10"

@@ -26,7 +26,7 @@ public class TestIReport {
 			int dateNumber = Integer.parseInt(simpleDateNumber.format(date));
 			int dateYear = Integer.parseInt(simpleDateYear.format(date));
 			
-			HashMap param = new HashMap();
+			HashMap<String, Object> param = new HashMap<String, Object>();
 			param.put("pSequeneReport", "ที่");
 			JasperReport jasperReport = JasperCompileManager.compileReport("report/IDRReport.jrxml");
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,param,new JREmptyDataSource());

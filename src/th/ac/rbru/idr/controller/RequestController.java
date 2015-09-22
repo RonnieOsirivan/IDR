@@ -41,11 +41,16 @@ public class RequestController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,IOException {
-		ResultSetMapper<Student> student = new ResultSetMapper<Student>();
 		try {
-			
-			Principal principal = request.getUserPrincipal();
-			List<Student> studentList = student.mapRersultSetToObject(getStudentInfo(principal.getName()), Student.class);
+			String studentCode = "";
+			if(!request.getParameter("studentCode").equals("null") && !(request.getParameter("studentCode")).isEmpty()){
+				studentCode = request.getParameter("studentCode");
+			}else{
+				Principal principal = request.getUserPrincipal();
+				studentCode = principal.getName();
+			}
+			ResultSetMapper<Student> student = new ResultSetMapper<Student>();
+			List<Student> studentList = student.mapRersultSetToObject(getStudentInfo(studentCode), Student.class);
 			String resultJson = ConvertDataType.getInstance().objectToJasonArray(studentList);
 			sendResponse(request, response, resultJson);
 		} catch (SQLException e) {

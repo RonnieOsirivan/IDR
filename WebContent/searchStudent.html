@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script type="text/javascript" src="./bootstrap/jquery/dist/jquery.js"></script>
+	<script type="text/javascript" src="./bootstrap/bootstrap/dist/js/bootstrap.js"></script>
+	<script type="text/javascript" src="./bootstrap/bootstrap-table/js/bootstrap-table.js"></script>
+	<script type="text/javascript" src="./bootstrap/bootstrap-table/js/bootstrap-table-th-TH.js"></script>
+	<script type="text/javascript" src="./js/sweetalert-dev.js"></script>
+	<link href="./bootstrap/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+	<link href="./bootstrap/bootstrap-table/css/bootstrap-table.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="css/sweetalert.css" />
+<title>Search Student</title>
+</head>
+<body>
+	
+	<div class="container">
+	    <div class="row">
+            <div class="col-lg-6 col-md-offset-3">
+                <div class="well well-sm"><strong><span class="glyphicon glyphicon-asterisk"></span>Required at least one field</strong></div>
+                <div class="form-group">
+                    <label>ID</label>
+                    <div class="input-group">
+                        <input type="number" class="form-control" name="inputId" id="inputId" placeholder="Enter ID number" >
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-asterisk"></span></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>First name</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="inputFirstName" name="inputFirstName" placeholder="Enter first name" >
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-asterisk"></span></span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="InputEmail">Last name</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="inputLastName" name="inputLastName" placeholder="Enter last name" >
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-asterisk"></span></span>
+                    </div>
+                </div>
+                <input type="button" name="Search" id="searchBtn" value="Search" class="btn btn-info pull-right">
+            </div>
+	    </div>
+	</div>
+	
+	<div id="toolbar" class="btn-group">
+		<form action="/IDR/logout" method="get" id="logoutForm">
+			<button id="back" type="button" class="btn btn-default">
+	        	<i class="glyphicon glyphicon-chevron-left"></i>
+	    	</button>
+			<button id="logout" type="button" class="btn btn-default">
+	        	<i class="glyphicon glyphicon-off"></i>
+	    	</button>
+	    	<button id="request" type="button" class="btn btn-default" disabled>
+				<i class="glyphicon glyphicon-user"></i>
+			</button>
+		</form>
+	</div>
+	 <div class="container">
+        <table id="table"
+        		data-click-to-select="true"
+       			data-single-select="true"
+				data-maintain-selected="true"
+				data-toggle="table"
+				data-pagination="true"
+				data-page-list="[5,10,20,25]"
+				data-toolbar="#toolbar"
+				data-cache="false">
+            <thead>
+	            <tr>
+	            	<th data-field="state" data-checkbox="true"></th>
+	                <th data-field="studentCode">student code</th>
+	                <th data-field="firstName">First Name</th>
+	                <th data-field="lastName">Last Name</th>
+	            </tr>
+            </thead>
+        </table>
+    </div>
+	
+	<script type="text/javascript">
+		var table = $('#table');
+		
+		$('#logout').click(function(){
+			sessionStorage.clear();
+			$('#logoutForm').submit();
+		});
+		
+		$('#back').click(function(){
+    		window.location.assign("./management_Admin.html");
+    	})
+    	
+    	$('#request').click(function(){
+    		var checked = table.bootstrapTable('getSelections');
+    		sessionStorage.setItem("studentCode",checked[0].studentCode);
+    		window.location.assign("./requestForm.html");
+    	})
+    	
+    	//enable request button
+    	table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+    		$('#request').prop('disabled', !table.bootstrapTable('getSelections').length);
+        });
+	
+		$(function () {
+		   	$('#searchBtn').click(function(){
+		   		loadData();
+		   	});
+		});
+		
+		function loadData(){
+			var id = (document.getElementById("inputId").value).trim();
+			var firstName = (document.getElementById("inputFirstName").value).trim();
+			var lastName = (document.getElementById("inputLastName").value).trim();
+			
+			if(id.length == 0 && firstName.length == 0 && lastName.length == 0){
+				swal("Enter data at least one field","","error");
+			}else{
+				var xmlhttp = loadXMLDoc();
+				var json;
+				xmlhttp.open("GET","./SearchStudentController?id="+id+"&firstName="+firstName+"&lastName="+lastName,true);
+				xmlhttp.send();
+				xmlhttp.onreadystatechange=function(){
+					if (xmlhttp.readyState==4 && xmlhttp.status==200){
+						json = JSON.parse(xmlhttp.responseText);
+						console.log(json);
+					}
+					table.bootstrapTable('removeAll');
+					table.bootstrapTable('load',json);
+			    }
+			}
+		}
+		
+		//validate input id max length
+		var inputId = document.getElementById("inputId");
+		inputId.oninput = function(){
+			if(this.value.length > 4){
+				this.value = this.value.slice(0,10);
+			}
+		}
+		
+		function loadXMLDoc(){
+	        var xmlhttp;
+	        if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
+				xmlhttp=new XMLHttpRequest();
+	        }
+	        else{// code for IE6, IE5
+	          	xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	        }
+	        return xmlhttp;
+		}
+		
+	</script>
+</body>
+</html>

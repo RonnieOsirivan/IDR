@@ -45,9 +45,19 @@
                                 	<select id="reportType">
                                 		<option value="studentStatus" selected="selected">ใบรับรองการเป็นนักศึกษา</option>
                                 	</select>
-                                	<!--<input id="checkType" name="checkType" type="checkbox" value="1"/>แบบฟอร์มรับรองการเป็นนักศึกษา
-                                	<input id="checkType" name="checkType" type="checkbox" value="2"/>request type2<br>  -->
-                                </p> 
+                                </p>
+                                <p>
+                                	<lable>Select type of student</lable><br>
+                                	<input type="radio" name="studentType" value="local" onclick="onRadioBoxChange(this);" checked>Local student
+                                	<input type="radio" name="studentType" value="foriegn" onclick="onRadioBoxChange(this);">Foriegn student
+                                </p>
+                                <div id="passportNumDiv" style="display:none">
+                                	<p>
+	                                	<label for="passportNum" class="uname"> *Passport Number </label>
+	                                	<input id="passportNum" name="passportNum" type="text" placeholder="Enter passport number" maxlength="10">
+                                	</p>
+                                </div> 
+                                
                                 <p>
                                 	<label>*Select Language</label><br>
                                 	<input id="checkTypeLangThai" name="checkTypeLang" type="checkbox" value="thai"/>Thai
@@ -91,6 +101,7 @@
         
         <script type="text/javascript">
         function formSubmit(){
+        	sessionStorage.clear();
         	document.getElementById("logoutForm").submit();
         }
         //get user information
@@ -100,6 +111,7 @@
         var langParam="";
         var nameParam="";
         var telephoneParam="";
+        var passportNumParam="";
         
         xmlhttp.onreadystatechange=function(){
 			if (xmlhttp.readyState==4 && xmlhttp.status==200){
@@ -107,7 +119,8 @@
 				document.getElementById("userInfo").innerHTML= json[0].prefix+json[0].firstName+" "+json[0].lastName+" รหัส "+json[0].studentCode+" คณะ "+json[0].facultyName;
 			}
         }
-        xmlhttp.open("GET","./RequestController",true);
+        console.log(sessionStorage.getItem("studentCode"));
+        xmlhttp.open("GET","./RequestController?studentCode="+sessionStorage.getItem("studentCode"),true);
         xmlhttp.send();
 	        
         
@@ -117,6 +130,7 @@
             var requestFlag2=false;
             var requestFlag3=false;
             var requestFlag4=false;
+            var requestFlag5=false;
             
             var e =  document.getElementById("reportType");
             reportTypeParam="&reportTypeParam="+e.options[e.selectedIndex].value;
@@ -128,11 +142,23 @@
                 }
             }
             reportTypeParam = reportTypeParam.substring(0, reportTypeParam.length-1);*/
-            console.log(reportTypeParam); 
+            if(!requestFlag5){
+            	if($('input[name="studentType"]:checked').val() === "foriegn"){
+            		if($('#passportNum').val().trim().length == 0){
+            			swal("Please enter passport number", "", "error");
+            			requestFlag5 = false;
+            		}else{
+            			passportNumParam = "&passportNum="+$('#passportNum').val();
+            			requestFlag5 = true;
+            		}
+            	}else{
+            		requestFlag5 = true;
+            	}
+            }
             
-            if(!requestFlag1){
+            if(!requestFlag1 && requestFlag5){
             	swal("Please select report type", "", "error");
-            }else if(requestFlag1){
+            }else if(requestFlag1 && requestFlag5){
             	var checkTypeLang = document.getElementsByName("checkTypeLang");
             	langParam = "&lang=";
             	for(var i=0,l=checkTypeLang.length;i<l;i++){
@@ -142,8 +168,7 @@
                     }
                 }
             	langParam = langParam.substring(0, langParam.length-1);
-            	console.log(langParam)
-            	if(!requestFlag2){
+            	if(!requestFlag2 && requestFlag5){
             		swal("Please select language", "", "error");
             	}
             }
@@ -171,14 +196,13 @@
             	}
             }
             
-            if(requestFlag1 && requestFlag2 && requestFlag3 && requestFlag4){
+            if(requestFlag1 && requestFlag2 && requestFlag3 && requestFlag4 && requestFlag5){
             	sendRequestGenerateReport(json);
             }
         }//valthisform()
         
         function sendRequestGenerateReport(json){
         	var xmlhttp = loadXMLDoc();
-            
             xmlhttp.onreadystatechange=function(){
     			if (xmlhttp.readyState==4 && xmlhttp.status==200){
     				swal({type:"success",
@@ -186,11 +210,15 @@
     					confirmButtonText: "ok"
     					},
     					function(){
-    						window.location.assign("./management_Student.html");
+    						if(sessionStorage.getItem("studentCode") === null){
+    							window.location.assign("./management_Student.html");
+    						}else{
+    							window.location.assign("./management_Admin.html");
+    						}
     					});
     			}
             }
-            xmlhttp.open("GET","./GenerateReportController?studentCode="+json[0].studentCode+reportTypeParam+langParam+nameParam+telephoneParam+"&useforParam="+document.getElementById("reason").value,true);
+            xmlhttp.open("GET","./GenerateReportController?studentCode="+json[0].studentCode + reportTypeParam + passportNumParam + langParam+nameParam + telephoneParam+"&useforParam="+document.getElementById("reason").value,true);
             xmlhttp.send();
         }
         
@@ -221,6 +249,14 @@
         		}
         	}else{
         		document.getElementById('inputName').style.display='none';
+        	}
+        }
+        
+        function onRadioBoxChange(e){
+        	if(e.value==="foriegn"){
+        		document.getElementById('passportNumDiv').style.display='block';
+        	}else{
+        		document.getElementById('passportNumDiv').style.display='none';
         	}
         }
         

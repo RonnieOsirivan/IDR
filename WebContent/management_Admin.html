@@ -17,9 +17,12 @@
 	
 	<div id="toolbar" class="btn-group">
 		<form action="/IDR/logout" method="get" id="logoutForm">
-			<button id="home" type="button" class="btn btn-default">
+			<button id="logout" type="button" class="btn btn-default">
 	        	<i class="glyphicon glyphicon-off"></i>
 	    	</button>
+	    	<button id="request" type="button" class="btn btn-default">
+				<i class="glyphicon glyphicon-user"></i>
+			</button>
 			<button id="remove" type="button" class="btn btn-default" disabled>
 				<i class="glyphicon glyphicon-trash"></i>
 			</button>
@@ -37,6 +40,7 @@
 				data-page-list="[5,10,20,25]"
 				data-toolbar="#toolbar"
 				data-cache="false"
+				data-row-style="rowStyle"
 				data-url="./ManagementReportController">
 		    <thead>
 		    <tr>
@@ -44,7 +48,7 @@
 		        <th data-field="reportId" data-visible="false">report ID</th>
 		        <th data-field="studentCode" data-sortable="true">Student Code</th>
 		        <th data-field="studentName" data-sortable="true">Name</th>
-		        <th data-field="reportName" data-sortable="true">Report Type</th>
+		        <th data-field="reportName" data-sortable="true" data-events="markPrint">Report Type</th>
 		        <th data-field="createDateString" data-sortable="true">Date</th>
 		    </tr>
 		    </thead>
@@ -54,14 +58,20 @@
 	<script type="text/javascript">
 		var $table = $('#table');
 	    $(function () {
+	    	$('#logout').click(function(){
+	    		sessionStorage.clear();
+	    		$('#logoutForm').submit();
+	    	});
+	    	
+	    	$('#request').click(function(){
+	    		window.location.assign("./searchStudent.html");
+	    	});
+	    	
 	    	//enable delete button
 	    	$table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
 	    		$('#remove').prop('disabled', !$table.bootstrapTable('getSelections').length);
 	        });
 	    	
-	    	$('#home').click(function(){
-	    		$('#logoutForm').submit();
-	    	});
 	    	
 			$('#remove').click(function () {
 				swal({title: "Are you sure?",
@@ -76,7 +86,8 @@
 							check.forEach(function(element){
 								param += element.reportId+",";
 							});
-							console.log(param.substring(0,param.length-1));
+							
+							//delete last ","
 							param = param.substring(0,param.length-1);
 							
 							$.post("./ManagementReportController",{
@@ -97,7 +108,6 @@
 							});
 						}
 				);
-				
 				/*var index = [];
 				$('input[name="selectItem"]:checked').each(function () {
 					index.push($(this).data('index'));
@@ -105,6 +115,22 @@
 				alert('Checked row index: ' + index.join(', ')); */
 			});
 	    });
+	    
+		window.markPrint = {
+			'click .markPrint': function (e, value, row, index) {
+				$('.markPrint')[index].parentElement.parentElement.style.backgroundColor = "rgb(227,240,216)"
+			}
+		};
+		
+	    function rowStyle(row,index){
+	    	var classes = ['success'];
+	    	if(row.reportPrintStatus === 1){
+	    		return {
+	    			classes : classes[0]
+	    		};
+	    	}
+	    	return {};
+	    }
 	</script>
 </body>
 </html>
