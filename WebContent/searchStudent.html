@@ -5,7 +5,7 @@
 <script type="text/javascript" src="./bootstrap/jquery/dist/jquery.js"></script>
 	<script type="text/javascript" src="./bootstrap/bootstrap/dist/js/bootstrap.js"></script>
 	<script type="text/javascript" src="./bootstrap/bootstrap-table/js/bootstrap-table.js"></script>
-	<script type="text/javascript" src="./bootstrap/bootstrap-table/js/bootstrap-table-th-TH.js"></script>
+	<script type="text/javascript" src="./bootstrap/bootstrap-table/js/bootstrap-table-en-US.js"></script>
 	<script type="text/javascript" src="./js/sweetalert-dev.js"></script>
 	<link href="./bootstrap/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
 	<link href="./bootstrap/bootstrap-table/css/bootstrap-table.css" rel="stylesheet">
@@ -13,29 +13,33 @@
 <title>Search Student</title>
 </head>
 <body>
+	<div id="lang" style="text-align: right; margin: 10px;">
+		<a href="javascript:getLabel('th_lang');"><img alt="thai" src="./img/thailand.png"></a> 
+		/ <a href="javascript:getLabel('en_lang');"><img alt="thai" src="./img/unitedStates.png"></a>
+	</div>
 	
 	<div class="container">
 	    <div class="row">
             <div class="col-lg-6 col-md-offset-3">
-                <div class="well well-sm"><strong><span class="glyphicon glyphicon-asterisk"></span>Required at least one field</strong></div>
+                <div class="well well-sm"><strong><span class="glyphicon glyphicon-asterisk"></span><span id="header">Required at least one field</span></strong></div>
                 <div class="form-group">
-                    <label>ID</label>
+                    <label id="labelID">ID</label>
                     <div class="input-group">
-                        <input type="number" class="form-control" name="inputId" id="inputId" placeholder="Enter ID number" >
+                        <input type="number" class="form-control" name="inputId" id="inputId" >
                         <span class="input-group-addon"><span class="glyphicon glyphicon-asterisk"></span></span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>First name</label>
+                    <label id="labelFirstName">First name</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" id="inputFirstName" name="inputFirstName" placeholder="Enter first name" >
+                        <input type="text" class="form-control" id="inputFirstName" name="inputFirstName">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-asterisk"></span></span>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label for="InputEmail">Last name</label>
+                    <label id="labelLastName">Last name</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" id="inputLastName" name="inputLastName" placeholder="Enter last name" >
+                        <input type="text" class="form-control" id="inputLastName" name="inputLastName">
                         <span class="input-group-addon"><span class="glyphicon glyphicon-asterisk"></span></span>
                     </div>
                 </div>
@@ -68,7 +72,7 @@
 				data-toolbar="#toolbar"
 				data-cache="false">
             <thead>
-	            <tr>
+	            <tr id="trHeader">
 	            	<th data-field="state" data-checkbox="true"></th>
 	                <th data-field="studentCode">student code</th>
 	                <th data-field="firstName">First Name</th>
@@ -80,6 +84,7 @@
 	
 	<script type="text/javascript">
 		var table = $('#table');
+		var langJson;
 		
 		$('#logout').click(function(){
 			sessionStorage.clear();
@@ -149,6 +154,40 @@
 	        return xmlhttp;
 		}
 		
+		function getLabel(lang){
+			localStorage.setItem("lang",lang);
+			var xmlhttp = loadXMLDoc();
+			xmlhttp.open("GET","./BilangualController?lang="+lang);
+			xmlhttp.send();
+			xmlhttp.onreadystatechange=function(){
+				if (xmlhttp.readyState==4 && xmlhttp.status==200){
+					langJson=JSON.parse(xmlhttp.responseText);
+					setLabel();
+				}
+			}
+		}
+	    
+	    function setLabel(){
+	    	document.getElementById("header").innerHTML = langJson.lang034;
+	    	document.getElementById("labelID").innerHTML = langJson.lang007;
+	    	document.getElementById("labelFirstName").innerHTML = langJson.lang035;
+	    	document.getElementById("labelLastName").innerHTML = langJson.lang036;
+	    	document.getElementById("searchBtn").value = langJson.lang037;
+	    	
+	    	var tr = $("#trHeader").children();
+	    	tr[1].innerHTML = "<th style><div class='th-inner sortable'>"+langJson.lang007+"</div><div class='fht-cell'></div></th>";
+	    	tr[2].innerHTML = "<th style><div class='th-inner sortable'>"+langJson.lang035+"</div><div class='fht-cell'></div></th>";
+		    tr[3].innerHTML = "<th style><div class='th-inner sortable'>"+langJson.lang036+"</div><div class='fht-cell'></div></th>";
+	    }
+	    
+	    (function(){
+        	if(localStorage.getItem("lang")==="en_lang"){
+        		getLabel("en_lang");
+        	}else{
+        		getLabel("th_lang");
+        	}
+	    })();
+	    
 	</script>
 </body>
 </html>

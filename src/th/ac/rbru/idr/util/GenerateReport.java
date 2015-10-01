@@ -24,6 +24,7 @@ public class GenerateReport {
 		try {
 			//for reportTypeResource test localhost
 			reportTypeResource = "/Users/rattasit/workspace/IDR/WebContent/report/IDRReportEng.jrxml";
+			
 			JasperReport jasperReport = JasperCompileManager.compileReport(reportTypeResource);
 			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport,param,new JREmptyDataSource());
 			JasperExportManager.exportReportToPdfFile(jasperPrint, reportFileDirectory);

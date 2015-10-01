@@ -25,8 +25,14 @@
             <div class="codrops-top">
                 <div class="clr"></div>
             </div><!--/ Codrops top bar -->
+            
+			<div id="lang" style="text-align: right; margin: 10px;">
+				<a href="javascript:getLabel('th_lang');"><img alt="thai" src="./img/thailand.png"></a> 
+				/ <a href="javascript:getLabel('en_lang');"><img alt="thai" src="./img/unitedStates.png"></a>
+			</div>
+			
             <header>
-                <h1>Internet Document Request <span>RBRU</span></h1>
+                <h1 id="header">Internet Document Request <span>RBRU</span></h1>
             </header>
             <section>				
                 <div id="container_demo" >
@@ -36,7 +42,7 @@
                     <div id="wrapper">
                         <div id="login" class="animate form">
                             <form  action="./LoginController" autocomplete="on" method="post"> 
-                                <h1>Request Form</h1>
+                                <h1 id="header2">Request Form</h1>
                                 
                                 <div id="userInfo"></div>
                                 
@@ -47,50 +53,50 @@
                                 	</select>
                                 </p>
                                 <p>
-                                	<lable>Select type of student</lable><br>
-                                	<input type="radio" name="studentType" value="local" onclick="onRadioBoxChange(this);" checked>Local student
-                                	<input type="radio" name="studentType" value="foriegn" onclick="onRadioBoxChange(this);">Foriegn student
+                                	<lable id="labelType">Select type of student</lable><br>
+                                	<input type="radio" name="studentType" value="local" onclick="onRadioBoxChange(this);" checked><label id="labelLocalStd">Local student</label>
+                                	<input type="radio" name="studentType" value="foriegn" onclick="onRadioBoxChange(this);"><label id="labelFkStd">Foriegn student</label>
                                 </p>
                                 <div id="passportNumDiv" style="display:none">
                                 	<p>
-	                                	<label for="passportNum" class="uname"> *Passport Number </label>
-	                                	<input id="passportNum" name="passportNum" type="text" placeholder="Enter passport number" maxlength="10">
+	                                	<label for="passportNum" class="uname" id="labelPassportNum"> *Passport Number </label>
+	                                	<input id="passportNum" name="passportNum" type="text" maxlength="10">
                                 	</p>
                                 </div> 
                                 
                                 <p>
-                                	<label>*Select Language</label><br>
-                                	<input id="checkTypeLangThai" name="checkTypeLang" type="checkbox" value="thai"/>Thai
-                                	<input id="checkTypeLangEng" name="checkTypeLang" type="checkbox" value="english" onchange="onCheckBoxChange(this)"/>English
+                                	<label id="labelSelectLang">*Select Language</label><br>
+                                	<input id="checkTypeLangThai" name="checkTypeLang" type="checkbox" value="thai"/><label id="labelLangThai">Thai</label>
+                                	<input id="checkTypeLangEng" name="checkTypeLang" type="checkbox" value="english" onchange="onCheckBoxChange(this)"/><label id="labelLangEng">English</label>
                                 </p>
                                 
                                 <div id="inputName" style="display:none">
                                 	<p>
-	                                	<label for="firstName" class="uname"> *First name </label>
-	                                	<input id="firstName" name="firstName" type="text" placeholder="Enter your first name">
+	                                	<label for="firstName" class="uname" id="labelFirstName"> *First name </label>
+	                                	<input id="firstName" name="firstName" type="text" >
                                 	</p>
                                 	<p>
-                                		<label for="lastName" class="uname"> *Last name </label>
-                                		<input id="surName" name="lastName" type="text" placeholder="Enter your last name">
+                                		<label for="lastName" class="uname" id="labelLastName"> *Last name </label>
+                                		<input id="surName" name="lastName" type="text" >
                                 	</p>
                                 </div>
                                 
                                 <p> 
-                                    <label for="telephone" class="uname" >*Telephone Number</label>
-                                    <input id="telephoneNumber" name="telephoneNumber" type="text" onkeydown="backspacerDOWN(this,event);" onkeyup="backspacerUP(this,event);" placeholder="Your Telephone Number"/>
+                                    <label for="telephone" class="uname" id="labelTelNum">*Telephone Number</label>
+                                    <input id="telephoneNumber" name="telephoneNumber" type="text" onkeydown="backspacerDOWN(this,event);" onkeyup="backspacerUP(this,event);"/>
                                 </p>
                                 <p>
-                                	<label for="reason" class="uname" >Use For</label>
-                                	<input id="reason" name="reason" type="text" placeholder="Use for">
+                                	<label for="reason" class="uname" id="labelUseFor">Use For</label>
+                                	<input id="reason" name="reason" type="text">
                                 </p>
                                 <p class="login button"> 
-                                    <input type="button" value="request" onclick="valthisform();"/> 
+                                    <input id="labelRequest" type="button" value="request" onclick="valthisform();"/> 
 								</p>
                             </form>
                             <form action="/IDR/logout" method="get" id="logoutForm">
                             	<p class="change_link">
-                            		<a href="./main.html" class="to_register">back</a>
-									<a href="javascript:formSubmit()" class="to_register">Log out</a>
+                            		<a href="javascript:backButton()" class="to_register"><span id="labelBack">back</span></a>
+									<a href="javascript:formSubmit()" class="to_register"><span id="labelLogOut">Log out</span></a>
 								</p>
                             </form>
                         </div>
@@ -100,183 +106,233 @@
         </div>
         
         <script type="text/javascript">
-        function formSubmit(){
-        	sessionStorage.clear();
-        	document.getElementById("logoutForm").submit();
-        }
-        //get user information
-        var xmlhttp = loadXMLDoc();
-        var json;
-        var reportTypeParam ="";
-        var langParam="";
-        var nameParam="";
-        var telephoneParam="";
-        var passportNumParam="";
-        
-        xmlhttp.onreadystatechange=function(){
-			if (xmlhttp.readyState==4 && xmlhttp.status==200){
-				json = JSON.parse(xmlhttp.responseText);
-				document.getElementById("userInfo").innerHTML= json[0].prefix+json[0].firstName+" "+json[0].lastName+" รหัส "+json[0].studentCode+" คณะ "+json[0].facultyName;
-			}
-        }
-        console.log(sessionStorage.getItem("studentCode"));
-        xmlhttp.open("GET","./RequestController?studentCode="+sessionStorage.getItem("studentCode"),true);
-        xmlhttp.send();
+	        function formSubmit(){
+	        	sessionStorage.clear();
+	        	document.getElementById("logoutForm").submit();
+	        }
+	        //get user information
+	        var xmlhttp = loadXMLDoc();
+	        var json;
+	        var langJson;
+	        var reportTypeParam ="";
+	        var langParam="";
+	        var nameParam="";
+	        var telephoneParam="";
+	        var passportNumParam="";
 	        
-        
-        function valthisform(){
-            var checkType=document.getElementsByName("checkType");
-            var requestFlag1=true;
-            var requestFlag2=false;
-            var requestFlag3=false;
-            var requestFlag4=false;
-            var requestFlag5=false;
-            
-            var e =  document.getElementById("reportType");
-            reportTypeParam="&reportTypeParam="+e.options[e.selectedIndex].value;
-            
-            /* for(var i=0,l=checkType.length;i<l;i++){
-                if(checkType[i].checked){
-                	requestFlag1=true;
-                	reportTypeParam += checkType[i].value+",";
-                }
-            }
-            reportTypeParam = reportTypeParam.substring(0, reportTypeParam.length-1);*/
-            if(!requestFlag5){
-            	if($('input[name="studentType"]:checked').val() === "foriegn"){
-            		if($('#passportNum').val().trim().length == 0){
-            			swal("Please enter passport number", "", "error");
-            			requestFlag5 = false;
-            		}else{
-            			passportNumParam = "&passportNum="+$('#passportNum').val();
-            			requestFlag5 = true;
-            		}
-            	}else{
-            		requestFlag5 = true;
-            	}
-            }
-            
-            if(!requestFlag1 && requestFlag5){
-            	swal("Please select report type", "", "error");
-            }else if(requestFlag1 && requestFlag5){
-            	var checkTypeLang = document.getElementsByName("checkTypeLang");
-            	langParam = "&lang=";
-            	for(var i=0,l=checkTypeLang.length;i<l;i++){
-                    if(checkTypeLang[i].checked){
-                    	requestFlag2=true;
-                    	langParam += checkTypeLang[i].value+",";
-                    }
-                }
-            	langParam = langParam.substring(0, langParam.length-1);
-            	if(!requestFlag2 && requestFlag5){
-            		swal("Please select language", "", "error");
-            	}
-            }
-            
-            if(document.getElementById("checkTypeLangEng").checked && requestFlag2){
-            	if(((document.getElementById("firstName").value).trim()).length < 1){
-            		swal("Please input your firstname", "", "error");
-            	}else if(((document.getElementById("surName").value).trim()).length < 1){
-            		swal("Please input your surname", "", "error");
-            	}else{
-            		nameParam = "&firstName="+(document.getElementById("firstName").value).trim()+"&surName="+(document.getElementById("surName").value).trim();
-            		requestFlag3 = true;
-            	}
-            }else if(requestFlag2){
-            	requestFlag3 = true;
-            }
-            
-            if(requestFlag3){
-            	var telephoneValue = document.getElementById("telephoneNumber").value;
-            	if((telephoneValue.trim()).length < 1){
-            		swal("Please input telepone number", "", "error");
-            	}else{
-            		telephoneParam = "&telephoneParam="+telephoneValue;
-            		requestFlag4 = true;
-            	}
-            }
-            
-            if(requestFlag1 && requestFlag2 && requestFlag3 && requestFlag4 && requestFlag5){
-            	sendRequestGenerateReport(json);
-            }
-        }//valthisform()
-        
-        function sendRequestGenerateReport(json){
-        	var xmlhttp = loadXMLDoc();
-            xmlhttp.onreadystatechange=function(){
-    			if (xmlhttp.readyState==4 && xmlhttp.status==200){
-    				swal({type:"success",
-    					title: "Success", 
-    					confirmButtonText: "ok"
-    					},
-    					function(){
-    						if(sessionStorage.getItem("studentCode") === null){
-    							window.location.assign("./management_Student.html");
-    						}else{
-    							window.location.assign("./management_Admin.html");
-    						}
-    					});
-    			}
-            }
-            xmlhttp.open("GET","./GenerateReportController?studentCode="+json[0].studentCode + reportTypeParam + passportNumParam + langParam+nameParam + telephoneParam+"&useforParam="+document.getElementById("reason").value,true);
-            xmlhttp.send();
-        }
-        
-        function loadXMLDoc(){
-	        var xmlhttp;
-	        if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
-				xmlhttp=new XMLHttpRequest();
+	        xmlhttp.onreadystatechange=function(){
+				if (xmlhttp.readyState==4 && xmlhttp.status==200){
+					json = JSON.parse(xmlhttp.responseText);
+					document.getElementById("userInfo").innerHTML= json[0].prefix+json[0].firstName+" "+json[0].lastName+" รหัส "+json[0].studentCode+" คณะ "+json[0].facultyName;
+				}
 	        }
-	        else{// code for IE6, IE5
-	          	xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	        console.log(sessionStorage.getItem("studentCode"));
+	        xmlhttp.open("GET","./RequestController?studentCode="+sessionStorage.getItem("studentCode"),true);
+	        xmlhttp.send();
+		        
+	        
+	        function valthisform(){
+	            var checkType=document.getElementsByName("checkType");
+	            var requestFlag1=true;
+	            var requestFlag2=false;
+	            var requestFlag3=false;
+	            var requestFlag4=false;
+	            var requestFlag5=false;
+	            
+	            var e =  document.getElementById("reportType");
+	            reportTypeParam="&reportTypeParam="+e.options[e.selectedIndex].value;
+	            
+	            /* for(var i=0,l=checkType.length;i<l;i++){
+	                if(checkType[i].checked){
+	                	requestFlag1=true;
+	                	reportTypeParam += checkType[i].value+",";
+	                }
+	            }
+	            reportTypeParam = reportTypeParam.substring(0, reportTypeParam.length-1);*/
+	            if(!requestFlag5){
+	            	if($('input[name="studentType"]:checked').val() === "foriegn"){
+	            		if($('#passportNum').val().trim().length == 0){
+	            			swal(langJson.lang025, "", "error");
+	            			requestFlag5 = false;
+	            		}else{
+	            			passportNumParam = "&passportNum="+$('#passportNum').val();
+	            			requestFlag5 = true;
+	            		}
+	            	}else{
+	            		requestFlag5 = true;
+	            	}
+	            }
+	            
+	            if(!requestFlag1 && requestFlag5){
+	            	swal("Please select report type", "", "error");
+	            }else if(requestFlag1 && requestFlag5){
+	            	var checkTypeLang = document.getElementsByName("checkTypeLang");
+	            	langParam = "&lang=";
+	            	for(var i=0,l=checkTypeLang.length;i<l;i++){
+	                    if(checkTypeLang[i].checked){
+	                    	requestFlag2=true;
+	                    	langParam += checkTypeLang[i].value+",";
+	                    }
+	                }
+	            	langParam = langParam.substring(0, langParam.length-1);
+	            	if(!requestFlag2 && requestFlag5){
+	            		swal(langJson.lang026, "", "error");
+	            	}
+	            }
+	            
+	            if(document.getElementById("checkTypeLangEng").checked && requestFlag2){
+	            	if(((document.getElementById("firstName").value).trim()).length < 1){
+	            		swal(langJson.lang027, "", "error");
+	            	}else if(((document.getElementById("surName").value).trim()).length < 1){
+	            		swal(langJson.lang028, "", "error");
+	            	}else{
+	            		nameParam = "&firstName="+(document.getElementById("firstName").value).trim()+"&surName="+(document.getElementById("surName").value).trim();
+	            		requestFlag3 = true;
+	            	}
+	            }else if(requestFlag2){
+	            	requestFlag3 = true;
+	            }
+	            
+	            if(requestFlag3){
+	            	var telephoneValue = document.getElementById("telephoneNumber").value;
+	            	if((telephoneValue.trim()).length < 1){
+	            		swal(langJson.lang038, "", "error");
+	            	}else{
+	            		telephoneParam = "&telephoneParam="+telephoneValue;
+	            		requestFlag4 = true;
+	            	}
+	            }
+	            
+	            if(requestFlag1 && requestFlag2 && requestFlag3 && requestFlag4 && requestFlag5){
+	            	sendRequestGenerateReport(json);
+	            }
+	        }//valthisform()
+	        
+	        function sendRequestGenerateReport(json){
+	        	var xmlhttp = loadXMLDoc();
+	            xmlhttp.onreadystatechange=function(){
+	    			if (xmlhttp.readyState==4 && xmlhttp.status==200){
+	    				swal({type:"success",
+	    					title: langJson.lang039, 
+	    					confirmButtonText: "ok"
+	    					},
+	    					function(){
+	    						if(sessionStorage.getItem("studentCode") === null){
+	    							window.location.assign("./management_Student.html");
+	    						}else{
+	    							window.location.assign("./management_Admin.html");
+	    						}
+	    					});
+	    			}
+	            }
+	            xmlhttp.open("GET","./GenerateReportController?studentCode="+json[0].studentCode + reportTypeParam + passportNumParam + langParam+nameParam + telephoneParam+"&useforParam="+document.getElementById("reason").value,true);
+	            xmlhttp.send();
 	        }
-	        return xmlhttp;
-		}
-        
-        function onCheckBoxChange(e){
-        	if(e.checked){
-        		document.getElementById('inputName').style.display='block';
-        		if(json[0].firstNameEng){
-        			document.getElementById('firstName').value = json[0].firstNameEng;
-        		}else{
-        			document.getElementById('firstName').value = "";
-        		}
-        		
-        		if(json[0].surNameEng){
-        			document.getElementById('surName').value = json[0].surNameEng;
-        		}else{
-        			document.getElementById('surName').value = "";
-        		}
-        	}else{
-        		document.getElementById('inputName').style.display='none';
-        	}
-        }
-        
-        function onRadioBoxChange(e){
-        	if(e.value==="foriegn"){
-        		document.getElementById('passportNumDiv').style.display='block';
-        	}else{
-        		document.getElementById('passportNumDiv').style.display='none';
-        	}
-        }
-        
-        $(function(){
-		    $("#firstName").keypress(function(event){
-		    	checkInputEnglistOnly(event.which);
-		    });
-		    $("#surName").keypress(function(event){
-		    	checkInputEnglistOnly(event.which);
-		    });
-		});
-        
-        function checkInputEnglistOnly(ew){
-        	if((65 <= ew && ew <= 90) || (97 <= ew && ew <= 122)){
-	        	return true;
-	        }else{
-	        	swal("Enter English character only","","error");
-	        	return false;
+	        
+	        function loadXMLDoc(){
+		        var xmlhttp;
+		        if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
+					xmlhttp=new XMLHttpRequest();
+		        }
+		        else{// code for IE6, IE5
+		          	xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+		        }
+		        return xmlhttp;
+			}
+	        
+	        function onCheckBoxChange(e){
+	        	if(e.checked){
+	        		document.getElementById('inputName').style.display='block';
+	        		if(json[0].firstNameEng){
+	        			document.getElementById('firstName').value = json[0].firstNameEng;
+	        		}else{
+	        			document.getElementById('firstName').value = "";
+	        		}
+	        		
+	        		if(json[0].surNameEng){
+	        			document.getElementById('surName').value = json[0].surNameEng;
+	        		}else{
+	        			document.getElementById('surName').value = "";
+	        		}
+	        	}else{
+	        		document.getElementById('inputName').style.display='none';
+	        	}
 	        }
-        }
+	        
+	        function onRadioBoxChange(e){
+	        	if(e.value==="foriegn"){
+	        		document.getElementById('passportNumDiv').style.display='block';
+	        	}else{
+	        		document.getElementById('passportNumDiv').style.display='none';
+	        	}
+	        }
+	        
+	        $(function(){
+			    $("#firstName").keypress(function(event){
+			    	checkInputEnglistOnly(event.which);
+			    });
+			    $("#surName").keypress(function(event){
+			    	checkInputEnglistOnly(event.which);
+			    });
+			});
+	        
+	        function checkInputEnglistOnly(ew){
+	        	if((65 <= ew && ew <= 90) || (97 <= ew && ew <= 122)){
+		        	return true;
+		        }else{
+		        	swal(langJson.lang029,"","error");
+		        	return false;
+		        }
+	        }
+	        
+	        function getLabel(lang){
+	        	localStorage.setItem("lang",lang);
+				var xmlhttp = loadXMLDoc();
+				xmlhttp.open("GET","./BilangualController?lang="+lang);
+				xmlhttp.send();
+				xmlhttp.onreadystatechange=function(){
+					if (xmlhttp.readyState==4 && xmlhttp.status==200){
+						langJson=JSON.parse(xmlhttp.responseText);
+						setLabel();
+					}
+				}
+			}
+	        
+	        (function(){
+	        	if(localStorage.getItem("lang")==="en_lang"){
+	        		getLabel("en_lang");
+	        	}else{
+	        		getLabel("th_lang");
+	        	}
+		    })();
+	        
+	        function setLabel(){
+	    		document.getElementById("header").innerHTML = langJson.lang001;
+	    		document.getElementById("header2").innerHTML = langJson.lang011;
+	    		document.getElementById("reportType").options[0].text = langJson.lang012;
+	    		document.getElementById("labelType").innerHTML = langJson.lang013;
+	    		document.getElementById("labelLocalStd").innerHTML = langJson.lang014;
+	    		document.getElementById("labelFkStd").innerHTML = langJson.lang015;
+	    		document.getElementById("labelPassportNum").innerHTML = langJson.lang016;
+	    		document.getElementById("labelSelectLang").innerHTML = langJson.lang017;
+	    		document.getElementById("labelLangThai").innerHTML = langJson.lang018;
+	    		document.getElementById("labelLangEng").innerHTML = langJson.lang019;
+	    		document.getElementById("labelTelNum").innerHTML = langJson.lang020;
+	    		document.getElementById("labelUseFor").innerHTML = langJson.lang021;
+	    		document.getElementById("labelRequest").value = langJson.lang022;
+	    		document.getElementById("labelFirstName").innerHTML = langJson.lang023;
+	    		document.getElementById("labelLastName").innerHTML = langJson.lang024;
+	    		document.getElementById("labelBack").innerHTML = langJson.lang030;
+	    		document.getElementById("labelLogOut").innerHTML = langJson.lang031;
+	    	}
+	        
+	        function backButton(){
+	        	if(sessionStorage.getItem("studentCode") === null){
+					window.location.assign("./main.html");
+				}else{
+					window.location.assign("./searchStudent.html");
+				}
+	        }
         </script>
 </body>
 </html>

@@ -17,8 +17,12 @@
             <div class="codrops-top">
                 <div class="clr"></div>
             </div><!--/ Codrops top bar -->
+           <div id="lang" style="text-align: right; margin: 10px;">
+				<a href="javascript:getLabel('th_lang');"><img alt="thai" src="./img/thailand.png"></a> 
+				/ <a href="javascript:getLabel('en_lang');"><img alt="thai" src="./img/unitedStates.png"></a>
+			</div>
             <header>
-                <h1>Internet Document Request <span>RBRU</span></h1>
+                <h1 id="header">Internet Document Request <span>RBRU</span></h1>
             </header>
             <section>				
                 <div id="container_demo" >
@@ -27,17 +31,17 @@
                     <a class="hiddenanchor" id="tologin"></a>
                     <div id="wrapper">
                         <div id="login" class="animate form">
-                        	<h1>Main Menu</h1>
-							<input type="button" value="Request Menu" onclick="redirect('request')" style="font-size: 250%;font-family: 'FranchiseRegular'">
+                        	<h1 id="labelMenu">Main Menu</h1>
+							<input type="button" id="labelReq" value="Request Menu" onclick="redirect('request')" style="font-size: 250%;font-family: 'FranchiseRegular'">
 							<br>
 							<br>
-							<input type="button" value="Managment Menu" onclick="redirect('management')" style="font-size: 250%;font-family: 'FranchiseRegular'">
+							<input type="button" id="labelMng" value="Managment Menu" onclick="redirect('management')" style="font-size: 250%;font-family: 'FranchiseRegular'">
 							<br>
 							<br>
 							<br>
 							<form action="/IDR/logout" method="get" id="logoutForm">
 								<p class="change_link">
-									<a href="javascript:formSubmit()" class="to_register">Log out</a>
+									<a href="javascript:formSubmit()" class="to_register"><span id="labelLogOut">Log out</span></a>
 								</p>
 							</form>
                         </div>
@@ -47,6 +51,7 @@
         </div>
         
         <script type="text/javascript">
+        	var langJson;
         	function redirect(menu){
         		if("request" == menu){
         			window.location.assign("./requestForm.html");
@@ -58,6 +63,46 @@
         	function formSubmit(){
             	document.getElementById("logoutForm").submit();
             }
+        	
+        	function getLabel(lang){
+        		localStorage.setItem("lang",lang);
+    			var xmlhttp = loadXMLDoc();
+    			xmlhttp.open("GET","./BilangualController?lang="+lang);
+    			xmlhttp.send();
+    			xmlhttp.onreadystatechange=function(){
+    				if (xmlhttp.readyState==4 && xmlhttp.status==200){
+    					langJson=JSON.parse(xmlhttp.responseText);
+    					setLabel();
+    				}
+    			}
+    		}
+    	    
+    	    function setLabel(json){
+    	    	document.getElementById("header").innerHTML = langJson.lang001;
+    	    	document.getElementById("labelMenu").innerHTML = langJson.lang032;
+    	    	document.getElementById("labelReq").value = langJson.lang011;
+    	    	document.getElementById("labelMng").value = langJson.lang033;
+    	    	document.getElementById("labelLogOut").innerHTML = langJson.lang031;
+    	    }
+    	    
+    	    (function(){
+	        	if(localStorage.getItem("lang")==="en_lang"){
+	        		getLabel("en_lang");
+	        	}else{
+	        		getLabel("th_lang");
+	        	}
+		    })();
+    		
+    	    function loadXMLDoc(){
+    			var xmlhttp;
+    			if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
+    			xmlhttp=new XMLHttpRequest();
+    			}
+    			else{// code for IE6, IE5
+    			  	xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    			}
+    			return xmlhttp;
+    		}
         	
         </script>
     </body>
