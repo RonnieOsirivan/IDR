@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<script type="text/javascript" src="./bootstrap/jquery/dist/jquery.js"></script>
+	<script type="text/javascript" src="./bootstrap/bootstrap/dist/js/bootstrap.js"></script>
+	<script type="text/javascript" src="./bootstrap/bootstrap-table/js/bootstrap-table.js"></script>
+	<script type="text/javascript" src="./bootstrap/bootstrap-table/js/bootstrap-table-en-US.js"></script>
+	<script type="text/javascript" src="./js/sweetalert-dev.js"></script>
+	<script type="text/javascript" src="./js/jquery-ui.js"></script>
+	<script type="text/javascript" src="./js/pace/pace.js"></script>
+	<link href="./bootstrap/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+	<link href="./bootstrap/bootstrap-table/css/bootstrap-table.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="./css/sweetalert.css" />
+	<link rel="stylesheet" type="text/css" href="./css/jquery-ui.css" />
+	<link rel="stylesheet" type="text/css" href="./css/jquery-ui.structure.css" />
+	<link rel="stylesheet" type="text/css" href="./css/jquery-ui.theme.css" />
+	<link rel="stylesheet" type="text/css" href="./js/pace/themes/macOSX.css"/>
+	
+<meta charset="UTF-8">
+<title>Report Log</title>
+</head>
+<body>
+<style>
+	.col-center-block{
+		background-color: #FAFAFA;
+		float: none;
+	    display: block;
+		border: 1px solid GREY;
+		margin-bottom: auto;
+		padding: 30px;
+	}
+	.btn-group{
+		float: none;
+	    display: block;
+	}
+	.layout{
+		float: none;
+	    display: block;
+	    margin-left: auto;
+	    margin-right: auto;
+		margin-top: 20px;
+	}
+</style>
+	<div class="containner">
+		<div id="lang" style="text-align: right; margin: 10px;">
+			<a href="javascript:getLabel('th_lang');"><img alt="thai" src="./img/thailand.png"></a> 
+			/ <a href="javascript:getLabel('en_lang');"><img alt="thai" src="./img/unitedStates.png"></a>
+		</div>
+		
+		<div class="col-md-5 layout">
+			<div class="row">
+				<div id="toolbar" class="btn-group">
+					<form action="/IDR/logout" method="get" id="logoutForm">
+						<button id="dropdownMenu" type="button" class="btn btn-default dropdown-toggle" 
+							data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+				        	<i class="glyphicon glyphicon-th-list"></i>
+				    	</button>
+						<ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+							<li><a href="./management_Admin.html"><span id="menuLabel1">Management</span></a></li>
+							<li><a href="./searchStudent.html"><span id="menuLabel2">Request form</span></a></li>
+							<li><a href="javascript:logOut();"><span id="menuLabel3">Log out</span></a></li>
+						</ul>
+					</form>
+				</div>
+				
+				<div class="col-md-12 col-center-block">
+					<fieldset class="form-horizontal">
+						
+						<!-- Form Name -->
+						<legend id="headerLabel">Report</legend>
+						
+						<!-- Text input-->
+						<div class="form-group">
+						  <label class="col-md-4 control-label" for="sinceDate" id="sinceDateLabel">Since date</label>  
+						  <div class="col-md-4">
+						  <input id="sinceDate" name="sinceDate" type="text" placeholder="dd/mm/yyyy" class="form-control input-md">
+						    
+						  </div>
+						</div>
+						
+						<!-- Text input-->
+						<div class="form-group">
+						  <label class="col-md-4 control-label" for="untilDate" id="untilDateLabel">Until date</label>  
+						  <div class="col-md-4">
+						  <input id="untilDate" name="untilDate" type="text" placeholder="dd/mm/yyyy" class="form-control input-md">
+						    
+						  </div>
+						</div>
+						
+						<!-- Select Basic -->
+						<div class="form-group">
+						  <label class="col-md-4 control-label" for="reportType" id="reportTypeLabel">Report type</label>
+						  <div class="col-md-6">
+						    <select id="reportType" name="reportType" class="form-control">
+						      <option value="1">Statement of student status</option>
+						      <option value="0">All</option>
+						    </select>
+						  </div>
+						</div>
+						
+						<!-- Button (Double) -->
+						<div class="form-group">
+						  <label class="col-md-4 control-label" for="ok"></label>
+						  <div class="col-md-8">
+						    <input type="button" id="ok" name="ok" class="btn btn-success" value="OK">
+						    <input type="button" id="cancel" name="cancel" class="btn btn-danger" value="Cancel">
+						  </div>
+						</div>
+					
+					</fieldset>
+				</div>
+			</div>
+		</div>
+		
+	</div><!-- containner -->
+	<script>
+		var sinceDate;
+		var untilDate;
+		$(function() {
+		  $("#sinceDate").datepicker({dateFormat: 'dd/mm/yy'});
+		  $("#untilDate").datepicker({dateFormat: 'dd/mm/yy'});
+		});
+		
+		$("#sinceDate").change(function(){
+			var dateString = $("#sinceDate").val();
+			var dsplit = dateString.split("/");
+			sinceDate = new Date(dsplit[2],dsplit[1]-1,dsplit[0]);
+			
+			if(sinceDate > untilDate){
+				$("#untilDate").val("");
+			}
+		});
+		
+		$("#untilDate").change(function(){
+			var untilString = $("#untilDate").val();
+			var dsplit = untilString.split("/");
+			untilDate = new Date(dsplit[2],dsplit[1]-1,dsplit[0]);	
+			
+			if(sinceDate > untilDate){
+				$("#sinceDate").val("");
+			}
+		});
+		
+		$("#ok").click(function(){
+			if(!$("#sinceDate").val()){
+				swal("Please enter since date","","error");
+			}else if(!$("#untilDate").val()){
+				swal("Please enter until date","","error");
+			}else{
+				sendRequest();
+			}	
+		});
+		
+		function sendRequest(){
+			var method = "report";
+			var reportType = $('#reportType').val();
+			var sinceDate = $('#sinceDate').val();
+			var untilDate = $('#untilDate').val();
+			
+			var xmlhttp = loadXMLDoc();
+			xmlhttp.open("GET","./ReportLogController?method="+method+"&reportType="+reportType+"&sinceDate="+sinceDate+"&untilDate="+untilDate);
+			xmlhttp.send();
+			xmlhttp.onreadystatechange=function(){
+				if (xmlhttp.readyState==4 && xmlhttp.status==200){
+					window.location.assign("./reportLogFile/10.pdf")
+					//window.open("./reportLogFile/10.pdf", "_blank");
+				}else{
+					setTimeout(sendRequest,5000);
+					console.log("1");
+				}
+			}
+		}
+		
+		$("#cancel").click(function(){
+			$("#sinceDate").val("");
+			$("#untilDate").val("");
+		});
+		
+		function loadXMLDoc(){
+	        var xmlhttp;
+	        if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
+				xmlhttp=new XMLHttpRequest();
+	        }
+	        else{// code for IE6, IE5
+	          	xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	        }
+	        return xmlhttp;
+		}
+		
+		(function(){
+			if(localStorage.getItem("lang")==="en_lang"){
+				getLabel("en_lang");
+			}else{
+				getLabel("th_lang");
+			}
+		})();
+		
+		function getLabel(lang){
+			localStorage.setItem("lang",lang);
+			var xmlhttp = loadXMLDoc();
+			var langJson;
+			xmlhttp.open("GET","./BilangualController?lang="+lang);
+			xmlhttp.send();
+			xmlhttp.onreadystatechange=function(){
+				if (xmlhttp.readyState==4 && xmlhttp.status==200){
+					langJson=JSON.parse(xmlhttp.responseText);
+					setLabel(langJson);
+				}
+			}
+		}
+    	
+    	function setLabel(json){
+    		document.getElementById("headerLabel").innerHTML = json.lang040;
+    		document.getElementById("sinceDateLabel").innerHTML = json.lang041;
+    		document.getElementById("untilDateLabel").innerHTML = json.lang042;
+    		document.getElementById("reportTypeLabel").innerHTML = json.lang043;
+    		document.getElementById("ok").value = json.lang044;
+    		document.getElementById("cancel").value = json.lang045;
+    		$('#reportType').children('option[value="1"]').text(json.lang012);
+    		$('#reportType').children('option[value="0"]').text(json.lang046);
+    		document.getElementById("menuLabel1").innerHTML = json.lang032;
+    		document.getElementById("menuLabel2").innerHTML = json.lang047;
+    		document.getElementById("menuLabel3").innerHTML = json.lang031;
+    		document.getElementById("sinceDate").placeholder = json.lang048;
+    		document.getElementById("untilDate").placeholder = json.lang048;
+    	}
+    	
+    	function logOut(){
+    		sessionStorage.clear();
+        	document.getElementById("logoutForm").submit();
+    	}
+	</script>
+</body>
+</html>

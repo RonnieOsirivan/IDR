@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reportLog" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9dd17b53-e99b-4483-8560-9d939a4b0b07">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="sinceDate" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="untilDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="reportType" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT RL.STUDENTCODE,
+S.STUDENTNAME,RL.FACULTYNAME,
+RL.DOCUMENTNUMBER,RL.REQUESTDATE,
+RL.PRINTDATE,RT.REPORTNAMETHAI
+FROM REPORTLOG RL, REPORTTYPE RT,STUDENT S
+WHERE RL.REPORTTYPEID = RT.REPORTTYPEID
+AND RL.STUDENTCODE = S.STUDENTCODE
+AND RL.REQUESTDATE BETWEEN STR_TO_DATE($P{sinceDate},'%d/%m/%Y')
+AND STR_TO_DATE($P{untilDate},'%d/%m/%Y')
+AND RL.PRINTDATE IS NOT NULL
+AND RL.REPORTTYPEID IN ($P{reportType});]]>
+	</queryString>
+	<field name="STUDENTCODE" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="STUDENTNAME" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="FACULTYNAME" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="DOCUMENTNUMBER" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="REQUESTDATE" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="PRINTDATE" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="REPORTNAMETHAI" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="233" y="0" width="90" height="28" uuid="96e3f154-9e3e-4f44-afd1-f39871a6a96f"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" size="24"/>
+				</textElement>
+				<text><![CDATA[รายงาน]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="209" y="28" width="154" height="31" uuid="c8cb8279-26c8-46d0-bfe2-dbd5f850fb1c"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" size="24"/>
+				</textElement>
+				<text><![CDATA[สรุปคำร้องขอเอกสาร]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="396" y="2" width="21" height="20" uuid="0dc053b4-539d-4ee0-8896-298b8d7ed24b"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="14"/>
+				</textElement>
+				<text><![CDATA[วันที่]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="417" y="2" width="57" height="20" uuid="b797d884-dea2-481a-a786-b603d90132b8"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{sinceDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="474" y="2" width="16" height="20" uuid="a6295bd0-2d68-4f30-bdab-f0e47cc3cedd"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" size="14"/>
+				</textElement>
+				<text><![CDATA[ถึง]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="496" y="2" width="57" height="20" uuid="54ccbbf0-eea0-45ae-aa28-b0b861669b55"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{untilDate}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="61" height="20" uuid="00a093fa-8e1c-42a7-ae26-e74c4b881245"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="14" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="false"/>
+				</textElement>
+				<text><![CDATA[รหัสนักศึกษา]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="209" y="0" width="114" height="20" uuid="49601fb6-f46f-4560-bd55-fcc2f7b6f6fe"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="14" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[คณะ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="404" y="0" width="75" height="20" uuid="28ff6d15-3f51-4436-b310-3e200851b272"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="14" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[วันที่ร้องขอ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="481" y="0" width="73" height="20" uuid="8ca72816-7b9a-4bb3-a585-f61282dad497"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="14" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[วันที่พิมพ์]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="20" width="555" height="1" uuid="6a97ace5-97cb-4e87-90f2-69df74cd6945"/>
+			</line>
+			<staticText>
+				<reportElement x="323" y="0" width="81" height="20" uuid="37a8c8d5-c11c-412c-a672-f07467045931"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="14" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[ประเภทรายงาน]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="61" y="0" width="148" height="20" uuid="3bbec2cd-1e6b-4c22-a788-97c6548ab767"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="14" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[ชื่อ]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="61" height="20" uuid="a369c632-9a37-49e7-b267-4be692f321b9"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="14" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{STUDENTCODE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="209" y="0" width="114" height="20" isPrintWhenDetailOverflows="true" uuid="a11a218d-af44-4713-868d-fea0572b0e54"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="14" isBold="false" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FACULTYNAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="404" y="0" width="75" height="20" uuid="96ae85db-7ac3-4307-974e-aee9b7e3cd86"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="14" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REQUESTDATE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="323" y="0" width="81" height="20" uuid="db692c95-704e-4f7d-812c-c06f6aa51f96"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="14" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REPORTNAMETHAI}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="61" y="0" width="148" height="20" isPrintWhenDetailOverflows="true" uuid="727ff78a-c883-4551-98c0-9b5c1a9d386d"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="14" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{STUDENTNAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="481" y="0" width="73" height="20" uuid="dbd4d326-18d9-43dc-9124-2ad33a55f6d6"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="14" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PRINTDATE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="47" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="3" width="555" height="1" uuid="2f353037-85ad-4597-8fcb-d61299a0d9d7"/>
+			</line>
+			<textField>
+				<reportElement x="434" y="5" width="80" height="20" uuid="f53855fe-dfee-4497-818a-dff22563f606"/>
+				<textElement textAlignment="Right">
+					<font fontName="TH SarabunPSK" size="14" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["หน้า "+$V{PAGE_NUMBER}+" ทั้งหมด"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="514" y="5" width="40" height="20" uuid="1abbf3d8-4fbf-48a3-9c3e-14bcbd36b97a"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="14" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

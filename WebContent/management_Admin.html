@@ -21,6 +21,7 @@
 		/ <a href="javascript:getLabel('en_lang');"><img alt="thai" src="./img/unitedStates.png"></a>
 	</div>
     
+    <!--  
 	<div id="toolbar" class="btn-group">
 		<form action="/IDR/logout" method="get" id="logoutForm">
 			<button id="logout" type="button" class="btn btn-default">
@@ -29,6 +30,27 @@
 	    	<button id="request" type="button" class="btn btn-default">
 				<i class="glyphicon glyphicon-user"></i>
 			</button>
+			<button id="report" type="button" class="btn btn-default">
+				<i class="glyphicon glyphicon-file"></i>
+			</button>
+			<button id="remove" type="button" class="btn btn-default" disabled>
+				<i class="glyphicon glyphicon-trash"></i>
+			</button>
+		</form>
+	</div>
+	-->
+	
+	<div id="toolbar" class="btn-group">
+		<form action="/IDR/logout" method="get" id="logoutForm">
+			<button id="dropdownMenu" type="button" class="btn btn-default dropdown-toggle" 
+				data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+	        	<i class="glyphicon glyphicon-th-list"></i>
+	    	</button>
+			<ul class="dropdown-menu" aria-labelledby="dropdownMenu">
+				<li><a href="./searchStudent.html"><span id="menuLabel1">Request form</span></a></li>
+				<li><a href="./reportLog.html"><span id="menuLabel2">Report</span></a></li>
+				<li><a href="javascript:logOut();"><span id="menuLabel3">Log out</span></a></li>
+			</ul>
 			<button id="remove" type="button" class="btn btn-default" disabled>
 				<i class="glyphicon glyphicon-trash"></i>
 			</button>
@@ -62,11 +84,14 @@
 	
 	<script type="text/javascript">
 		var $table = $('#table');
+		var printStatus = [];
+		
+		function logOut(){
+    		sessionStorage.clear();
+    		$('#logoutForm').submit();
+    	}
+		
 	    $(function () {
-	    	$('#logout').click(function(){
-	    		sessionStorage.clear();
-	    		$('#logoutForm').submit();
-	    	});
 	    	
 	    	$('#request').click(function(){
 	    		window.location.assign("./searchStudent.html");
@@ -119,17 +144,27 @@
 				});
 				alert('Checked row index: ' + index.join(', ')); */
 			});
-	    });
+			
+			$('#report').click(function(){
+				window.location.assign("./reportLog.html");
+			});
+	    });//end function
 	    
 		window.markPrint = {
 			'click .markPrint': function (e, value, row, index) {
-				$('.markPrint')[index].parentElement.parentElement.style.backgroundColor = "rgb(227,240,216)"
+				e.currentTarget.parentElement.parentElement.style.backgroundColor = "rgb(227,240,216)";
+				printStatus.push(index);
+				//$('.markPrint')[index].parentElement.parentElement.style.backgroundColor = "rgb(227,240,216)";
 			}
 		};
 		
 	    function rowStyle(row,index){
 	    	var classes = ['success'];
 	    	if(row.reportPrintStatus === 1){
+	    		return {
+	    			classes : classes[0]
+	    		};
+	    	}else if(printStatus.indexOf(index) != -1){
 	    		return {
 	    			classes : classes[0]
 	    		};
@@ -157,6 +192,10 @@
 	    	tr[2].innerHTML = "<th style><div class='th-inner sortable'>"+json.lang008+"</div><div class='fht-cell'></div></th>";
 		    tr[3].innerHTML = "<th style><div class='th-inner sortable'>"+json.lang009+"</div><div class='fht-cell'></div></th>";
 		    tr[4].innerHTML = "<th style><div class='th-inner sortable'>"+json.lang010+"</div><div class='fht-cell'></div></th>";
+		    
+		    document.getElementById("menuLabel1").innerHTML = json.lang047;
+    		document.getElementById("menuLabel2").innerHTML = json.lang040;
+    		document.getElementById("menuLabel3").innerHTML = json.lang031;
 	    }
 	    
 	    (function(){

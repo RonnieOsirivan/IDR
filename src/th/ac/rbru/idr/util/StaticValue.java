@@ -17,6 +17,9 @@ public class StaticValue implements ServletContextListener{
 	public static String REPORT_TYPE_STUDENT_STATUS_ENG;
 	public static String REPORT_FILE_DIRECTORY;
 	public static String REPORT_TRASH_DIRECTORY;
+	public static String REPORT_LOG_FILE_DIRECTORY;
+	public static String REPORT_LOG;
+	
 	
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
@@ -28,6 +31,8 @@ public class StaticValue implements ServletContextListener{
 			REPORT_TYPE_STUDENT_STATUS_ENG = prop.getProperty("report_type_student_status_Eng");
 			REPORT_FILE_DIRECTORY = prop.getProperty("report_file_directory");
 			REPORT_TRASH_DIRECTORY = prop.getProperty("report_trash_directory");
+			REPORT_LOG = prop.getProperty("report_log");
+			REPORT_LOG_FILE_DIRECTORY = prop.getProperty("report_log_directory");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

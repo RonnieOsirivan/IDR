@@ -95,15 +95,15 @@ public class GenerateReportController extends HttpServlet {
 								" PASSPORTNUMBER "+request.getParameter("passportNum")+" ";
 				}
 				detailParam += "is currently a student of the "
-				+studentEng.getDegreeCerificate()
-				+" Faculty of "+studentEng.getProgramName()+" in "
+				+studentEng.getDegreeCerificate()+" Program, "
 				+studentEng.getFacultyName()+","+" Rambhai Barni Rajabhat University.";
-		param.put("pSequenceReport", "No. "+map.get("docNum"));
+		param.put("pSequenceReport", "No. "+documentNumEngFormat(map));
 		param.put("pDate", formatter.format(date));
 		param.put("pDetail", detailParam);
 		
 		int reportId = insertReport(studentEng.getStudentCode(),studentEng.getPrefixName()+studentEng.getStudentName()+" "+studentEng.getStudentSurname(),
-				request.getParameter("telephoneParam"),request.getParameter("useforParam"),"EN",Integer.parseInt(map.get("docId")));
+				request.getParameter("telephoneParam"),request.getParameter("useforParam"),"EN",Integer.parseInt(map.get("docId")),studentEng.getFacultyName(),
+				documentNumEngFormat(map),map.get("reportTypeId"));
 		GenerateReport genReport = new GenerateReport();
 		genReport.generarteReport("studentStatusEng",reportId, param,getAbsulutePath());
 		sendResponse(request, response, "Done!");
@@ -148,12 +148,13 @@ public class GenerateReportController extends HttpServlet {
 			pDetail += " กำลังศึกษาอยู่ปี "+thaiNumeral(student.getStudentYear());
 		}
 		pDetail += " ที่มหาวิทยาลัยราชภัฏรำไพพรรณี จริง";
-		param.put("pSequenceReport", "ที่ "+thaiNumeral(Integer.parseInt(map.get("reportTypeId")))+"."+thaiNumeral(Integer.parseInt(map.get("docRuningNum")))+" / "+thaiNumeral(Integer.parseInt(map.get("acadYear"))));
+		param.put("pSequenceReport", "ที่ "+thaiNumeral(Integer.parseInt(map.get("reportTypeId")))+"."+thaiNumeral3Digit(Integer.parseInt(map.get("docRuningNum")))+" / "+thaiNumeral(Integer.parseInt(map.get("acadYear"))));
 		param.put("pDate", dateParam);
 		param.put("pDetail", pDetail);
 		
 		int reportId = insertReport(student.getStudentCode(),student.getPrefix()+student.getFirstName()+" "+student.getLastName(),
-				request.getParameter("telephoneParam"),request.getParameter("useforParam"),"TH",Integer.parseInt(map.get("docId")));
+				request.getParameter("telephoneParam"),request.getParameter("useforParam"),"TH",Integer.parseInt(map.get("docId")),
+				student.getFacultyName(),documentNumEngFormat(map),map.get("reportTypeId"));
 		GenerateReport genReport = new GenerateReport();
 		genReport.generarteReport("studentStatusThai", reportId,param,getAbsulutePath());
 //		FileInputStream pdfStream = convertPdfToBinary("/Users/rattasit/workspace/IDR/WebContent/reportFile/test.pdf");
@@ -172,10 +173,10 @@ public class GenerateReportController extends HttpServlet {
 //		return inputStream;
 //	}
 	
-	private int insertReport(String stdCode,String stdName,String telephoneNum,String usefor,String language,int docId){
+	private int insertReport(String stdCode,String stdName,String telephoneNum,String usefor,String language,int docId,String facName,String docNum,String reportTypeId){
 		String stdInsertSql = "INSERT IGNORE INTO STUDENT(STUDENTCODE,STUDENTNAME,TELEPHONENUMBER) VALUES (?,?,?)";
 		String pdfInsertSql = "INSERT INTO REPORT(STUDENTCODE,REPORTTYPEID,USEFOR,REPORTFILE,LANGUAGE,DOCUMENTID) VALUES(?,?,?,?,?,?)";
-		String reportPathSql = "";
+		
 		PreparedStatement stmt = null;
 		ConnectionDB.getInstance();
 		int reportId = 0;
@@ -190,7 +191,7 @@ public class GenerateReportController extends HttpServlet {
 			
 			stmt = con.prepareStatement(pdfInsertSql,Statement.RETURN_GENERATED_KEYS);
 			stmt.setString(1, stdCode);
-			stmt.setInt(2, 1);
+			stmt.setInt(2, Integer.parseInt(reportTypeId));
 			stmt.setString(3,usefor);
 			stmt.setString(4, "");
 			stmt.setString(5, language);
@@ -202,12 +203,24 @@ public class GenerateReportController extends HttpServlet {
 				reportId = rs.getInt(1);
 			}
 			
-			reportPathSql = "UPDATE REPORT SET REPORTFILE = ? WHERE REPORTID = ?";
+			String reportPathSql = "UPDATE REPORT SET REPORTFILE = ? WHERE REPORTID = ?";
 			String reportPath = StaticValue.REPORT_FILE_DIRECTORY+reportId+".pdf";
 			stmt = con.prepareStatement(reportPathSql);
 			stmt.setString(1, reportPath);
 			stmt.setInt(2, reportId);
 			stmt.execute();
+			stmt.close();
+			
+			String reportLogInsertSql = "	INSERT INTO `IDR`.`REPORTLOG` (`REPORTID`, `STUDENTCODE`, 	"+
+					"	`FACULTYNAME`, `DOCUMENTNUMBER`, `REPORTTYPEID`) 	"+
+					"	VALUES (?, ?, ?, ?, ?)	";
+			stmt = con.prepareStatement(reportLogInsertSql);
+			stmt.setInt(1, reportId);
+			stmt.setString(2, stdCode);
+			stmt.setString(3, facName);
+			stmt.setString(4, docNum);
+			stmt.setInt(5, Integer.parseInt(reportTypeId));
+			stmt.executeUpdate();
 			stmt.close();
 			
 			releaseConnection();
@@ -224,11 +237,37 @@ public class GenerateReportController extends HttpServlet {
 		return df.format(number);
 	}
 	
+	private String thaiNumeral3Digit(int number){
+		DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(new Locale("th","TH","TH"));
+		df.applyPattern("####");
+		String docNum = "";
+		if(df.format(number).length() == 1){
+			docNum = "๐๐"+df.format(number);
+		}else if(df.format(number).length() == 2){
+			docNum = "๐"+df.format(number);
+		}else{
+			docNum = df.format(number);
+		}
+		return docNum;
+	}
+	
 	//overload method
 	private String thaiNumeral(long number){
 		DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(new Locale("th","TH","TH"));
 		df.applyPattern("##########");
 		return df.format(number);
+	}
+	
+	private String documentNumEngFormat(HashMap<String,String> docNum){
+		String docRunnigNum = "";
+		if(docNum.get("docRuningNum").length() == 1){
+			docRunnigNum = "00"+docNum.get("docRuningNum");
+		}else if(docNum.get("docRuningNum").length() == 2){
+			docRunnigNum = "0"+docNum.get("docRuningNum");
+		}else{
+			docRunnigNum = docNum.get("docRuningNum");
+		}
+		return docNum.get("reportTypeId")+"."+docRunnigNum+" / "+docNum.get("acadYear");
 	}
 	
 	private String NameFormat(String str){
@@ -294,7 +333,7 @@ public class GenerateReportController extends HttpServlet {
 				"	STDBIO.BIRTHDATE AS BIRTHDATE, "+
 				"	DE.DEGREECERTIFICATEENG AS DEGREECERTIFICATEENG,	"+
 				"	PRO.PROGRAMNAMEENG AS PROGRAMNAMEENG,	"+
-				"	'Hummanities and Social Science' AS FACULTYNAMEENG	"+
+				"	FAC.FACULTYNAMEENG AS FACULTYNAMEENG	"+
 				"	FROM STUDENTMASTER STDM,	"+
 				"	STUDENTBIO	STDBIO, "+
 				"	FACULTY FAC,	"+
@@ -306,7 +345,8 @@ public class GenerateReportController extends HttpServlet {
 				"	AND STDM.FACULTYID = FAC.FACULTYID	"+
 				"	AND STDM.PREFIXID  = PRE.PREFIXID	"+
 				"	AND STDM.PROGRAMID = PRO.PROGRAMID	"+
-				"	AND PRO.DEGREEID   = DE.DEGREEID ";
+				"	AND PRO.DEGREEID   = DE.DEGREEID "+
+				"	AND PRO.PROGRAMSTATUS = 40 ";
 		return getData(sql);
 	}
 	

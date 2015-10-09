@@ -20,6 +20,7 @@
 			<intercept-url pattern="/main.html" access="hasRole('ROLE_STUDENT')" />
 			<intercept-url pattern="/management_Student.html" access="hasRole('ROLE_STUDENT')" />
 			<intercept-url pattern="/requestForm.html" access="hasAnyRole('ROLE_STUDENT','ROLE_ADMIN')" />
+			<intercept-url pattern="/reportLog.html" access="hasRole('ROLE_ADMIN')" />
 	 		<access-denied-handler error-page="/403.html" />
 
 	 		<form-login login-page="/login.html"

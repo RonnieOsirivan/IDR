@@ -4,12 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -49,7 +50,6 @@ public class ManagementReportController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal().getClass());
 		String userName = ((User)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
 		RoleCheck roleCheck = new RoleCheck();
 		if(request.getParameter("reportId")!=null){
@@ -164,10 +164,20 @@ public class ManagementReportController extends HttpServlet {
 	private void markPrint(String reportId){
 		connecctionRBRUMySQL();
 		String sql = "UPDATE REPORT SET REPORTPRINTSTATUS = 1 WHERE REPORTID = ?";
+		String printTimeSql = "UPDATE `IDR`.`REPORTLOG` SET `PRINTDATE`=? WHERE `REPORTID`=?";
 		try {
 			PreparedStatement stmt = con.prepareStatement(sql);
 			stmt.setInt(1, Integer.parseInt(reportId));
 			stmt.executeUpdate();
+			stmt.close();
+			
+			Timestamp timeStamp = new Timestamp(new Date().getTime());
+			stmt = con.prepareStatement(printTimeSql);
+			stmt.setTimestamp(1, timeStamp);
+			stmt.setInt(2, Integer.parseInt(reportId));
+			stmt.executeUpdate();
+			stmt.close();
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

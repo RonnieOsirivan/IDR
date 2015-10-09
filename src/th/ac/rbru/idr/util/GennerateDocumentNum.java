@@ -1,6 +1,7 @@
 package th.ac.rbru.idr.util;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -11,17 +12,33 @@ public class GennerateDocumentNum {
 	public synchronized HashMap<String,String> getDocumentNum(String docTypeNumber){
 		HashMap<String, String> map = new HashMap<String,String>();
 		try {
-			String sql = "	INSERT INTO DOCUMENTNUM(REPORTTYPEID,DOCUMENTRUNNINGNUM,ACADYEAR,DOCUMENTNUMBER)	"+
-					"	SELECT "+docTypeNumber+",DOCUMENTRUNNINGNUM+1,ACADYEAR,concat("+docTypeNumber+",'.',DOCUMENTRUNNINGNUM+1,' / ',ACADYEAR)	"+
+			String selectSQL = " SELECT REPORTTYPEID,DOCUMENTRUNNINGNUM,ACADYEAR	"+
 					"	FROM DOCUMENTNUM	"+
 					"	WHERE REPORTTYPEID="+docTypeNumber+
 					"	ORDER BY DOCUMENTID DESC	"+
-					"	LIMIT 1";
+					"	LIMIT 1;	";
+			
+			int docRunNum = 0;
+			int acadYear = 0;
+			String docNum = "";
+			ResultSet resultSet = getDataMySql(selectSQL);
+			if(resultSet.next()){
+				docRunNum = resultSet.getInt(2)+1;
+				acadYear = resultSet.getInt(3);
+				docNum = documentNumberFormmat(docTypeNumber, docRunNum, acadYear);
+			}
+			
+			String sql = "	INSERT INTO DOCUMENTNUM(REPORTTYPEID,DOCUMENTRUNNINGNUM,ACADYEAR,DOCUMENTNUMBER) "+
+					" VALUES (?,?,?,?) ";
 			ConnectionDB.getInstance();
 			con = ConnectionDB.getRBRUMySQL();
-			Statement st = con.createStatement();
-			st.executeUpdate(sql);
-			st.close();
+			PreparedStatement psmt = con.prepareStatement(sql);
+			psmt.setInt(1, Integer.parseInt(docTypeNumber));
+			psmt.setInt(2, docRunNum);
+			psmt.setInt(3, acadYear);
+			psmt.setString(4, docNum);
+			
+			psmt.executeUpdate();
 			releaseConnection();
 			
 			ResultSet rs = getDataMySql("SELECT * FROM DOCUMENTNUM WHERE REPORTTYPEID ="+docTypeNumber+" ORDER BY DOCUMENTID DESC LIMIT 1");
@@ -60,5 +77,17 @@ public class GennerateDocumentNum {
 				e.printStackTrace(System.err);
 			}
 		}
+	}
+	
+	private String documentNumberFormmat(String docType,int docRunNum,int acadYear){
+		String docRunNumString = "";
+		if(String.valueOf(docRunNum).length() == 1){
+			docRunNumString = "00"+String.valueOf(docRunNum);
+		}else if(String.valueOf(docRunNum).length() == 2){
+			docRunNumString = "0"+String.valueOf(docRunNum);
+		}else{
+			docRunNumString = String.valueOf(docRunNum);
+		}
+		return docType+"."+docRunNumString+" / "+acadYear;
 	}
 }
