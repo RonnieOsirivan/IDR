@@ -19,6 +19,7 @@ public class StaticValue implements ServletContextListener{
 	public static String REPORT_TRASH_DIRECTORY;
 	public static String REPORT_LOG_FILE_DIRECTORY;
 	public static String REPORT_LOG;
+	public static String ABSULUTEPATH;
 	
 	
 	@Override

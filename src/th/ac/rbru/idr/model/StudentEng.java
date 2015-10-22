@@ -19,8 +19,12 @@ public class StudentEng {
 	private Date birtDate;
 	@Column(name="DEGREECERTIFICATEENG")
 	private String degreeCerificate;
+	@Column(name="PROGRAMNAME")
+	private String programNameThai;
 	@Column(name="PROGRAMNAMEENG")
 	private String programName;
+	@Column(name="FACULTYNAMETHAI")
+	private String facultyNameThai;
 	@Column(name="FACULTYNAMEENG")
 	private String facultyName;
 	public String getPrefixName() {
@@ -59,11 +63,23 @@ public class StudentEng {
 	public void setDegreeCerificate(String degreeCerificate) {
 		this.degreeCerificate = degreeCerificate;
 	}
+	public String getProgramNameThai() {
+		return programNameThai;
+	}
+	public void setProgramNameThai(String programNameThai) {
+		this.programNameThai = programNameThai;
+	}
 	public String getProgramName() {
 		return programName;
 	}
 	public void setProgramName(String programName) {
 		this.programName = programName;
+	}
+	public String getFacultyNameThai() {
+		return facultyNameThai;
+	}
+	public void setFacultyNameThai(String facultyNameThai) {
+		this.facultyNameThai = facultyNameThai;
 	}
 	public String getFacultyName() {
 		return facultyName;

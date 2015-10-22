@@ -30,7 +30,10 @@ public class ResetDocNumScheduler implements ServletContextListener{
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
 		excecuteResetDocNum();
+//		ApplicationContext p = (ApplicationContext)arg0.getServletContext();
+//		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"+p.getContextPath());
 	}
+	
 	
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {

@@ -25,4 +25,7 @@
 			<property name="username" value="rattasit.s" />
 			<property name="password" value="rattasit.s" />
 	</bean>
+	
+	<bean id="deleteFile" class="th.ac.rbru.idr.util.DeleteReportFile"></bean>
+	<bean id="resetDocumentNumber" class="th.ac.rbru.idr.util.ResetDocNumScheduler"></bean>
 </beans>

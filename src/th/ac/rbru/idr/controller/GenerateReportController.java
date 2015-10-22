@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -21,7 +22,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.sf.jasperreports.engine.JRException;
 import th.ac.rbru.idr.model.Student;
 import th.ac.rbru.idr.model.StudentEng;
 import th.ac.rbru.idr.util.ConnectionDB;
@@ -65,8 +65,6 @@ public class GenerateReportController extends HttpServlet {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}catch (JRException e) {
-			e.printStackTrace();
 		}
 	}
 
@@ -77,7 +75,7 @@ public class GenerateReportController extends HttpServlet {
 		// TODO Auto-generated method stub
 	}
 	
-	private void generateReportEng(HttpServletRequest request,HttpServletResponse response) throws SQLException, JRException, IOException{
+	private void generateReportEng(HttpServletRequest request,HttpServletResponse response) throws SQLException, IOException{
 		Date date = new Date();
 		SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy",Locale.US);
 		ResultSetMapper<StudentEng> studentResult = new ResultSetMapper<StudentEng>();
@@ -102,10 +100,10 @@ public class GenerateReportController extends HttpServlet {
 		param.put("pDetail", detailParam);
 		
 		int reportId = insertReport(studentEng.getStudentCode(),studentEng.getPrefixName()+studentEng.getStudentName()+" "+studentEng.getStudentSurname(),
-				request.getParameter("telephoneParam"),request.getParameter("useforParam"),"EN",Integer.parseInt(map.get("docId")),studentEng.getFacultyName(),
+				request.getParameter("telephoneParam"),request.getParameter("useforParam"),"EN",Integer.parseInt(map.get("docId")),studentEng.getFacultyNameThai(),studentEng.getProgramNameThai(),
 				documentNumEngFormat(map),map.get("reportTypeId"));
 		GenerateReport genReport = new GenerateReport();
-		genReport.generarteReport("studentStatusEng",reportId, param,getAbsulutePath());
+		genReport.generarteReport("studentStatusEng",String.valueOf(reportId), param,getAbsulutePath());
 		sendResponse(request, response, "Done!");
 	}
 	
@@ -154,9 +152,9 @@ public class GenerateReportController extends HttpServlet {
 		
 		int reportId = insertReport(student.getStudentCode(),student.getPrefix()+student.getFirstName()+" "+student.getLastName(),
 				request.getParameter("telephoneParam"),request.getParameter("useforParam"),"TH",Integer.parseInt(map.get("docId")),
-				student.getFacultyName(),documentNumEngFormat(map),map.get("reportTypeId"));
+				student.getFacultyName(),student.getProgramName(),documentNumEngFormat(map),map.get("reportTypeId"));
 		GenerateReport genReport = new GenerateReport();
-		genReport.generarteReport("studentStatusThai", reportId,param,getAbsulutePath());
+		genReport.generarteReport("studentStatusThai", String.valueOf(reportId),param,getAbsulutePath());
 //		FileInputStream pdfStream = convertPdfToBinary("/Users/rattasit/workspace/IDR/WebContent/reportFile/test.pdf");
 		sendResponse(request, response, "Done!");
 	}
@@ -173,7 +171,7 @@ public class GenerateReportController extends HttpServlet {
 //		return inputStream;
 //	}
 	
-	private int insertReport(String stdCode,String stdName,String telephoneNum,String usefor,String language,int docId,String facName,String docNum,String reportTypeId){
+	private int insertReport(String stdCode,String stdName,String telephoneNum,String usefor,String language,int docId,String facName,String programName,String docNum,String reportTypeId){
 		String stdInsertSql = "INSERT IGNORE INTO STUDENT(STUDENTCODE,STUDENTNAME,TELEPHONENUMBER) VALUES (?,?,?)";
 		String pdfInsertSql = "INSERT INTO REPORT(STUDENTCODE,REPORTTYPEID,USEFOR,REPORTFILE,LANGUAGE,DOCUMENTID) VALUES(?,?,?,?,?,?)";
 		
@@ -193,7 +191,7 @@ public class GenerateReportController extends HttpServlet {
 			stmt.setString(1, stdCode);
 			stmt.setInt(2, Integer.parseInt(reportTypeId));
 			stmt.setString(3,usefor);
-			stmt.setString(4, "");
+			stmt.setString(4, programName);
 			stmt.setString(5, language);
 			stmt.setInt(6, docId);
 			stmt.executeUpdate();
@@ -212,14 +210,18 @@ public class GenerateReportController extends HttpServlet {
 			stmt.close();
 			
 			String reportLogInsertSql = "	INSERT INTO `IDR`.`REPORTLOG` (`REPORTID`, `STUDENTCODE`, 	"+
-					"	`FACULTYNAME`, `DOCUMENTNUMBER`, `REPORTTYPEID`) 	"+
-					"	VALUES (?, ?, ?, ?, ?)	";
+					"	`FACULTYNAME`,`PROGRAMNAME`,`DOCUMENTNUMBER`, `REPORTTYPEID`,`REQUESTDATE`) 	"+
+					"	VALUES (?, ?, ?, ?, ?,?,?)	";
+			
+			Timestamp timeStamp = new Timestamp(new Date().getTime());
 			stmt = con.prepareStatement(reportLogInsertSql);
 			stmt.setInt(1, reportId);
 			stmt.setString(2, stdCode);
 			stmt.setString(3, facName);
-			stmt.setString(4, docNum);
-			stmt.setInt(5, Integer.parseInt(reportTypeId));
+			stmt.setString(4, programName);
+			stmt.setString(5, docNum);
+			stmt.setInt(6, Integer.parseInt(reportTypeId));
+			stmt.setTimestamp(7, timeStamp);
 			stmt.executeUpdate();
 			stmt.close();
 			
@@ -332,7 +334,10 @@ public class GenerateReportController extends HttpServlet {
 				"	STDM.STUDENTCODE AS STUDENTCODE,	"+
 				"	STDBIO.BIRTHDATE AS BIRTHDATE, "+
 				"	DE.DEGREECERTIFICATEENG AS DEGREECERTIFICATEENG,	"+
+				"	  'สาขาวิชา'	||"+
+				"	PRO.PROGRAMNAME AS PROGRAMNAME,	"+
 				"	PRO.PROGRAMNAMEENG AS PROGRAMNAMEENG,	"+
+				"	FAC.FACULTYNAME	AS FACULTYNAMETHAI,"+
 				"	FAC.FACULTYNAMEENG AS FACULTYNAMEENG	"+
 				"	FROM STUDENTMASTER STDM,	"+
 				"	STUDENTBIO	STDBIO, "+
@@ -378,7 +383,6 @@ public class GenerateReportController extends HttpServlet {
 			con = ConnectionDB.getRegConnection();
 			Statement statement = con.createStatement();
 			result = statement.executeQuery(sql);
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

@@ -46,6 +46,9 @@
   <listener>
     <listener-class>th.ac.rbru.idr.util.StaticValue</listener-class>
   </listener>
+  <listener>
+    <listener-class>th.ac.rbru.idr.util.ContextPath</listener-class>
+  </listener>
   <filter>
     <filter-name>springSecurityFilterChain</filter-name>
     <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -54,4 +57,16 @@
     <filter-name>springSecurityFilterChain</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+  <servlet>
+    <servlet-name>staticFile</servlet-name>
+    <servlet-class>org.apache.catalina.servlets.DefaultServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>staticFile</servlet-name>
+    <url-pattern>/reportFile/*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>staticFile</servlet-name>
+    <url-pattern>/reportLogFile/*</url-pattern>
+  </servlet-mapping>
 </web-app>

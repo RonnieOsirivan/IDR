@@ -156,18 +156,31 @@
 			var method = "report";
 			var reportType = $('#reportType').val();
 			var sinceDate = $('#sinceDate').val();
-			var untilDate = $('#untilDate').val();
+			var untilDate = $('#untilDate').val()+" 23:59";
 			
 			var xmlhttp = loadXMLDoc();
 			xmlhttp.open("GET","./ReportLogController?method="+method+"&reportType="+reportType+"&sinceDate="+sinceDate+"&untilDate="+untilDate);
 			xmlhttp.send();
 			xmlhttp.onreadystatechange=function(){
 				if (xmlhttp.readyState==4 && xmlhttp.status==200){
-					window.location.assign("./reportLogFile/10.pdf")
-					//window.open("./reportLogFile/10.pdf", "_blank");
+					document.getElementById("ok").disabled = true;
+					document.getElementById("cancel").disabled = true;
+					setTimeout(function(){showReport(xmlhttp.responseText)},2000);
+				}
+			}
+		}
+		
+		function showReport(reportName){
+			console.log(reportName);
+			var xmlhttp = loadXMLDoc();
+			xmlhttp.open("GET","./reportLogFile/"+reportName);
+			xmlhttp.send();
+			xmlhttp.onreadystatechange=function(){
+				if (xmlhttp.readyState==4 && xmlhttp.status==200){
+					window.location.assign("./reportLogFile/"+reportName);
+					//window.open("./reportLogFile/reportLog.pdf", "_blank");
 				}else{
-					setTimeout(sendRequest,5000);
-					console.log("1");
+					setTimeout(function(){showReport(reportName)},2000);
 				}
 			}
 		}

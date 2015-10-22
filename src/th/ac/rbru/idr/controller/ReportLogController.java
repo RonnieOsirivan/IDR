@@ -1,6 +1,5 @@
 package th.ac.rbru.idr.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -51,37 +50,26 @@ public class ReportLogController extends HttpServlet {
 		}else{
 			param.put("reportType", request.getParameter("reportType"));
 		}
-		System.out.println(request.getParameter("sinceDate"));
-		System.out.println(request.getParameter("untilDate"));
-		System.out.println(request.getParameter("reportType"));
 		
 		GenerateReport genReport = new GenerateReport();
-		genReport.generarteReport("studentStatusThai", 10,param,getAbsulutePath());
-		
+		String reportName = genReport.generarteReport("reportLog", "reportLog",param,getAbsulutePath());
+		sendResponse(request, response, reportName);
+	}
+	
+	private void sendResponse(HttpServletRequest request,HttpServletResponse response,String resultJson){
 		try {
-			File f = new File("/Users/rattasit/workspace/IDR/WebContent/reportLogFile/10.pdf");
-			System.out.println(getAbsulutePath());
-			if(f.exists() && !f.isDirectory()){
-				System.out.println("tttttttttttt");
-			}
-			response.sendRedirect("./reportLogFile/10.pdf");
+			response.setCharacterEncoding("utf-8");
+			response.setContentType("application/json;charset=utf-8");
+			PrintWriter out = response.getWriter();
+			out.write(resultJson);
+			out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
-	private void sendResponse(HttpServletRequest request,HttpServletResponse response,String resultJson) throws IOException{
-		response.setCharacterEncoding("utf-8");
-		response.setContentType("application/json;charset=utf-8");
-		PrintWriter out = response.getWriter();
-		out.write(resultJson);
-		out.close();
+	private String getAbsulutePath(){
+		String abPath = getServletContext().getRealPath("/");
+		return abPath;
 	}
-	
-	 private String getAbsulutePath(){
-	    	String abPath = getServletContext().getRealPath("/");
-	    	return abPath;
-	 }
-
 }

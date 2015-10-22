@@ -265,11 +265,11 @@ public class ManagementReportController extends HttpServlet {
 		File afile;
 		for (String id : reportIdArray) {
 			// for test
-			afile = new File("/Users/rattasit/workspace/IDR/WebContent/"+StaticValue.REPORT_FILE_DIRECTORY+id+".pdf");
-			afile.renameTo(new File("/Users/rattasit/workspace/IDR/WebContent/"+StaticValue.REPORT_TRASH_DIRECTORY+afile.getName()));
+//			afile = new File("/Users/rattasit/workspace/IDR/WebContent/"+StaticValue.REPORT_FILE_DIRECTORY+id+".pdf");
+//			afile.renameTo(new File("/Users/rattasit/workspace/IDR/WebContent/"+StaticValue.REPORT_TRASH_DIRECTORY+afile.getName()));
 			
-//			afile = new File(getAbsulutePath()+StaticValue.REPORT_FILE_DIRECTORY+id+".pdf");
-//			afile.renameTo(new File(getAbsulutePath()+StaticValue.REPORT_TRASH_DIRECTORY+afile.getName()));
+			afile = new File(getAbsulutePath()+StaticValue.REPORT_FILE_DIRECTORY+id+".pdf");
+			afile.renameTo(new File(getAbsulutePath()+StaticValue.REPORT_TRASH_DIRECTORY+afile.getName()));
 		}
 	}
 	

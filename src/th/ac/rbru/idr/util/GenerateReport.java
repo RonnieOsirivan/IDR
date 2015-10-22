@@ -1,8 +1,12 @@
 package th.ac.rbru.idr.util;
 
 import java.sql.Connection;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 
+import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
@@ -10,32 +14,52 @@ import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 
+
+
 public class GenerateReport {
-	public void generarteReport(String reportTypeResource,int reportId,HashMap<String, Object> param,String abPath){
+	public String generarteReport(String reportTypeResource,String reportId,HashMap<String, Object> param,String abPath){
 		String reportFileDirectory="";
+		String reportTypeResourceFile = "";
+		String reportName = "";
+		
+		DateFormat df = new SimpleDateFormat("HH:mm:ss");
+		String time = df.format(new Date()).toString();
+		
 		if("studentStatusThai".equals(reportTypeResource)){
-			reportTypeResource = abPath+StaticValue.REPORT_TYPE_STUDENT_STATUS_THAI;
+			reportTypeResourceFile = abPath+StaticValue.REPORT_TYPE_STUDENT_STATUS_THAI;
 			reportFileDirectory = abPath+StaticValue.REPORT_FILE_DIRECTORY+reportId+".pdf";
 		}else if("studentStatusEng".equals(reportTypeResource)){
-			reportTypeResource = abPath+StaticValue.REPORT_TYPE_STUDENT_STATUS_ENG;
+			reportTypeResourceFile = abPath+StaticValue.REPORT_TYPE_STUDENT_STATUS_ENG;
 			reportFileDirectory = abPath+StaticValue.REPORT_FILE_DIRECTORY+reportId+".pdf";
 		}else if("reportLog".equals(reportTypeResource)){
-			reportTypeResource = abPath+StaticValue.REPORT_LOG;
+			reportTypeResourceFile = abPath+StaticValue.REPORT_LOG;
 			reportFileDirectory = abPath+StaticValue.REPORT_LOG_FILE_DIRECTORY+reportId+".pdf";
 		}
 		
+		
 		//for reportFileDirectory test localhost
-		reportFileDirectory = "/Users/rattasit/workspace/IDR/WebContent/reportLogFile/"+reportId+".pdf"; 
+//		reportFileDirectory = "/Users/rattasit/workspace/IDR/WebContent/reportFile/"+reportId+".pdf"; 
+//		reportFileDirectory = "/Users/rattasit/workspace/IDR/WebContent/reportLogFile/"+reportId+time+".pdf"; 
+		
+		//for reportTypeResource test localhost
+//		reportTypeResource = "/Users/rattasit/workspace/IDR/WebContent/report/IDRReport.jrxml";
+//		reportTypeResourceFile = "/Users/rattasit/workspace/IDR/WebContent/report/reportLog.jrxml";
+		
 		try {
-			//for reportTypeResource test localhost
-			reportTypeResource = "/Users/rattasit/workspace/IDR/WebContent/report/reportLog.jrxml";
 			@SuppressWarnings("static-access")
 			Connection con = ConnectionDB.getInstance().getRBRUMySQL();
-			JasperReport jasperReport = JasperCompileManager.compileReport(reportTypeResource);
-			JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, param,con);
+			JasperReport jasperReport = JasperCompileManager.compileReport(reportTypeResourceFile);
+			JasperPrint jasperPrint;
+			if("reportLog".equals(reportTypeResource)){
+				jasperPrint = JasperFillManager.fillReport(jasperReport, param,con);
+			}else{
+				jasperPrint = JasperFillManager.fillReport(jasperReport, param,new JREmptyDataSource());
+			}
 			JasperExportManager.exportReportToPdfFile(jasperPrint, reportFileDirectory);
 		} catch (JRException e) {
 			e.printStackTrace();
 		}
+		reportName = reportId+time+".pdf";
+		return reportName;
 	}
 }
