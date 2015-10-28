@@ -85,6 +85,7 @@
 	<script type="text/javascript">
 		var $table = $('#table');
 		var printStatus = [];
+		var json;
 		
 		function logOut(){
     		sessionStorage.clear();
@@ -104,10 +105,10 @@
 	    	
 	    	
 			$('#remove').click(function () {
-				swal({title: "Are you sure?",
-						text: "You will not be able to recover this file!",
+				swal({title: json.lang051,
 						type: "warning",   showCancelButton: true,   confirmButtonColor: "#DD6B55",
-						confirmButtonText: "Yes, delete it!",
+						confirmButtonText: json.lang052,
+						cancelButtonText: json.lang045,
 						closeOnConfirm: false 
 						},
 						function(){
@@ -175,18 +176,17 @@
 	    function getLabel(lang){
 	    	localStorage.setItem("lang",lang);
 			var xmlhttp = loadXMLDoc();
-			var langJson;
 			xmlhttp.open("GET","./BilangualController?lang="+lang);
 			xmlhttp.send();
 			xmlhttp.onreadystatechange=function(){
 				if (xmlhttp.readyState==4 && xmlhttp.status==200){
-					langJson=JSON.parse(xmlhttp.responseText);
-					setLabel(langJson);
+					json=JSON.parse(xmlhttp.responseText);
+					setLabel();
 				}
 			}
 		}
 	    
-	    function setLabel(json){
+	    function setLabel(){
 	    	var tr = $("#trHeader").children();
 	    	tr[1].innerHTML = "<th style><div class='th-inner sortable'>"+json.lang007+"</div><div class='fht-cell'></div></th>";
 	    	tr[2].innerHTML = "<th style><div class='th-inner sortable'>"+json.lang008+"</div><div class='fht-cell'></div></th>";
