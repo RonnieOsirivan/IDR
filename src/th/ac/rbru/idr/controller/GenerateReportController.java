@@ -109,7 +109,7 @@ public class GenerateReportController extends HttpServlet {
 	
 	private void generateReportThai(HttpServletRequest request,HttpServletResponse response)throws SQLException, IOException{
 		Date date = new Date();
-		SimpleDateFormat simpleDateFullDate = new SimpleDateFormat("dd MMMM yyyy",new Locale("th","th"));
+//		SimpleDateFormat simpleDateFullDate = new SimpleDateFormat("dd MMMM yyyy",new Locale("th","th"));
 		SimpleDateFormat simpleDateNumber = new SimpleDateFormat("dd",new Locale("th","th"));
 		SimpleDateFormat simpleDateMounth = new SimpleDateFormat("MMMM",new Locale("th","th"));
 		SimpleDateFormat simpleDateYear = new SimpleDateFormat("yyyy",new Locale("th","th"));

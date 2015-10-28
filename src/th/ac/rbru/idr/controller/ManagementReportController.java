@@ -157,6 +157,7 @@ public class ManagementReportController extends HttpServlet {
 //			e.printStackTrace();
 //		} 
 //		response.sendRedirect("./reportFile/"+request.getParameter("reportId")+"after.pdf");
+		
 		markPrint(request.getParameter("reportId"));
 		response.sendRedirect("./reportFile/"+request.getParameter("reportId")+".pdf");
 	}

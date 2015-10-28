@@ -1,16 +1,27 @@
 package th.ac.rbru.idr.controller;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.sql.Connection;
 import java.util.HashMap;
 
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import th.ac.rbru.idr.util.GenerateReport;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import th.ac.rbru.idr.util.ConnectionDB;
+import th.ac.rbru.idr.util.StaticValue;
 
 /**
  * Servlet implementation class ReportLogController
@@ -51,21 +62,51 @@ public class ReportLogController extends HttpServlet {
 			param.put("reportType", request.getParameter("reportType"));
 		}
 		
-		GenerateReport genReport = new GenerateReport();
-		String reportName = genReport.generarteReport("reportLog", "reportLog",param,getAbsulutePath());
-		sendResponse(request, response, reportName);
-	}
-	
-	private void sendResponse(HttpServletRequest request,HttpServletResponse response,String resultJson){
+		ConnectionDB.getInstance();
+		Connection con = ConnectionDB.getRBRUMySQL();
+		
 		try {
-			response.setCharacterEncoding("utf-8");
-			response.setContentType("application/json;charset=utf-8");
-			PrintWriter out = response.getWriter();
-			out.write(resultJson);
-			out.close();
+			//for test localhost
+//			JasperDesign jdesign = JRXmlLoader.load("/Users/rattasit/workspace/IDR/WebContent/report/reportLog.jrxml");
+			
+			JasperDesign jdesign = JRXmlLoader.load(getAbsulutePath()+StaticValue.REPORT_LOG);
+			JasperReport jReport = JasperCompileManager.compileReport(jdesign);
+			
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			response.setHeader("Accept-Ranges", "bytes");
+			response.setHeader("Connection", "close");
+//			response.setContentType("application/pdf");
+			response.setContentType("blob");
+			JasperPrint jPrint = JasperFillManager.fillReport(jReport, param, con);
+			JasperExportManager.exportReportToPdfStream(jPrint, baos);
+			
+//			response.setHeader("Content-disposition",
+//	                  "inline; filename=" +
+//	                  "Report.pdf" );
+			
+			response.setHeader("Content-disposition",
+	                  "attachment; filename=" +
+	                  "Report.pdf" );
+			response.setContentLength(baos.size());
+	
+			
+			ServletOutputStream out1 = response.getOutputStream();
+			baos.writeTo(out1);
+			
+			baos.flush();
+			baos.close();
+			out1.flush();
+			out1.close();
+			
+		} catch (JRException e) {
+			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+//		GenerateReport genReport = new GenerateReport();
+//		String reportName = genReport.generarteReport("reportLog", "reportLog",param,getAbsulutePath());
+//		sendResponse(request, response, reportName);
 	}
 	
 	private String getAbsulutePath(){

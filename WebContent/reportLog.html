@@ -161,11 +161,50 @@
 			var xmlhttp = loadXMLDoc();
 			xmlhttp.open("GET","./ReportLogController?method="+method+"&reportType="+reportType+"&sinceDate="+sinceDate+"&untilDate="+untilDate);
 			xmlhttp.send();
+			xmlhttp.responseType="blob";
+			xmlhttp.responseType="application/pdf";
 			xmlhttp.onreadystatechange=function(){
+				
 				if (xmlhttp.readyState==4 && xmlhttp.status==200){
-					document.getElementById("ok").disabled = true;
-					document.getElementById("cancel").disabled = true;
-					setTimeout(function(){showReport(xmlhttp.responseText)},2000);
+					//console.log(xmlhttp.response);
+					
+					//var win = window.open();
+					//win.document.open().write(
+							/* "<script type='text/javascript' src='./js/pdfobject_source.js'><\/script>"+
+							"<title>Report Log</title> "+
+							"	<div id='pdfRenderer'></div>	"+
+							"	<script type='text/javascript'>	"+
+							"	(function(){	"+
+							"	var pdf = new PDFObject({	"+
+							"	url: './ReportLogController?method="+method+'&reportType='+reportType+'&sinceDate='+sinceDate+'&untilDate='+untilDate+"',"+
+							"	id: 'pdfRendered',	"+
+							"	pdfOpenParams: {	"+
+							"view: 'FitH'"+
+							"}"+
+							"}).embed('pdfRenderer');"+
+							"})();"+
+							" <\/script>" */
+							
+							//"<title>Report Log</title> "+
+							//"<embed src='./ReportLogController?method="+method+"&reportType="+reportType+"&sinceDate="+sinceDate+"&untilDate="+untilDate +"' width='100%' height='100%' type='application/pdf' > </embed>"
+							//);
+					
+					//---------------------------------------------
+					var file = window.URL.createObjectURL(xmlhttp.response);
+					var a = document.createElement("a");
+					a.href = file;
+					a.download = xmlhttp.response.name || "Report.pdf";
+					document.body.appendChild(a);
+					a.click();
+					// remove `a` following `Save As` dialog, 
+					// `window` regains `focus`
+					window.onfocus = function () {                     
+						document.body.removeChild(a)
+					} 
+				    //----------------------------------------
+					//document.getElementById("ok").disabled = true;
+					//document.getElementById("cancel").disabled = true;
+					//setTimeout(function(){showReport(xmlhttp.responseText)},2000);
 				}
 			}
 		}
@@ -243,6 +282,20 @@
     		sessionStorage.clear();
         	document.getElementById("logoutForm").submit();
     	}
+	</script>
+	
+	
+	<div id='pdfRenderer'></div>
+	<script type='text/javascript'>
+		/* (function(){
+			var pdf = new PDFObject({
+				  url: './ReportLogController?method='+method+'&reportType='+reportType+'&sinceDate='+sinceDate+'&untilDate='+untilDate,
+				  id: 'pdfRendered',
+				  pdfOpenParams: {
+				    view: 'FitH'
+				  }
+			}).embed('pdfRenderer');
+		})(); */
 	</script>
 </body>
 </html>
