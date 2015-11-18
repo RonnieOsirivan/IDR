@@ -21,6 +21,7 @@
 			<intercept-url pattern="/management_Student.html" access="hasRole('ROLE_STUDENT')" />
 			<intercept-url pattern="/requestForm.html" access="hasAnyRole('ROLE_STUDENT','ROLE_ADMIN')" />
 			<intercept-url pattern="/reportLog.html" access="hasRole('ROLE_ADMIN')" />
+			<intercept-url pattern="/searchStudent.html" access="hasRole('ROLE_ADMIN')" />
 	 		<access-denied-handler error-page="/403.html" />
 
 	 		<form-login login-page="/login.html"
@@ -37,12 +38,14 @@
 			<xss-protection/>
 		</headers>	
 		<session-management invalid-session-url="/login.html">
-			<concurrency-control max-sessions="1" error-if-maximum-exceeded="true"/>
+			<concurrency-control max-sessions="1" error-if-maximum-exceeded="false"/>
 		</session-management>
 	</http>		
 	
 	<authentication-manager>
-		<authentication-provider >
+		<authentication-provider user-service-ref="aunthenticationManagement">
+		<password-encoder hash="md5"/>
+			<!--  
 			<jdbc-user-service data-source-ref="testDataSource"
 				users-by-username-query="select USERNAME,value AS PASSWORD,1 AS enabled from radcheck where USERNAME = ?"
 				authorities-by-username-query="SELECT RAD.username AS USERNAME,
@@ -50,6 +53,8 @@
 												FROM radcheck RAD 
 												LEFT JOIN ROLE R ON RAD.username = R.USERNAME
 												WHERE RAD.username = ?" />
+			-->
 		</authentication-provider>
 	</authentication-manager>	
+	<beans:bean id="aunthenticationManagement" class="th.ac.rbru.idr.util.AuthenticationManagement"/>			
 </beans:beans>

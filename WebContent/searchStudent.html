@@ -25,21 +25,21 @@
                 <div class="form-group">
                     <label id="labelID">ID</label>
                     <div class="input-group">
-                        <input type="number" class="form-control" name="inputId" id="inputId" >
+                        <input type="number" class="form-control" name="inputId" id="inputId" onkeypress="return searchKeyPress(event);" />
                         <span class="input-group-addon"><span class="glyphicon glyphicon-asterisk"></span></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label id="labelFirstName">First name</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" id="inputFirstName" name="inputFirstName">
+                        <input type="text" class="form-control" id="inputFirstName" name="inputFirstName"onkeypress="return searchKeyPress(event);" />
                         <span class="input-group-addon"><span class="glyphicon glyphicon-asterisk"></span></span>
                     </div>
                 </div>
                 <div class="form-group">
                     <label id="labelLastName">Last name</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" id="inputLastName" name="inputLastName">
+                        <input type="text" class="form-control" id="inputLastName" name="inputLastName" onkeypress="return searchKeyPress(event);" />
                         <span class="input-group-addon"><span class="glyphicon glyphicon-asterisk"></span></span>
                     </div>
                 </div>
@@ -73,16 +73,14 @@
 				<li><a href="./reportLog.html"><span id="menuLabel2">Request form</span></a></li>
 				<li><a href="javascript:logOut();"><span id="menuLabel3">Log out</span></a></li>
 			</ul>
-			<button id="request" type="button" class="btn btn-default" disabled>
+			<!--<button id="request" type="button" class="btn btn-default" disabled>
 				<i class="glyphicon glyphicon-user"></i>
-			</button>
+			</button>-->
 		</form>
 	</div>
 	
 	 <div class="container">
         <table id="table"
-        		data-click-to-select="true"
-       			data-single-select="true"
 				data-maintain-selected="true"
 				data-toggle="table"
 				data-pagination="true"
@@ -91,10 +89,10 @@
 				data-cache="false">
             <thead>
 	            <tr id="trHeader">
-	            	<th data-field="state" data-checkbox="true"></th>
-	                <th data-field="studentCode">student code</th>
-	                <th data-field="firstName">First Name</th>
-	                <th data-field="lastName">Last Name</th>
+	                <th data-field="studentCode" data-sortable="true">student</th>
+	                <th data-field="firstName" data-sortable="true">First Name</th>
+	                <th data-field="lastName" data-sortable="true">Last Name</th>
+	                <th data-field="action" data-formatter="actionFormatter" data-events="actionEvents" data-align="center">request</th>
 	            </tr>
             </thead>
         </table>
@@ -113,11 +111,12 @@
     		window.location.assign("./management_Admin.html");
     	})
     	
-    	$('#request').click(function(){
+    	//funtion handle request button click above table
+    	/* $('#request').click(function(){
     		var checked = table.bootstrapTable('getSelections');
     		sessionStorage.setItem("studentCode",checked[0].studentCode);
     		window.location.assign("./requestForm.html");
-    	})
+    	}) */
     	
     	//enable request button
     	table.on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
@@ -145,7 +144,6 @@
 				xmlhttp.onreadystatechange=function(){
 					if (xmlhttp.readyState==4 && xmlhttp.status==200){
 						json = JSON.parse(xmlhttp.responseText);
-						console.log(json);
 					}
 					table.bootstrapTable('removeAll');
 					table.bootstrapTable('load',json);
@@ -158,6 +156,37 @@
 		inputId.oninput = function(){
 			if(this.value.length > 4){
 				this.value = this.value.slice(0,10);
+			}
+		}
+		
+		function actionFormatter(value, row, index) {
+			return [
+					"<a class='request' href='javascript:void(0)' title='Request'> "+
+					"<i class='glyphicon glyphicon-edit'></i>"
+			        ].join('');
+		    /* return [
+		        '<a class="like" href="javascript:void(0)" title="Like">',
+		        '<i class="glyphicon glyphicon-heart"></i>',
+		        '</a>',
+		        '<a class="edit ml10" href="javascript:void(0)" title="Edit">',
+		        '<i class="glyphicon glyphicon-edit"></i>',
+		        '</a>',
+		        '<a class="remove ml10" href="javascript:void(0)" title="Remove">',
+		        '<i class="glyphicon glyphicon-remove"></i>',
+		        '</a>'
+		    ].join(''); */
+		}
+
+		window.actionEvents = {
+		    'click .request': function (e, value, row, index) {
+		        sessionStorage.setItem("studentCode",row.studentCode);
+    			window.location.assign("./requestForm.html");
+		    }
+		};
+		
+		function searchKeyPress(e){
+			if(e.keyCode==13){
+				document.getElementById('searchBtn').click();
 			}
 		}
 		
@@ -194,11 +223,13 @@
 	    	document.getElementById("menuLabel1").innerHTML = langJson.lang032;
     		document.getElementById("menuLabel2").innerHTML = langJson.lang040;
     		document.getElementById("menuLabel3").innerHTML = langJson.lang031;
+    		
 	    	
 	    	var tr = $("#trHeader").children();
-	    	tr[1].innerHTML = "<th style><div class='th-inner sortable'>"+langJson.lang007+"</div><div class='fht-cell'></div></th>";
-	    	tr[2].innerHTML = "<th style><div class='th-inner sortable'>"+langJson.lang035+"</div><div class='fht-cell'></div></th>";
-		    tr[3].innerHTML = "<th style><div class='th-inner sortable'>"+langJson.lang036+"</div><div class='fht-cell'></div></th>";
+	    	tr[0].innerHTML = "<th style><div class='th-inner sortable'>"+langJson.lang007+"</div><div class='fht-cell'></div></th>";
+	    	tr[1].innerHTML = "<th style><div class='th-inner sortable'>"+langJson.lang035+"</div><div class='fht-cell'></div></th>";
+		    tr[2].innerHTML = "<th style><div class='th-inner sortable'>"+langJson.lang036+"</div><div class='fht-cell'></div></th>";
+		    tr[3].innerHTML = "<th style><div class='th-inner sortable'>"+langJson.lang022+"</div><div class='fht-cell'></div></th>";
 	    }
 	    
 	    (function(){

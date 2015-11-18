@@ -38,6 +38,11 @@ public class Student {
 	private String programName;
 	@Column(name="STUDENTYEAR")
 	private int studentYear;
+	@Column(name="ADMITACADYEAR")
+	private int admitAcadYear;
+	@Column(name="DEGREEID")
+	private int degreeID;
+	
 	public String getPrefix() {
 		return prefix;
 	}
@@ -127,5 +132,17 @@ public class Student {
 	}
 	public void setStudentYear(int studentYear) {
 		this.studentYear = studentYear;
+	}
+	public int getAdmitAcadYear() {
+		return admitAcadYear;
+	}
+	public void setAdmitAcadYear(int admitAcadYear) {
+		this.admitAcadYear = admitAcadYear;
+	}
+	public int getDegreeID() {
+		return degreeID;
+	}
+	public void setDegreeID(int degreeID) {
+		this.degreeID = degreeID;
 	}
 }

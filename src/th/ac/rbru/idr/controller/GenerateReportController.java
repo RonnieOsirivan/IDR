@@ -94,10 +94,14 @@ public class GenerateReportController extends HttpServlet {
 				}
 				detailParam += "is currently a student of the "
 				+studentEng.getDegreeCerificate()+" Program, "
-				+studentEng.getFacultyName()+","+" Rambhai Barni Rajabhat University.";
+				+studentEng.getFacultyName()+","+" Rambhai Barni Rajabhat University. ";
 		param.put("pSequenceReport", "No. "+documentNumEngFormat(map));
 		param.put("pDate", formatter.format(date));
 		param.put("pDetail", detailParam);
+		
+		//Image for test
+//		param.put("pGarudaSymbol", "/Users/rattasit/workspace/IDR/WebContent/img/garudaSymbol.jpg");
+		param.put("pGarudaSymbol", getAbsulutePath()+StaticValue.GARUDASYMBOL);
 		
 		int reportId = insertReport(studentEng.getStudentCode(),studentEng.getPrefixName()+studentEng.getStudentName()+" "+studentEng.getStudentSurname(),
 				request.getParameter("telephoneParam"),request.getParameter("useforParam"),"EN",Integer.parseInt(map.get("docId")),studentEng.getFacultyNameThai(),studentEng.getProgramNameThai(),
@@ -123,31 +127,44 @@ public class GenerateReportController extends HttpServlet {
 		int dateNumber = Integer.parseInt(simpleDateNumber.format(date));
 		String mounthName = simpleDateMounth.format(date);
 		int dateYear = Integer.parseInt(simpleDateYear.format(date));
-		String dateParam = thaiNumeral(dateNumber)+" "+mounthName+" "+thaiNumeral(dateYear);
+		String dateParam = thaiNumeral(dateNumber)+"  "+mounthName+"  "+thaiNumeral(dateYear);
 		HashMap<String, String> map = new GennerateDocumentNum().getDocumentNum("1");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		String pDetail = "		ขอรับรองว่า "+student.getPrefix()+student.getFirstName()+" "+student.getLastName()
-				+ " รหัสประจำตัวนักศึกษา "+thaiNumeral(Long.parseLong(student.getStudentCode()));
+		String pDetail = "	ขอรับรองว่า  "+student.getPrefix()+student.getFirstName()+"  "+student.getLastName()
+				+ "  รหัสประจำตัวนักศึกษา  "+thaiNumeral(Long.parseLong(student.getStudentCode()));
 				
 				if(request.getParameter("passportNum") != null){
-					pDetail += " เกิดวันที่ "+thaiNumeral(Integer.parseInt(simpleDateNumber.format(student.getBirthDate())))+" "
-							+simpleDateMounth.format(student.getBirthDate())+" "
-							+thaiNumeral(Integer.parseInt(simpleDateYear.format(student.getBirthDate())))+" "
-							+"เลขที่พาสปอร์ต "+request.getParameter("passportNum");
+					pDetail += "  เกิดวันที่  "+thaiNumeral(Integer.parseInt(simpleDateNumber.format(student.getBirthDate())))+"  "
+							+simpleDateMounth.format(student.getBirthDate())+"  "
+							+thaiNumeral(Integer.parseInt(simpleDateYear.format(student.getBirthDate())))+"  "
+							+"เลขที่พาสปอร์ต  "+request.getParameter("passportNum");
 				}
 				
-				pDetail += " เป็นนักศึกษา "+student.getPeriod()
-				+ " ระดับ"+student.getLevelCodeName()
-				+ " "+student.getDegreeName()
-				+ " ("+student.getDegreeAbb()+" "+thaiNumeral(student.getStudyYear())+" ปี)"
-				+ " "+student.getProgramName();
+				pDetail += "  เป็นนักศึกษา"+student.getPeriod()
+				+ "  ระดับ"+student.getLevelCodeName()
+				+ "  "+student.getDegreeName()
+				+ "  ("+student.getDegreeAbb()+"  "+thaiNumeral(student.getStudyYear())+"  ปี)";
+				
+				if(!((student.getAdmitAcadYear() >= 2555 && student.getDegreeID() == 204) || (student.getAdmitAcadYear() >= 2556 && student.getDegreeID() == 205 ))){
+					pDetail += "  "+student.getProgramName();
+				}
+			
 		if(student.getStudyYear() >= student.getStudentYear()){
-			pDetail += " กำลังศึกษาอยู่ปี "+thaiNumeral(student.getStudentYear());
+			pDetail += "  กำลังศึกษาอยู่ปี  "+thaiNumeral(student.getStudentYear());
 		}
-		pDetail += " ที่มหาวิทยาลัยราชภัฏรำไพพรรณี จริง";
-		param.put("pSequenceReport", "ที่ "+thaiNumeral(Integer.parseInt(map.get("reportTypeId")))+"."+thaiNumeral3Digit(Integer.parseInt(map.get("docRuningNum")))+" / "+thaiNumeral(Integer.parseInt(map.get("acadYear"))));
+		pDetail += "  ที่มหาวิทยาลัยราชภัฏรำไพพรรณี  จริง ";
+		param.put("pSequenceReport", "ที่  "+thaiNumeral(Integer.parseInt(map.get("reportTypeId")))+"."+thaiNumeral3Digit(Integer.parseInt(map.get("docRuningNum")))+" / "+thaiNumeral(Integer.parseInt(map.get("acadYear"))));
 		param.put("pDate", dateParam);
+		
+		//Image for test
+//		param.put("pGarudaSymbol", "/Users/rattasit/workspace/IDR/WebContent/img/garudaSymbol.jpg");
+		param.put("pGarudaSymbol", getAbsulutePath()+StaticValue.GARUDASYMBOL);
+		
+		//WordDelimiter wdlt = new WordDelimiter();
+		
+		//pDetail = wdlt.wordDelimiter(pDetail);
+		
 		param.put("pDetail", pDetail);
 		
 		int reportId = insertReport(student.getStudentCode(),student.getPrefix()+student.getFirstName()+" "+student.getLastName(),
@@ -269,7 +286,7 @@ public class GenerateReportController extends HttpServlet {
 		}else{
 			docRunnigNum = docNum.get("docRuningNum");
 		}
-		return docNum.get("reportTypeId")+"."+docRunnigNum+" / "+docNum.get("acadYear");
+		return docNum.get("reportTypeId")+"."+docRunnigNum+" / "+(Integer.parseInt(docNum.get("acadYear"))-543);
 	}
 	
 	private String NameFormat(String str){
@@ -307,7 +324,9 @@ public class GenerateReportController extends HttpServlet {
 				"	  PRO.STUDYYEAR          AS STUDYYEAR,	"+
 				"	  'สาขาวิชา'	"+
 				"	  ||PRO.PROGRAMNAME AS PROGRAMNAME,	"+
-				"	  STDM.STUDENTYEAR  AS STUDENTYEAR	"+
+				"	  STDM.STUDENTYEAR  AS STUDENTYEAR,	"+
+				"	STDM.ADMITACADYEAR AS ADMITACADYEAR, "+
+				"	DE.DEGREEID AS DEGREEID"+
 				"	FROM STUDENTMASTER STDM,	"+
 				"	  STUDENTBIO STDBIO,	"+
 				"	  FACULTY FAC,	"+
@@ -324,6 +343,7 @@ public class GenerateReportController extends HttpServlet {
 				"	AND LE.LEVELCODE   = LC.LEVELCODE	"+
 				"	AND STDM.PROGRAMID = PRO.PROGRAMID	"+
 				"	AND PRO.DEGREEID   = DE.DEGREEID	";
+		System.out.println(sql);
 		return getData(sql);
 	}
 	
@@ -388,7 +408,6 @@ public class GenerateReportController extends HttpServlet {
 		}
 		return result;
 	}
-	
 	
 	private void releaseConnection(){
 		if(con != null){

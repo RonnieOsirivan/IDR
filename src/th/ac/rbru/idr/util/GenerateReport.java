@@ -17,25 +17,26 @@ import net.sf.jasperreports.engine.JasperReport;
 
 
 public class GenerateReport {
-	public String generarteReport(String reportTypeResource,String reportId,HashMap<String, Object> param,String abPath){
+	public void generarteReport(String reportTypeResource,String reportId,HashMap<String, Object> param,String abPath){
 		String reportFileDirectory="";
 		String reportTypeResourceFile = "";
-		String reportName = "";
-		
-		DateFormat df = new SimpleDateFormat("HH:mm:ss");
-		String time = df.format(new Date()).toString();
 		
 		if("studentStatusThai".equals(reportTypeResource)){
 			reportTypeResourceFile = abPath+StaticValue.REPORT_TYPE_STUDENT_STATUS_THAI;
 			reportFileDirectory = abPath+StaticValue.REPORT_FILE_DIRECTORY+reportId+".pdf";
+			
+			//for test
+//			reportTypeResource = "/Users/rattasit/workspace/IDR/WebContent/report/IDRReport.jrxml";
 		}else if("studentStatusEng".equals(reportTypeResource)){
 			reportTypeResourceFile = abPath+StaticValue.REPORT_TYPE_STUDENT_STATUS_ENG;
 			reportFileDirectory = abPath+StaticValue.REPORT_FILE_DIRECTORY+reportId+".pdf";
+			
+			//for test
+//			reportTypeResource = "/Users/rattasit/workspace/IDR/WebContent/report/IDRReportEng.jrxml";
 		}else if("reportLog".equals(reportTypeResource)){
 			reportTypeResourceFile = abPath+StaticValue.REPORT_LOG;
 			reportFileDirectory = abPath+StaticValue.REPORT_LOG_FILE_DIRECTORY+reportId+".pdf";
 		}
-		
 		
 		//for reportFileDirectory test localhost
 //		reportFileDirectory = "/Users/rattasit/workspace/IDR/WebContent/reportFile/"+reportId+".pdf"; 
@@ -43,6 +44,7 @@ public class GenerateReport {
 		
 		//for reportTypeResource test localhost
 //		reportTypeResource = "/Users/rattasit/workspace/IDR/WebContent/report/IDRReport.jrxml";
+//		reportTypeResource = "/Users/rattasit/workspace/IDR/WebContent/report/IDRReportEng.jrxml";
 //		reportTypeResourceFile = "/Users/rattasit/workspace/IDR/WebContent/report/reportLog.jrxml";
 		
 		try {
@@ -59,7 +61,5 @@ public class GenerateReport {
 		} catch (JRException e) {
 			e.printStackTrace();
 		}
-		reportName = reportId+time+".pdf";
-		return reportName;
 	}
 }

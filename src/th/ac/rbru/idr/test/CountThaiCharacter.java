@@ -3,7 +3,7 @@ package th.ac.rbru.idr.test;
 public class CountThaiCharacter {
 
 	public static void main(String[] args) {
-		String olle = "";
+		String olle = "รัฐ ";
 		int count = 0;
 
 		for(int i=0; i<olle.length(); i++)
@@ -13,7 +13,6 @@ public class CountThaiCharacter {
 		}
 
 		System.out.println(count);
-
 	}
 	
 	static boolean isMark(char ch)

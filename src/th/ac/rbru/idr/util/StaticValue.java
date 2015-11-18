@@ -20,6 +20,7 @@ public class StaticValue implements ServletContextListener{
 	public static String REPORT_LOG_FILE_DIRECTORY;
 	public static String REPORT_LOG;
 	public static String ABSULUTEPATH;
+	public static String GARUDASYMBOL;
 	
 	
 	@Override
@@ -34,6 +35,7 @@ public class StaticValue implements ServletContextListener{
 			REPORT_TRASH_DIRECTORY = prop.getProperty("report_trash_directory");
 			REPORT_LOG = prop.getProperty("report_log");
 			REPORT_LOG_FILE_DIRECTORY = prop.getProperty("report_log_directory");
+			GARUDASYMBOL = prop.getProperty("garuda_symbol_picture");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
