@@ -27,6 +27,9 @@ public class StudentEng {
 	private String facultyNameThai;
 	@Column(name="FACULTYNAMEENG")
 	private String facultyName;
+	@Column(name="GPA")
+	private double gpa;
+	
 	public String getPrefixName() {
 		return prefixName;
 	}
@@ -86,5 +89,11 @@ public class StudentEng {
 	}
 	public void setFacultyName(String facultyName) {
 		this.facultyName = facultyName;
+	}
+	public double getGpa() {
+		return gpa;
+	}
+	public void setGpa(double gpa) {
+		this.gpa = gpa;
 	}
 }

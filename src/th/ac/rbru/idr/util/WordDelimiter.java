@@ -22,8 +22,8 @@ public class WordDelimiter {
 		int start = boundary.first();
 		for (int end = boundary.next(); end != BreakIterator.DONE; start = end, end = boundary.next()) {
 			
-			System.out.println(source.substring(start,end));
-			System.out.println(widthPixel(source.substring(start,end)));
+//			System.out.println(source.substring(start,end));
+//			System.out.println(widthPixel(source.substring(start,end)));
 			
 			if(counter == 0){
 				if(!source.substring(start, end).equals(" ") || !source.substring(start, end).equals("  ")){
@@ -36,7 +36,7 @@ public class WordDelimiter {
 				counter += widthPixel(source.substring(start, end));
 			}else{
 				lineLength = 449;
-				strWithNewLine.append("\r");
+				strWithNewLine.append(" ");
 				if(!source.substring(start, end).equals(" ") || !source.substring(start, end).equals("  ")){
 					strWithNewLine.append(source.substring(start, end)); 
 					counter = widthPixel(source.substring(start, end));
@@ -45,10 +45,10 @@ public class WordDelimiter {
 					lineNum++;
 				}
 			}
-			System.out.println("count = "+counter);
+//			System.out.println("count = "+counter);
 		}
 		
-		System.out.println(strWithNewLine.toString());
+//		System.out.println(strWithNewLine.toString());
 		return strWithNewLine.toString();
 	}
 	
@@ -70,12 +70,10 @@ public class WordDelimiter {
 		return count;
 	}
 	
-	private int widthPixel(String text){
+	public int widthPixel(String text){
 		Font font = new Font("TH SarabunPSK", Font.PLAIN, 16);
 		Canvas c = new Canvas();
 		FontMetrics fontMetrics = c.getFontMetrics(font);
 		return fontMetrics.stringWidth(text);
-//		System.out.println(fontMetrics.stringWidth(test));
-//		System.out.println(fontMetrics.charWidth('ณ')+" "+fontMetrics.charWidth('ฒ')+" "+fontMetrics.charWidth('ญ'));
 	}
 }

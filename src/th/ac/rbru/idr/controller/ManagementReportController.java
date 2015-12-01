@@ -228,7 +228,8 @@ public class ManagementReportController extends HttpServlet {
 				"	FROM STUDENT AS STD ,REPORT AS RP , REPORTTYPE AS RPT	"+
 				"	WHERE STD.STUDENTCODE = "+studentCode+
 				"	AND STD.STUDENTCODE = RP.STUDENTCODE	"+
-				"	AND RP.REPORTTYPEID = RPT.REPORTTYPEID";
+				"	AND RP.REPORTTYPEID = RPT.REPORTTYPEID "+
+				"	ORDER BY RP.CREATEDATE ";
 		return getDataMySql(sql);
 	}
 	
@@ -242,7 +243,8 @@ public class ManagementReportController extends HttpServlet {
 				"	RP.CREATEDATE AS CREATEDATE	"+
 				"	FROM STUDENT AS STD ,REPORT AS RP , REPORTTYPE AS RPT	"+
 				"	WHERE STD.STUDENTCODE = RP.STUDENTCODE	"+
-				"	AND RP.REPORTTYPEID = RPT.REPORTTYPEID";
+				"	AND RP.REPORTTYPEID = RPT.REPORTTYPEID "+
+				"	ORDER BY RP.CREATEDATE ";
 		return getDataMySql(sql);
 	}
 	

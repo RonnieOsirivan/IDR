@@ -48,10 +48,22 @@
                                 
                                 <br>
                                 <p>
-                                	<select id="reportType">
+                                	<select id="reportType" onchange="reportChecker(this)">
                                 		<option value="studentStatus" selected="selected">ใบรับรองการเป็นนักศึกษา</option>
+                                		<option value="lastSemester" >ใบรับรองเป็นนักศึกษาภาคเรียนสุดท้าย</option>
+                                		<option value="summaryGPA" >ใบรับรองเกรดเฉลี่ยสะสม</option>
+                                		<option value="gradeEachSemester" >ใบรับรองผลการเรียน</option>
                                 	</select>
                                 </p>
+                                <div id="semesterDev" style="display:none">
+	                                <p>
+	                                	<select id="semester">
+	                                	</select> / 
+	                                	<select id="acadYear" onchange="handleSemester(this)">
+	                                	</select>
+	                                </p>
+	                                <br/>
+                                </div>
                                 <p>
                                 	<lable id="labelType">Select type of student</lable><br>
                                 	<input type="radio" name="studentType" value="local" onclick="onRadioBoxChange(this);" checked><label id="labelLocalStd">Local student</label>
@@ -114,22 +126,23 @@
 	        var xmlhttp = loadXMLDoc();
 	        var json;
 	        var langJson;
+	        var semesterData;
 	        var reportTypeParam ="";
 	        var langParam="";
 	        var nameParam="";
 	        var telephoneParam="";
 	        var passportNumParam="";
+	        var semesterParam="";
+	        var acadYearParam="";
 	        
-	        xmlhttp.onreadystatechange=function(){
-				if (xmlhttp.readyState==4 && xmlhttp.status==200){
-					json = JSON.parse(xmlhttp.responseText);
-					document.getElementById("userInfo").innerHTML= json[0].prefix+json[0].firstName+" "+json[0].lastName+" รหัส "+json[0].studentCode+" คณะ "+json[0].facultyName;
-				}
+	        function reportChecker(e){
+	        	var rep = document.getElementById("reportType").value;
+	        	if(rep === "gradeEachSemester"){
+		        	document.getElementById('semesterDev').style.display='block';
+	        	}else{
+	        		document.getElementById('semesterDev').style.display='none';
+	        	}
 	        }
-	        console.log(sessionStorage.getItem("studentCode"));
-	        xmlhttp.open("GET","./RequestController?studentCode="+sessionStorage.getItem("studentCode"),true);
-	        xmlhttp.send();
-		        
 	        
 	        function valthisform(){
 	            var checkType=document.getElementsByName("checkType");
@@ -140,7 +153,10 @@
 	            var requestFlag5=false;
 	            
 	            var e =  document.getElementById("reportType");
-	            reportTypeParam="&reportTypeParam="+e.options[e.selectedIndex].value;
+	            //reportTypeParam="&reportTypeParam="+e.options[e.selectedIndex].value;
+	            reportTypeParam="&reportTypeParam="+e.value;
+	            semesterParam = "&semesterParam="+document.getElementById("semester").value;
+	            acadYearParam = "&acadYearParam="+document.getElementById("acadYear").value;
 	            
 	            /* for(var i=0,l=checkType.length;i<l;i++){
 	                if(checkType[i].checked){
@@ -225,7 +241,7 @@
 	    					});
 	    			}
 	            }
-	            xmlhttp.open("GET","./GenerateReportController?studentCode="+json[0].studentCode + reportTypeParam + passportNumParam + langParam+nameParam + telephoneParam+"&useforParam="+document.getElementById("reason").value,true);
+	            xmlhttp.open("GET","./GenerateReportController?studentCode=" + json[0].studentCode + reportTypeParam + passportNumParam + semesterParam + acadYearParam + langParam+nameParam + telephoneParam + "&useforParam=" + document.getElementById("reason").value,true);
 	            xmlhttp.send();
 	        }
 	        
@@ -309,7 +325,10 @@
 	        function setLabel(){
 	    		document.getElementById("header").innerHTML = langJson.lang001;
 	    		document.getElementById("header2").innerHTML = langJson.lang011;
-	    		document.getElementById("reportType").options[0].text = langJson.lang012;
+	    		$("#reportType option[value='studentStatus']").text(langJson.lang012);
+	    		$("#reportType option[value='lastSemester']").text(langJson.lang055);
+	    		$("#reportType option[value='summaryGPA']").text(langJson.lang053);
+	    		$("#reportType option[value='gradeEachSemester']").text(langJson.lang054);
 	    		document.getElementById("labelType").innerHTML = langJson.lang013;
 	    		document.getElementById("labelLocalStd").innerHTML = langJson.lang014;
 	    		document.getElementById("labelFkStd").innerHTML = langJson.lang015;
@@ -325,6 +344,65 @@
 	    		document.getElementById("labelBack").innerHTML = langJson.lang030;
 	    		document.getElementById("labelLogOut").innerHTML = langJson.lang031;
 	    	}
+	        
+	        (function(){
+	        	if(sessionStorage.getItem("studentCode") === null && localStorage.getItem("role") === "admin"){
+	        		window.location.assign("./searchStudent.html");
+	        	}else{
+	        		
+	        		var xmlhttp = loadXMLDoc();
+	        		
+	        		 xmlhttp.onreadystatechange=function(){
+	     				if (xmlhttp.readyState==4 && xmlhttp.status==200){
+	     					json = JSON.parse(xmlhttp.responseText);
+	     					document.getElementById("userInfo").innerHTML= json[0].prefix+json[0].firstName+" "+json[0].lastName+" รหัส "+json[0].studentCode+" คณะ "+json[0].facultyName;
+	     				}
+	     	        }
+	     	        xmlhttp.open("GET","./RequestController?studentCode="+sessionStorage.getItem("studentCode"),true);
+	     	        xmlhttp.send();
+	     	        
+	     	        var xmlhttp2 = loadXMLDoc();
+					xmlhttp2.open("GET","./RequestController?method=getSemester&studentCode="+sessionStorage.getItem("studentCode"));
+					xmlhttp2.send();
+					xmlhttp2.onreadystatechange=function(){
+						if (xmlhttp2.readyState==4 && xmlhttp2.status==200){
+							var acadYear;
+							semesterData = JSON.parse(xmlhttp2.responseText);
+							
+							//check role is admin
+							if(localStorage.getItem("role") !== "admin"){
+								//document.getElementById("reportType").remove(1);
+								$("#reportType option[value='lastSemester']").remove();
+							}
+							
+							//check student don't havae grade
+							if(semesterData == null){
+								$("#reportType option[value='summaryGPA']").remove();
+								$("#reportType option[value='gradeEachSemester']").remove();
+							}else{
+								semesterData.forEach(function(t){
+									if(acadYear != t.acadYear){
+										$("#acadYear").append("<option value='"+t.acadYear+"' selected='selected'>"+t.acadYear+"</option>");
+										acadYear = t.acadYear;
+									}
+								});//end forEach
+								handleSemester();
+							}
+							
+						}
+					}
+	        	}
+		    })();
+	        
+	        function handleSemester(){
+	        	var acadYear = document.getElementById("acadYear").value;
+	        	$("#semester").html("");
+	        	semesterData.forEach(function(t){
+	        		if(acadYear == t.acadYear){
+	        			$("#semester").append("<option value='"+t.semester+"' selected='selected'>"+t.semester+"</option>")
+	        		}
+	        	});
+	        }
 	        
 	        function backButton(){
 	        	if(sessionStorage.getItem("studentCode") === null){

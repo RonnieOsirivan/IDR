@@ -57,9 +57,10 @@ public class ReportLogController extends HttpServlet {
 		param.put("sinceDate", request.getParameter("sinceDate"));
 		param.put("untilDate", request.getParameter("untilDate"));
 		if("0".equals(request.getParameter("reportType"))){
-			param.put("reportType", "1,2,3,4,5,6,7,8");
+			param.put("reportType", "0");
 		}else{
-			param.put("reportType", request.getParameter("reportType"));
+//			param.put("reportType", request.getParameter("reportType"));
+			param.put("reportType", "AND RL.REPORTTYPEID IN (1,2,4,5)");
 		}
 		
 		ConnectionDB.getInstance();

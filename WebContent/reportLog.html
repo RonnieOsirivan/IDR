@@ -93,8 +93,9 @@
 						  <label class="col-md-4 control-label" for="reportType" id="reportTypeLabel">Report type</label>
 						  <div class="col-md-6">
 						    <select id="reportType" name="reportType" class="form-control">
-						      <option value="1">Statement of student status</option>
-						      <option value="0">All</option>
+						      <!--  <option value="0">All</option> -->
+						       <option value="1">Statement of student status</option>
+						       <option value="5">Statement GPA</option>
 						    </select>
 						  </div>
 						</div>
@@ -269,8 +270,9 @@
     		document.getElementById("reportTypeLabel").innerHTML = json.lang043;
     		document.getElementById("ok").value = json.lang044;
     		document.getElementById("cancel").value = json.lang045;
+    		//$('#reportType').children('option[value="0"]').text(json.lang046);
     		$('#reportType').children('option[value="1"]').text(json.lang012);
-    		$('#reportType').children('option[value="0"]').text(json.lang046);
+    		$('#reportType').children('option[value="5"]').text(json.lang053);
     		document.getElementById("menuLabel1").innerHTML = json.lang032;
     		document.getElementById("menuLabel2").innerHTML = json.lang047;
     		document.getElementById("menuLabel3").innerHTML = json.lang031;

@@ -42,6 +42,8 @@ public class Student {
 	private int admitAcadYear;
 	@Column(name="DEGREEID")
 	private int degreeID;
+	@Column(name="GPA")
+	private double gpa;
 	
 	public String getPrefix() {
 		return prefix;
@@ -144,5 +146,11 @@ public class Student {
 	}
 	public void setDegreeID(int degreeID) {
 		this.degreeID = degreeID;
+	}
+	public double getGpa() {
+		return gpa;
+	}
+	public void setGpa(double gpa) {
+		this.gpa = gpa;
 	}
 }

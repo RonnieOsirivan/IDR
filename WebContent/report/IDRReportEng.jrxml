@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="IDRReport" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="6" uuid="7420bca3-7e8d-4898-9527-23ca925073ad">
-	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="176"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="125"/>
+	<property name="ireport.y" value="560"/>
 	<parameter name="pSequenceReport" class="java.lang.String"/>
 	<parameter name="pDate" class="java.lang.String"/>
 	<parameter name="pStdName" class="java.lang.String"/>
@@ -35,7 +35,7 @@
 		</band>
 	</title>
 	<detail>
-		<band height="597" splitType="Stretch">
+		<band height="323" splitType="Stretch">
 			<staticText>
 				<reportElement x="356" y="0" width="168" height="55" uuid="dd1da59e-910d-4967-ab71-01e6fc9c9e97"/>
 				<textElement>
@@ -68,16 +68,6 @@ Assistant to the President
 Acting for Vice President for Academic Affairs
 Rambhai Barni Rajabhat University]]></text>
 			</staticText>
-			<staticText>
-				<reportElement x="58" y="467" width="140" height="75" uuid="b689887e-11ea-44dd-b20c-6e59e530b68f"/>
-				<textElement>
-					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Registry Division
-Office of Academic Service
-Tel. 039-319111 Ext. 8404-5
-Fax 039-471070]]></text>
-			</staticText>
 			<textField isStretchWithOverflow="true">
 				<reportElement x="58" y="86" width="461" height="24" uuid="8a9a075f-0a65-47a4-9806-06f357c204df"/>
 				<textElement textAlignment="Justified">
@@ -86,51 +76,65 @@ Fax 039-471070]]></text>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{pDetail}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement x="351" y="467" width="167" height="20" uuid="eb454f45-b1e5-4b8b-a47a-30f1462d20f6"/>
-				<textElement>
-					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Typist...............................................]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="352" y="502" width="167" height="20" uuid="16bfe143-ce6a-491a-9ec8-7f7a7a0ca480"/>
-				<textElement>
-					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[Proofreader.....................................]]></text>
-			</staticText>
 			<image>
 				<reportElement x="349" y="188" width="100" height="50" uuid="e6d50d3f-5ba4-4510-ae88-de46a4b0fc52"/>
 				<imageExpression><![CDATA[new java.io.StringBufferInputStream( new org.w3c.tools.codec.Base64Decoder($V{IMAGE_BASE64}).processString() )]]></imageExpression>
 			</image>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="161">
 			<staticText>
-				<reportElement x="124" y="554" width="142" height="20" uuid="3b14b9b6-3903-4306-a76f-00ab8450b0e1"/>
+				<reportElement x="111" y="120" width="355" height="20" uuid="16e6098e-8dbb-42fd-8d3d-ddd6aa2d133e"/>
+				<textElement textAlignment="Center">
+					<font fontName="TH SarabunPSK" size="11" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[RAMBHAI BARNI RAJABHAT UNIVERSITY : THE WISDOM TREASURE TROVE OF THE EAST AND ASEAN]]></text>
+			</staticText>
+			<line>
+				<reportElement x="109" y="119" width="353" height="1" uuid="3494367a-fc96-46aa-9a53-be19b7f148d0"/>
+				<graphicElement>
+					<pen lineWidth="0.75"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="243" y="96" width="223" height="22" uuid="8234c47b-54ea-47d4-af0c-1eb73ae4c281"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="18"/>
+				</textElement>
+				<text><![CDATA[“ขุมปัญญาแห่งภูมิภาคตะวันออกและอาเซียน”]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="111" y="99" width="142" height="20" uuid="3b14b9b6-3903-4306-a76f-00ab8450b0e1"/>
 				<textElement>
 					<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[มหาวิทยาลัยราชภัฏรำไพพรรณี]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="256" y="551" width="223" height="22" uuid="8234c47b-54ea-47d4-af0c-1eb73ae4c281"/>
+				<reportElement x="356" y="42" width="167" height="20" uuid="16bfe143-ce6a-491a-9ec8-7f7a7a0ca480"/>
 				<textElement>
-					<font fontName="TH SarabunPSK" size="18"/>
+					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[“ขุมปัญญาแห่งภูมิภาคตะวันออกและอาเซียน”]]></text>
+				<text><![CDATA[Proofreader.....................................]]></text>
 			</staticText>
-			<line>
-				<reportElement x="122" y="574" width="353" height="1" uuid="3494367a-fc96-46aa-9a53-be19b7f148d0"/>
-				<graphicElement>
-					<pen lineWidth="0.75"/>
-				</graphicElement>
-			</line>
 			<staticText>
-				<reportElement x="124" y="575" width="355" height="20" uuid="16e6098e-8dbb-42fd-8d3d-ddd6aa2d133e"/>
-				<textElement textAlignment="Center">
-					<font fontName="TH SarabunPSK" size="11" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				<reportElement x="356" y="0" width="167" height="20" uuid="eb454f45-b1e5-4b8b-a47a-30f1462d20f6"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[RAMBHAI BARNI RAJABHAT UNIVERSITY : THE WISDOM TREASURE TROVE OF THE EAST AND ASEAN]]></text>
+				<text><![CDATA[Typist...............................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="58" y="0" width="140" height="75" uuid="b689887e-11ea-44dd-b20c-6e59e530b68f"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Registry Division
+Office of Academic Service
+Tel. 039-319111 Ext. 8404-5
+Fax 039-471070]]></text>
 			</staticText>
 		</band>
-	</detail>
+	</pageFooter>
 </jasperReport>

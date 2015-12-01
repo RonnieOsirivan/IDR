@@ -29,7 +29,8 @@ AND RL.STUDENTCODE = S.STUDENTCODE
 AND RL.REQUESTDATE BETWEEN STR_TO_DATE($P{sinceDate},'%d/%m/%Y')
 AND STR_TO_DATE($P{untilDate},'%d/%m/%Y %H:%i')
 AND RL.PRINTDATE IS NOT NULL
-AND RL.REPORTTYPEID IN ($P{reportType});]]>
+$P!{reportType}
+ORDER BY RL.REQUESTDATE]]>
 	</queryString>
 	<field name="STUDENTCODE" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -56,6 +57,9 @@ AND RL.REPORTTYPEID IN ($P{reportType});]]>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="LENGTHTIME" class="java.lang.String"/>
+	<variable name="customQuery" class="java.lang.String">
+		<variableExpression><![CDATA[$P{reportType}.equals("0")?"1,5":$P{reportType}]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>

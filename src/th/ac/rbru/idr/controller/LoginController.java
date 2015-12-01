@@ -34,7 +34,7 @@ public class LoginController extends HttpServlet {
 		}else if(roleCheck.hasRole("ROLE_STUDENT")){
 			Principal principal = request.getUserPrincipal();
 			String studentCode = principal.getName();
-			if(getFinanceStatus(studentCode).equalsIgnoreCase("N")){
+			if(getStudentStatus(studentCode).equalsIgnoreCase("Y")){
 				response.sendRedirect("./main.html");
 			}else{
 				response.sendRedirect("./permissionDenied.html");
@@ -61,6 +61,27 @@ public class LoginController extends HttpServlet {
 			e.printStackTrace();
 		}
 		return financeStatus;
+	}
+	
+	private String getStudentStatus(String studentCode){
+		String status = "N";
+		int statusnum = 0;
+		try {
+			String sql = " SELECT STUDENTSTATUS "+
+					" FROM STUDENTMASTER "+
+					" WHERE STUDENTCODE LIKE '"+studentCode+"' ";
+			ResultSet rs = getData(sql);
+			while (rs.next()) {
+				statusnum = rs.getInt("STUDENTSTATUS");
+				
+			}
+			if(statusnum==10 || statusnum==11 || statusnum==14){
+				status = "Y";
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return status;
 	}
 	
 	private ResultSet getData(String sql) throws SQLException {

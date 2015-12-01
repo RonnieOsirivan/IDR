@@ -179,10 +179,30 @@
 
 		window.actionEvents = {
 		    'click .request': function (e, value, row, index) {
-		        sessionStorage.setItem("studentCode",row.studentCode);
-    			window.location.assign("./requestForm.html");
+		    	
+		    	var xmlhttp = loadXMLDoc();
+				var json;
+				xmlhttp.open("GET","./SearchStudentController?method=checkStatus"+"&studentCode="+row.studentCode,true);
+				xmlhttp.send();
+				xmlhttp.onreadystatechange=function(){
+					if (xmlhttp.readyState==4 && xmlhttp.status==200){
+						json = JSON.parse(xmlhttp.responseText);
+						console.log(json);
+						
+						if(json.canReq === "Y"){
+				    		sessionStorage.setItem("studentCode",row.studentCode);
+			    			window.location.assign("./requestForm.html");
+				    	}else{
+				    		if(localStorage.getItem("lang") === "en_lang"){
+				    			swal(json.msgEng,"","error");
+				    		}else{
+				    			swal(json.msgThai,"","error");
+				    		}
+				    	}
+					}
+			    }// end onready
 		    }
-		};
+		};//end window action
 		
 		function searchKeyPress(e){
 			if(e.keyCode==13){

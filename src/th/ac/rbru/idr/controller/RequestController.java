@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import th.ac.rbru.idr.model.Semester;
 import th.ac.rbru.idr.model.Student;
 import th.ac.rbru.idr.util.ConnectionDB;
 import th.ac.rbru.idr.util.ConvertDataType;
@@ -42,17 +43,22 @@ public class RequestController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,IOException {
 		try {
-			String studentCode = "";
-			if(!request.getParameter("studentCode").equals("null") && !(request.getParameter("studentCode")).isEmpty()){
-				studentCode = request.getParameter("studentCode");
+			if("getSemester".equalsIgnoreCase(request.getParameter("method"))){
+				getSemester(request, response);
 			}else{
-				Principal principal = request.getUserPrincipal();
-				studentCode = principal.getName();
+				String studentCode = "";
+				if(!request.getParameter("studentCode").equals("null") && !(request.getParameter("studentCode")).isEmpty()){
+					studentCode = request.getParameter("studentCode");
+				}else{
+					Principal principal = request.getUserPrincipal();
+					studentCode = principal.getName();
+				}
+				ResultSetMapper<Student> student = new ResultSetMapper<Student>();
+				List<Student> studentList = student.mapRersultSetToObject(getStudentInfo(studentCode), Student.class);
+				String resultJson = ConvertDataType.getInstance().objectToJasonArray(studentList);
+				sendResponse(request, response, resultJson);
 			}
-			ResultSetMapper<Student> student = new ResultSetMapper<Student>();
-			List<Student> studentList = student.mapRersultSetToObject(getStudentInfo(studentCode), Student.class);
-			String resultJson = ConvertDataType.getInstance().objectToJasonArray(studentList);
-			sendResponse(request, response, resultJson);
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -106,7 +112,24 @@ public class RequestController extends HttpServlet {
 		return getData(sql);
 	}
 	
-	private ResultSet getData(String sql) throws SQLException {
+	private void getSemester(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		ResultSetMapper<Semester> mapper = new ResultSetMapper<Semester>();
+		List<Semester> semList = mapper.mapRersultSetToObject(getSemesterSQL(request.getParameter("studentCode")), Semester.class);
+		String resultJson = ConvertDataType.getInstance().objectToJasonArray(semList);
+		sendResponse(request, response, resultJson);
+	}
+	
+	private ResultSet getSemesterSQL(String studentCode){
+		String sql = "	SELECT DISTINCT EN.SEMESTER, EN.ACADYEAR	"+
+				"	FROM STUDENTMASTER STDM, ENROLLSUMMARY EN	"+
+				"	WHERE STDM.STUDENTID = EN.STUDENTID	"+
+				"	AND EN.GRADE IS NOT NULL	"+
+				"	AND STDM.STUDENTCODE LIKE "+studentCode+
+				"	ORDER BY EN.ACADYEAR,EN.SEMESTER ";
+		return getData(sql);
+	}
+	
+	private ResultSet getData(String sql) {
 		ResultSet result = null;
 		
 		try {

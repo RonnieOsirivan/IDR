@@ -72,7 +72,6 @@ public class AuthenticationManagement implements UserDetailsService{
 				"	rad.ATTRIBUTE as 'ATTRIBUTE'	"+
 				"	FROM IDR.radcheck rad	"+
 				"	WHERE rad.username = '"+userName+"'";
-		System.out.println(sql);
 		
 		try {
 			Statement st = con.createStatement();

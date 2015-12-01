@@ -86,6 +86,6 @@
               username="rattasit.s"
               password="rattasit.s"
               driverClassName="com.mysql.jdbc.Driver"
-              url="jdbc:mysql://jwsdev01.rbru.ac.th:3306/IDR?characterEncoding=UTF-8"/>
+              url="jdbc:mysql://10.5.1.110:3306/IDR?characterEncoding=UTF-8"/>
              
 </Context>

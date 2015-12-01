@@ -14,7 +14,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import oracle.jdbc.proxy.annotation.GetDelegate;
 import th.ac.rbru.idr.model.Student;
+import th.ac.rbru.idr.model.StudentStatus;
 import th.ac.rbru.idr.util.ConnectionDB;
 import th.ac.rbru.idr.util.ConvertDataType;
 import th.ac.rbru.idr.util.ResultSetMapper;
@@ -32,21 +34,85 @@ public class SearchStudentController extends HttpServlet {
      */
     public SearchStudentController() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		getStudent(request, response);
+		if("checkStatus".equalsIgnoreCase(request.getParameter("method"))){
+			checkStatus(request, response);
+		}else{
+			getStudent(request, response);
+		}
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+	}
+	
+	private void checkStatus(HttpServletRequest request, HttpServletResponse response) throws IOException{
+		String sql = "	SELECT *	"+
+				"	FROM(	"+
+				"	SELECT STDM.STUDENTSTATUS ,	"+
+				"	  SBD.BYTEDES ,	"+
+				"	  SBD.BYTEDESENG,	"+
+				"	  STDS.SEMESTER,	"+
+				"	  STDS.ACADYEAR	"+
+				"	FROM STUDENTMASTER STDM,	"+
+				"	  STUDENTSTATUS STDS,	"+
+				"	  SYSBYTEDES SBD	"+
+				"	WHERE SBD.TABLENAME LIKE 'STUDENTSTATUS'	"+
+				"	AND SBD.COLUMNNAME LIKE 'STUDENTSTATUS'	"+
+				"	AND STDM.STUDENTSTATUS = SBD.BYTECODE	"+
+				"	AND STDM.STUDENTID = STDS.STUDENTID	"+
+				"	AND STDM.STUDENTCODE LIKE "+request.getParameter("studentCode")+
+				"	ORDER BY STDS.ACADYEAR DESC,STDS.SEMESTER DESC)	"+
+				"	WHERE ROWNUM = 1";
+		
+		ResultSetMapper<StudentStatus> stdsMapper = new ResultSetMapper<StudentStatus>();
+		StudentStatus stds = stdsMapper.mapRersultSetToObject(getData(sql), StudentStatus.class).get(0);
+		
+		String acadSQL = "	SELECT DFS.SEMESTER,	"+
+				"	TO_CHAR(sysdate,'YYYY','NLS_CALENDAR=''THAI BUDDHA'' NLS_DATE_LANGUAGE=THAI') - DFS.ACADYEARADJ AS ACADYEAR	"+
+				"	FROM DEFAULTSEMESTER DFS	"+
+				"	WHERE DFS.SYSAPPID = 25	"+
+				"	AND DFS.SYSMONTH   = TO_CHAR(SYSDATE,'MM')";
+		
+		int semester = 0;
+		int acadYear = 0;
+		try {
+			ResultSet result = getData(acadSQL);
+			while (result.next()) {
+				semester = result.getInt("SEMESTER");
+				acadYear = result.getInt("ACADYEAR");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		if(stds.getStudentStatus() == 10){
+			stds.setCanReq("Y");
+		}else if(stds.getStudentStatus() == 11 || stds.getStudentStatus() == 14){
+			if(semester == stds.getSemester() && acadYear == stds.getAcadYear()){
+				stds.setCanReq("Y");
+			}else{
+				stds.setCanReq("N");
+			}
+		}else{
+			stds.setCanReq("N");
+		}
+		
+		if(stds.getCanReq().equals("N")){
+			stds.setMsgThai("สถานะ "+stds.getStatusNameThai()+" ในเทอม "+stds.getSemester()+"/"+stds.getAcadYear());
+			stds.setMsgEng("Status is "+stds.getStatusNameEng()+" in semester "+stds.getSemester()+"/"+stds.getAcadYear());
+		}
+		
+		
+		String resultJson = ConvertDataType.getInstance().objectToJasonArray(stds);
+		sendResponse(request, response, resultJson);
 	}
 	
 	private void getStudent(HttpServletRequest request, HttpServletResponse response){
