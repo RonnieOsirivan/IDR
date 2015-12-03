@@ -51,6 +51,7 @@
                                 	<select id="reportType" onchange="reportChecker(this)">
                                 		<option value="studentStatus" selected="selected">ใบรับรองการเป็นนักศึกษา</option>
                                 		<option value="lastSemester" >ใบรับรองเป็นนักศึกษาภาคเรียนสุดท้าย</option>
+                                		<option value="completeGraduate" >ใบรับรองครบหลักสูตรและรอการอนุมัติจบการศึกษา</option>
                                 		<option value="summaryGPA" >ใบรับรองเกรดเฉลี่ยสะสม</option>
                                 		<option value="gradeEachSemester" >ใบรับรองผลการเรียน</option>
                                 	</select>
@@ -327,6 +328,7 @@
 	    		document.getElementById("header2").innerHTML = langJson.lang011;
 	    		$("#reportType option[value='studentStatus']").text(langJson.lang012);
 	    		$("#reportType option[value='lastSemester']").text(langJson.lang055);
+	    		$("#reportType option[value='completeGraduate']").text(langJson.lang056);
 	    		$("#reportType option[value='summaryGPA']").text(langJson.lang053);
 	    		$("#reportType option[value='gradeEachSemester']").text(langJson.lang054);
 	    		document.getElementById("labelType").innerHTML = langJson.lang013;
@@ -373,6 +375,7 @@
 							if(localStorage.getItem("role") !== "admin"){
 								//document.getElementById("reportType").remove(1);
 								$("#reportType option[value='lastSemester']").remove();
+								$("#reportType option[value='completeGraduate']").remove();
 							}
 							
 							//check student don't havae grade

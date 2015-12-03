@@ -1,8 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reportLog" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9dd17b53-e99b-4483-8560-9d939a4b0b07">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="0"/>
+	<property name="ireport.x" value="517"/>
 	<property name="ireport.y" value="0"/>
+	<subDataset name="summaryReportDataSet" uuid="9aaa9d3a-8891-4be1-bd1a-5bed3db6983f">
+		<parameter name="startDate" class="java.lang.String"/>
+		<parameter name="endDate" class="java.lang.String"/>
+		<parameter name="reportType" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[select RT.REPORTNAMETHAI , count(RT.REPORTNAMETHAI) AS amount
+from IDR.REPORTLOG RL, IDR.REPORTTYPE RT
+where RL.REPORTTYPEID = RT.REPORTTYPEID
+AND RL.REQUESTDATE BETWEEN STR_TO_DATE($P{startDate},'%d/%m/%Y')
+AND STR_TO_DATE($P{endDate},'%d/%m/%Y %H:%i')
+AND RL.PRINTDATE IS NOT NULL
+$P!{reportType}
+group by RT.REPORTNAMETHAI]]>
+		</queryString>
+		<field name="REPORTNAMETHAI" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="amount" class="java.lang.Long"/>
+		<group name="REPORTNAMETHAI">
+			<groupExpression><![CDATA[$F{REPORTNAMETHAI}]]></groupExpression>
+		</group>
+	</subDataset>
+	<subDataset name="dataset1" uuid="e4ebf07f-e3c3-4de3-bd23-1211e0799753"/>
 	<parameter name="sinceDate" class="java.lang.String">
 		<parameterDescription><![CDATA[]]></parameterDescription>
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -223,7 +246,7 @@ ORDER BY RL.REQUESTDATE]]>
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="47" splitType="Stretch">
+		<band height="27" splitType="Stretch">
 			<line>
 				<reportElement x="0" y="3" width="800" height="2" uuid="2f353037-85ad-4597-8fcb-d61299a0d9d7"/>
 			</line>
@@ -244,6 +267,43 @@ ORDER BY RL.REQUESTDATE]]>
 		</band>
 	</pageFooter>
 	<summary>
-		<band height="42" splitType="Stretch"/>
+		<band height="43">
+			<frame>
+				<reportElement x="473" y="13" width="303" height="28" uuid="317956f1-6129-4316-8745-c349d4789db9"/>
+				<componentElement>
+					<reportElement x="7" y="0" width="292" height="24" uuid="bbe9423c-9e16-45ae-b60f-0f529b198fe8"/>
+					<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+						<datasetRun subDataset="summaryReportDataSet" uuid="d830f55d-69d4-4da1-8300-1ff68ed006ec">
+							<datasetParameter name="startDate">
+								<datasetParameterExpression><![CDATA[$P{sinceDate}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="endDate">
+								<datasetParameterExpression><![CDATA[$P{untilDate}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="reportType">
+								<datasetParameterExpression><![CDATA[$P{reportType}]]></datasetParameterExpression>
+							</datasetParameter>
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						</datasetRun>
+						<jr:listContents height="24" width="292">
+							<textField>
+								<reportElement x="0" y="0" width="231" height="20" uuid="dc8c60db-c6df-4739-af4a-e058c82c8027"/>
+								<textElement textAlignment="Right">
+									<font fontName="TH SarabunPSK" size="16" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{REPORTNAMETHAI}]]></textFieldExpression>
+							</textField>
+							<textField>
+								<reportElement x="231" y="0" width="55" height="20" uuid="c5b218dc-127e-458a-881c-7018950303f1"/>
+								<textElement textAlignment="Right">
+									<font fontName="TH SarabunPSK" size="16" isBold="true" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+								</textElement>
+								<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+							</textField>
+						</jr:listContents>
+					</jr:list>
+				</componentElement>
+			</frame>
+		</band>
 	</summary>
 </jasperReport>

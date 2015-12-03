@@ -28,7 +28,7 @@ import th.ac.rbru.idr.util.ResultSetMapper;
 import th.ac.rbru.idr.util.StaticValue;
 import th.ac.rbru.idr.util.WordDelimiter;
 
-public class ReportGradeEachSemester {
+public class ReportCompleteGraduate {
 private Connection con = null;
 	
 	public void generateReport(HttpServletRequest request,HttpServletResponse response){
@@ -51,7 +51,7 @@ private Connection con = null;
 		SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy",Locale.US);
 		ResultSetMapper<StudentEng> studentResult = new ResultSetMapper<StudentEng>();
 		StudentEng studentEng = (studentResult.mapRersultSetToObject(getStudentInfoEng(request.getParameter("studentCode")), StudentEng.class)).get(0);
-		HashMap<String, String> map = new GennerateDocumentNum().getDocumentNum("4");
+		HashMap<String, String> map = new GennerateDocumentNum().getDocumentNum("1");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		String detailParam = "	This is to cerify that "+NameFormat(studentEng.getPrefixName())+" "
@@ -65,7 +65,7 @@ private Connection con = null;
 				}
 				detailParam += "is currently a student of the "
 				+studentEng.getDegreeCerificate()+" Program, "
-				+studentEng.getFacultyName()+","+" Rambhai Barni Rajabhai University and academic record in Semester "+request.getParameter("semesterParam")+"/"+(Integer.parseInt(request.getParameter("acadYearParam"))-543) +". ";
+				+studentEng.getFacultyName()+","+" Rambhai Barni Rajabhat University. ";
 		param.put("pSequenceReport", "No. "+documentNumEngFormat(map));
 		param.put("pDate", formatter.format(date));
 		param.put("pDetail", detailParam);
@@ -75,15 +75,11 @@ private Connection con = null;
 		param.put("pGarudaSymbol", getAbsulutePath()+StaticValue.GARUDASYMBOL);
 		param.put("pSignature", getAbsulutePath()+StaticValue.SIGNATURE);
 		
-		param.put("pStudentCode", request.getParameter("studentCode"));
-		param.put("pSemester", request.getParameter("semesterParam"));
-		param.put("pAcadYear", request.getParameter("acadYearParam"));
-		
 		int reportId = insertReport(studentEng.getStudentCode(),studentEng.getPrefixName()+studentEng.getStudentName()+" "+studentEng.getStudentSurname(),
 				request.getParameter("telephoneParam"),request.getParameter("useforParam"),"EN",Integer.parseInt(map.get("docId")),studentEng.getFacultyNameThai(),studentEng.getProgramNameThai(),
 				documentNumEngFormat(map),map.get("reportTypeId"));
 		GenerateReport genReport = new GenerateReport();
-		genReport.generarteReport("gradeEachSemesterEng",String.valueOf(reportId), param,getAbsulutePath());
+		genReport.generarteReport("studentStatusEng",String.valueOf(reportId), param,getAbsulutePath());
 		sendResponse(request, response, "Done!");
 	}
 	
@@ -104,7 +100,7 @@ private Connection con = null;
 		String mounthName = simpleDateMounth.format(date);
 		int dateYear = Integer.parseInt(simpleDateYear.format(date));
 		String dateParam = thaiNumeral(dateNumber)+"  "+mounthName+"  "+thaiNumeral(dateYear);
-		HashMap<String, String> map = new GennerateDocumentNum().getDocumentNum("4");
+		HashMap<String, String> map = new GennerateDocumentNum().getDocumentNum("3");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		String pDetail = "	ขอรับรองว่า  "+student.getPrefix()+student.getFirstName()+"  "+student.getLastName()
@@ -126,11 +122,10 @@ private Connection con = null;
 					pDetail += "  "+student.getProgramName();
 				}
 			
-//		if(student.getStudyYear() >= student.getStudentYear()){
-//			pDetail += "  กำลังศึกษาอยู่ปี  "+thaiNumeral(student.getStudentYear());
-//		}
-		pDetail += " กำลังศึกษาอยู่ที่มหาลัยราชภัฏรำไพพรรณีและได้รับผลการเรียนในภาคการศึกษาที่  ";
-		pDetail	+= thaiNumeral(Integer.parseInt(request.getParameter("semesterParam")))+" / "+thaiNumeral(Integer.parseInt(request.getParameter("acadYearParam")))+"  ดังนี้ ";
+		if(student.getStudyYear() >= student.getStudentYear()){
+			pDetail += "  กำลังศึกษาอยู่ปี  "+thaiNumeral(student.getStudentYear());
+		}
+		pDetail += "  ได้ศึกษาครบหลักสูตรและรอการอนุมัติผลการศึกษาจากสภามหาวิทยาลัยราชภัฏรำไพพรรณี  จริง ";
 		param.put("pSequenceReport", "ที่  "+thaiNumeral(Integer.parseInt(map.get("reportTypeId")))+"."+thaiNumeral3Digit(Integer.parseInt(map.get("docRuningNum")))+" / "+thaiNumeral(Integer.parseInt(map.get("acadYear"))));
 		param.put("pDate", dateParam);
 		
@@ -145,15 +140,11 @@ private Connection con = null;
 		
 		param.put("pDetail", pDetail);
 		
-		param.put("pStudentCode", stdCode);
-		param.put("pSemester", request.getParameter("semesterParam"));
-		param.put("pAcadYear", request.getParameter("acadYearParam"));
-		
 		int reportId = insertReport(student.getStudentCode(),student.getPrefix()+student.getFirstName()+" "+student.getLastName(),
 				request.getParameter("telephoneParam"),request.getParameter("useforParam"),"TH",Integer.parseInt(map.get("docId")),
 				student.getFacultyName(),student.getProgramName(),documentNumEngFormat(map),map.get("reportTypeId"));
 		GenerateReport genReport = new GenerateReport();
-		genReport.generarteReport("gradeEachSemesterThai", String.valueOf(reportId),param,getAbsulutePath());
+		genReport.generarteReport("studentStatusThai", String.valueOf(reportId),param,getAbsulutePath());
 //		FileInputStream pdfStream = convertPdfToBinary("/Users/rattasit/workspace/IDR/WebContent/reportFile/test.pdf");
 		sendResponse(request, response, "Done!");
 	}

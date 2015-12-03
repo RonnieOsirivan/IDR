@@ -73,6 +73,7 @@ private Connection con = null;
 		//Image for test
 //		param.put("pGarudaSymbol", "/Users/rattasit/workspace/IDR/WebContent/img/garudaSymbol.jpg");
 		param.put("pGarudaSymbol", getAbsulutePath()+StaticValue.GARUDASYMBOL);
+		param.put("pSignature", getAbsulutePath()+StaticValue.SIGNATURE);
 		
 		int reportId = insertReport(studentEng.getStudentCode(),studentEng.getPrefixName()+studentEng.getStudentName()+" "+studentEng.getStudentSurname(),
 				request.getParameter("telephoneParam"),request.getParameter("useforParam"),"EN",Integer.parseInt(map.get("docId")),studentEng.getFacultyNameThai(),studentEng.getProgramNameThai(),
@@ -132,6 +133,7 @@ private Connection con = null;
 		//Image for test
 //		param.put("pGarudaSymbol", "/Users/rattasit/workspace/IDR/WebContent/img/garudaSymbol.jpg");
 		param.put("pGarudaSymbol", getAbsulutePath()+StaticValue.GARUDASYMBOL);
+		param.put("pSignature", getAbsulutePath()+StaticValue.SIGNATURE);
 		
 		WordDelimiter wdlt = new WordDelimiter();
 		

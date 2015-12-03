@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="IDRRepoertBySem" language="groovy" pageWidth="595" pageHeight="842" columnWidth="557" leftMargin="19" rightMargin="19" topMargin="18" bottomMargin="19" uuid="23dd5130-f501-48c8-97fb-9814d745ad1e">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="160"/>
+	<property name="ireport.y" value="511"/>
 	<parameter name="pStudentCode" class="java.lang.String"/>
 	<parameter name="pSemester" class="java.lang.String"/>
 	<parameter name="pAcadYear" class="java.lang.String"/>
@@ -10,6 +10,7 @@
 	<parameter name="pSequenceReport" class="java.lang.String"/>
 	<parameter name="pDate" class="java.lang.String"/>
 	<parameter name="pDetail" class="java.lang.String"/>
+	<parameter name="pSignature" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT  TRANSLATE(ROWNUM,'0123456789','๐๑๒๓๔๕๖๗๘๙') AS ลำดับ,
 TRANSLATE(C.COURSECODE,'0123456789','๐๑๒๓๔๕๖๗๘๙') AS รหัสวิชา,
@@ -292,7 +293,7 @@ AND EN.SEMESTER = $P{pSemester}]]>
 		<band height="158">
 			<image evaluationTime="Report">
 				<reportElement x="330" y="47" width="100" height="50" uuid="f416ce82-d10e-421b-b7ed-61bda92554d1"/>
-				<imageExpression><![CDATA[new java.io.StringBufferInputStream( new org.w3c.tools.codec.Base64Decoder($V{IMAGE_BASE64}).processString() )]]></imageExpression>
+				<imageExpression><![CDATA[$P{pSignature}]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="268" y="97" width="211" height="61" uuid="3d32a561-f869-434a-89eb-0ff241a3852b"/>

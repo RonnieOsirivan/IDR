@@ -56,11 +56,18 @@ public class ReportLogController extends HttpServlet {
 		HashMap<String, Object> param = new HashMap<String,Object>();
 		param.put("sinceDate", request.getParameter("sinceDate"));
 		param.put("untilDate", request.getParameter("untilDate"));
-		if("0".equals(request.getParameter("reportType"))){
-			param.put("reportType", "0");
+		if("studentStatus".equals(request.getParameter("reportType"))){
+			param.put("reportType", "AND RL.REPORTTYPEID = 1");
+		}else if("lastSemester".equals(request.getParameter("reportType"))){
+			param.put("reportType", "AND RL.REPORTTYPEID = 2");
+		}else if("completeGraduate".equals(request.getParameter("reportType"))){
+			param.put("reportType", "AND RL.REPORTTYPEID = 3");
+		}else if("gradeEachSemester".equals(request.getParameter("reportType"))){
+			param.put("reportType", "AND RL.REPORTTYPEID = 4");
+		}else if("summaryGPA".equals(request.getParameter("reportType"))){
+			param.put("reportType", "AND RL.REPORTTYPEID = 5");
 		}else{
-//			param.put("reportType", request.getParameter("reportType"));
-			param.put("reportType", "AND RL.REPORTTYPEID IN (1,2,4,5)");
+			param.put("reportType", "AND RL.REPORTTYPEID IN (1,2,3,4,5)");
 		}
 		
 		ConnectionDB.getInstance();

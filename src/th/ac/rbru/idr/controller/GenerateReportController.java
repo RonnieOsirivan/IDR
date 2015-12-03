@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import th.ac.rbru.idr.task.ReportCompleteGraduate;
 import th.ac.rbru.idr.task.ReportGradeEachSemester;
 import th.ac.rbru.idr.task.ReportLastSemester;
 import th.ac.rbru.idr.task.ReportStudentStatus;
@@ -47,6 +48,9 @@ public class GenerateReportController extends HttpServlet {
 		}else if("lastSemester".equalsIgnoreCase(request.getParameter("reportTypeParam"))){
 			ReportLastSemester lastSemester = new ReportLastSemester();
 			lastSemester.generateReport(request, response);
+		}else if("completeGraduate".equalsIgnoreCase(request.getParameter("reportTypeParam"))){
+			ReportCompleteGraduate completeGraduate = new ReportCompleteGraduate();
+			completeGraduate.generateReport(request, response);
 		}
 	}
 
