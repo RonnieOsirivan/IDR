@@ -7,18 +7,25 @@ import javax.persistence.Entity;
 
 @Entity
 public class StudentEng {
+	
+	@Column(name="PREFIXNAME")
+	private String prefixNameThai;
+	@Column(name="STUDENTNAME")
+	private String studentNameThai;
+	@Column(name="STUDENTSURNAME")
+	private String studentSurnameThai;
 	@Column(name="PREFIXNAMEENG")
-	private String prefixName;
+	private String prefixNameEng;
 	@Column(name="STUDENTNAMEENG")
-	private String studentName;
+	private String studentNameEng;
 	@Column(name="STUDENTSURNAMEENG")
-	private String studentSurname;
+	private String studentSurnameEng;
 	@Column(name="STUDENTCODE")
 	private String studentCode;
 	@Column(name="BIRTHDATE")
 	private Date birtDate;
-	@Column(name="DEGREECERTIFICATEENG")
-	private String degreeCerificate;
+	@Column(name="DEGREENAMEENG")
+	private String degreeNameEng;
 	@Column(name="PROGRAMNAME")
 	private String programNameThai;
 	@Column(name="PROGRAMNAMEENG")
@@ -29,24 +36,47 @@ public class StudentEng {
 	private String facultyName;
 	@Column(name="GPA")
 	private double gpa;
+	@Column(name="ADMITACADYEAR")
+	private int admitAcadYear;
+	@Column(name="DEGREEID")
+	private int degreeId;
 	
-	public String getPrefixName() {
-		return prefixName;
+	
+	public String getPrefixNameThai() {
+		return prefixNameThai;
 	}
-	public void setPrefixName(String prefixName) {
-		this.prefixName = prefixName;
+	public void setPrefixNameThai(String prefixNameThai) {
+		this.prefixNameThai = prefixNameThai;
 	}
-	public String getStudentName() {
-		return studentName;
+	public String getStudentNameThai() {
+		return studentNameThai;
 	}
-	public void setStudentName(String studentName) {
-		this.studentName = studentName;
+	public void setStudentNameThai(String studentNameThai) {
+		this.studentNameThai = studentNameThai;
 	}
-	public String getStudentSurname() {
-		return studentSurname;
+	public String getStudentSurnameThai() {
+		return studentSurnameThai;
 	}
-	public void setStudentSurname(String studentSurname) {
-		this.studentSurname = studentSurname;
+	public void setStudentSurnameThai(String studentSurnameThai) {
+		this.studentSurnameThai = studentSurnameThai;
+	}
+	public String getPrefixNameEng() {
+		return prefixNameEng;
+	}
+	public void setPrefixNameEng(String prefixNameEng) {
+		this.prefixNameEng = prefixNameEng;
+	}
+	public String getStudentNameEng() {
+		return studentNameEng;
+	}
+	public void setStudentNameEng(String studentNameEng) {
+		this.studentNameEng = studentNameEng;
+	}
+	public String getStudentSurnameEng() {
+		return studentSurnameEng;
+	}
+	public void setStudentSurnameEng(String studentSurnameEng) {
+		this.studentSurnameEng = studentSurnameEng;
 	}
 	public String getStudentCode() {
 		return studentCode;
@@ -60,11 +90,11 @@ public class StudentEng {
 	public void setBirtDate(Date birtDate) {
 		this.birtDate = birtDate;
 	}
-	public String getDegreeCerificate() {
-		return degreeCerificate;
+	public String getDegreeNameEng() {
+		return degreeNameEng;
 	}
-	public void setDegreeCerificate(String degreeCerificate) {
-		this.degreeCerificate = degreeCerificate;
+	public void setDegreeNameEng(String degreeNameEng) {
+		this.degreeNameEng = degreeNameEng;
 	}
 	public String getProgramNameThai() {
 		return programNameThai;
@@ -95,5 +125,17 @@ public class StudentEng {
 	}
 	public void setGpa(double gpa) {
 		this.gpa = gpa;
+	}
+	public int getAdmitAcadYear() {
+		return admitAcadYear;
+	}
+	public void setAdmitAcadYear(int admitAcadYear) {
+		this.admitAcadYear = admitAcadYear;
+	}
+	public int getDegreeId() {
+		return degreeId;
+	}
+	public void setDegreeId(int degreeId) {
+		this.degreeId = degreeId;
 	}
 }

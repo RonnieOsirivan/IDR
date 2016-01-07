@@ -24,6 +24,8 @@ public class StaticValue implements ServletContextListener{
 	public static String ABSULUTEPATH;
 	public static String GARUDASYMBOL;
 	public static String SIGNATURE;
+	public static int FIRST_LINE_REPORT;
+	public static int OTHER_LINE_REPORT;
 	
 	
 	@Override
@@ -43,6 +45,12 @@ public class StaticValue implements ServletContextListener{
 			REPORT_LOG_FILE_DIRECTORY = prop.getProperty("report_log_directory");
 			GARUDASYMBOL = prop.getProperty("garuda_symbol_picture");
 			SIGNATURE = prop.getProperty("signature_picture");
+			
+			//401 for localhost ,650 for server ubuntu
+			FIRST_LINE_REPORT = Integer.parseInt(prop.getProperty("first_line"));
+			//449 for localhost ,740 for server ubuntu
+			OTHER_LINE_REPORT = Integer.parseInt(prop.getProperty("other_line"));
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

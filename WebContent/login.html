@@ -89,11 +89,6 @@
 				return xmlhttp;
 			}
 			
-	    	var myParam = location.search.split('error=')[1];
-	    	if(myParam){
-	    		document.getElementById("logInFailure").innerHTML = "Incorrect username or password";
-	    	}
-	    	
 			(function(){
 				localStorage.clear();
 				if(localStorage.getItem("lang")==="en_lang"){
@@ -109,6 +104,11 @@
 	    		document.getElementById("lang003").innerHTML = json.lang003;
 	    		document.getElementById("lang004").innerHTML = json.lang004;
 	    		document.getElementById("lang005").value = json.lang005;
+	    		
+	    		var myParam = location.search.split('error=')[1];
+		    	if(myParam){
+		    		document.getElementById("logInFailure").innerHTML = json.lang059;
+		    	}
 	    	}
 	    </script>
     </body>

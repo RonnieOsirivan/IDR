@@ -153,14 +153,14 @@
 	    
 		window.markPrint = {
 			'click .markPrint': function (e, value, row, index) {
-				e.currentTarget.parentElement.parentElement.style.backgroundColor = "rgb(227,240,216)";
+				e.currentTarget.parentElement.parentElement.style.backgroundColor = "rgb(242,222,222)";
 				printStatus.push(index);
 				//$('.markPrint')[index].parentElement.parentElement.style.backgroundColor = "rgb(227,240,216)";
 			}
 		};
 		
 	    function rowStyle(row,index){
-	    	var classes = ['success'];
+	    	var classes = ['bg-danger'];
 	    	if(row.reportPrintStatus === 1){
 	    		return {
 	    			classes : classes[0]

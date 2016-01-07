@@ -13,7 +13,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import th.ac.rbru.idr.model.StudentStatus;
 import th.ac.rbru.idr.util.ConnectionDB;
+import th.ac.rbru.idr.util.ResultSetMapper;
 import th.ac.rbru.idr.util.RoleCheck;
 
 /**
@@ -34,7 +36,7 @@ public class LoginController extends HttpServlet {
 		}else if(roleCheck.hasRole("ROLE_STUDENT")){
 			Principal principal = request.getUserPrincipal();
 			String studentCode = principal.getName();
-			if(getStudentStatus(studentCode).equalsIgnoreCase("Y")){
+			if(checkStatus(studentCode).equalsIgnoreCase("Y")){
 				response.sendRedirect("./main.html");
 			}else{
 				response.sendRedirect("./permissionDenied.html");
@@ -82,6 +84,56 @@ public class LoginController extends HttpServlet {
 			e.printStackTrace();
 		}
 		return status;
+	}
+	
+	private String checkStatus(String studentCode){
+		String sql = "	SELECT *	"+
+				"	FROM(	"+
+				"	SELECT STDM.STUDENTSTATUS ,	"+
+				"	  SBD.BYTEDES ,	"+
+				"	  SBD.BYTEDESENG,	"+
+				"	  STDS.SEMESTER,	"+
+				"	  STDS.ACADYEAR	"+
+				"	FROM STUDENTMASTER STDM,	"+
+				"	  STUDENTSTATUS STDS,	"+
+				"	  SYSBYTEDES SBD	"+
+				"	WHERE SBD.TABLENAME LIKE 'STUDENTSTATUS'	"+
+				"	AND SBD.COLUMNNAME LIKE 'STUDENTSTATUS'	"+
+				"	AND STDM.STUDENTSTATUS = SBD.BYTECODE	"+
+				"	AND STDM.STUDENTID = STDS.STUDENTID	"+
+				"	AND STDM.STUDENTCODE LIKE "+studentCode +
+				"	ORDER BY STDS.ACADYEAR DESC,STDS.SEMESTER DESC)	"+
+				"	WHERE ROWNUM = 1";
+		
+		ResultSetMapper<StudentStatus> stdsMapper = new ResultSetMapper<StudentStatus>();
+		String statusReq = "N";
+		try {
+			StudentStatus stds = stdsMapper.mapRersultSetToObject(getData(sql), StudentStatus.class).get(0);
+			String acadSQL = "	SELECT DFS.SEMESTER,	"+
+					"	TO_CHAR(sysdate,'YYYY','NLS_CALENDAR=''THAI BUDDHA'' NLS_DATE_LANGUAGE=THAI') - DFS.ACADYEARADJ AS ACADYEAR	"+
+					"	FROM DEFAULTSEMESTER DFS	"+
+					"	WHERE DFS.SYSAPPID = 25	"+
+					"	AND DFS.SYSMONTH   = TO_CHAR(SYSDATE,'MM')";
+			
+			int semester = 0;
+			int acadYear = 0;
+			
+			ResultSet result = getData(acadSQL);
+			while (result.next()) {
+				semester = result.getInt("SEMESTER");
+				acadYear = result.getInt("ACADYEAR");
+			}
+			if(stds.getStudentStatus() == 10){
+				statusReq = "Y";
+			}else if(stds.getStudentStatus() == 11 || stds.getStudentStatus() == 14){
+				if(semester == stds.getSemester() && acadYear == stds.getAcadYear()){
+					statusReq = "Y";
+				}
+			}
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		return statusReq;
 	}
 	
 	private ResultSet getData(String sql) throws SQLException {

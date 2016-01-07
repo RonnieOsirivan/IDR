@@ -47,10 +47,17 @@ public class ResetDocNumScheduler implements ServletContextListener{
 			if(rs.next()){
 				oldAcadYear = rs.getInt(1);
 			}
-			rs = getData(" SELECT TO_CHAR(sysdate,'YYYY','NLS_CALENDAR=''THAI BUDDHA'' NLS_DATE_LANGUAGE=THAI') - DFS.ACADYEARADJ AS ACADYEAR "+
-					  " FROM DEFAULTSEMESTER DFS "+
-					  " WHERE DFS.SYSAPPID = 25 "+
-					  " AND DFS.SYSMONTH   = TO_CHAR(SYSDATE,'MM')");
+			
+			// By Acad year
+//			rs = getData(" SELECT TO_CHAR(sysdate,'YYYY','NLS_CALENDAR=''THAI BUDDHA'' NLS_DATE_LANGUAGE=THAI') + DFS.ACADYEARADJ AS ACADYEAR "+
+//					  " FROM DEFAULTSEMESTER DFS "+
+//					  " WHERE DFS.SYSAPPID = 25 "+
+//					  " AND DFS.SYSMONTH   = TO_CHAR(SYSDATE,'MM')");
+			
+			// By System year
+			rs = getData(" SELECT TO_CHAR(sysdate,'YYYY','NLS_CALENDAR=''THAI BUDDHA'' NLS_DATE_LANGUAGE=THAI') "
+					+" FROM DUAL");
+			
 			if(rs.next()){
 				newAcadYear = rs.getBigDecimal(1).intValue();
 			}

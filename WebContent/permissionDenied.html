@@ -14,19 +14,57 @@
 		}
 	</style>
 	<div class="text_center">
-		<H2> Permission denied please contract office of the registrar</H2>
+		<H2><span id="text">Permission denied please contract office of the registrar</span></H2>
 		You will be redirected to login page in <span id="timer">10</span> seconds...
 	</div>
 	
 	<script type="text/javascript">
+		var langJson;
 		var redirectURL = "./login.html";
 		window.onload = function() { setInterval(countdown, 1000); }
+		
 		function countdown() {
 			var num = parseInt(document.getElementById('timer').innerHTML);
 			if(--num < 0) window.location = redirectURL;
 			else document.getElementById('timer').innerHTML = num;
 		}
+		
+		function loadXMLDoc(){
+			var xmlhttp;
+			if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
+				xmlhttp=new XMLHttpRequest();
+			}
+			else{// code for IE6, IE5
+				xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			return xmlhttp;
+		}
+		
+		
+		function getLabel(lang){
+			localStorage.setItem("lang",lang);
+			var xmlhttp = loadXMLDoc();
+			xmlhttp.open("GET","./BilangualController?lang="+lang);
+			xmlhttp.send();
+			xmlhttp.onreadystatechange=function(){
+				if (xmlhttp.readyState==4 && xmlhttp.status==200){
+					langJson=JSON.parse(xmlhttp.responseText);
+					setLabel();
+				}
+			}
+		}
+	        
+        (function(){
+        	if(localStorage.getItem("lang")==="en_lang"){
+        		getLabel("en_lang");
+        	}else{
+        		getLabel("th_lang");
+        	}
+	    })();
+	        
+        function setLabel(){
+    		document.getElementById("text").innerHTML = langJson.lang058;
+    	}
 	</script>
-	
 </body>
 </html>

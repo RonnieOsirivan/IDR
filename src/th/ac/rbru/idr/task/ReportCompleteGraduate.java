@@ -8,8 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -22,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import th.ac.rbru.idr.model.Student;
 import th.ac.rbru.idr.model.StudentEng;
 import th.ac.rbru.idr.util.ConnectionDB;
+import th.ac.rbru.idr.util.FormatNumber;
 import th.ac.rbru.idr.util.GenerateReport;
 import th.ac.rbru.idr.util.GennerateDocumentNum;
 import th.ac.rbru.idr.util.ResultSetMapper;
@@ -51,21 +50,32 @@ private Connection con = null;
 		SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy",Locale.US);
 		ResultSetMapper<StudentEng> studentResult = new ResultSetMapper<StudentEng>();
 		StudentEng studentEng = (studentResult.mapRersultSetToObject(getStudentInfoEng(request.getParameter("studentCode")), StudentEng.class)).get(0);
-		HashMap<String, String> map = new GennerateDocumentNum().getDocumentNum("1");
+		HashMap<String, String> map = new GennerateDocumentNum().getDocumentNum("3");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		String detailParam = "	This is to cerify that "+NameFormat(studentEng.getPrefixName())+" "
+		String detailParam = "	This is to cerify that "+NameFormat(studentEng.getPrefixNameEng())+" "
 				+NameFormat(request.getParameter("firstName"))+" "
 				+NameFormat(request.getParameter("surName"))+","
 				+" student code number "+studentEng.getStudentCode()+" ";
 				
-				if(request.getParameter("passportNum") != null){
-					detailParam += "date of birt is "+formatter.format(studentEng.getBirtDate())+
-								" PASSPORTNUMBER "+request.getParameter("passportNum")+" ";
-				}
-				detailParam += "is currently a student of the "
-				+studentEng.getDegreeCerificate()+" Program, "
-				+studentEng.getFacultyName()+","+" Rambhai Barni Rajabhat University. ";
+		if(request.getParameter("passportNum") != null){
+			detailParam += "date of birt is "+formatter.format(studentEng.getBirtDate())+
+						" PASSPORTNUMBER "+request.getParameter("passportNum")+" ";
+		}
+		detailParam += "is currently a student of the "+studentEng.getDegreeNameEng();
+		if(!((studentEng.getAdmitAcadYear() >= 2555 && studentEng.getDegreeId() == 204) || (studentEng.getAdmitAcadYear() >= 2556 && studentEng.getDegreeId() == 205 ))){
+			if(!(studentEng.getProgramName().trim().substring(studentEng.getProgramName().trim().length()-1, studentEng.getProgramName().trim().length()).equals(")"))){
+				detailParam += "  in "+studentEng.getProgramName();
+				detailParam += " Program, ";
+			}else{
+				String proName = studentEng.getProgramName();
+				detailParam += "  in "+proName.substring(0,proName.indexOf("(")) +" "+proName.substring(proName.indexOf("("), proName.length());
+				detailParam += ", ";
+			}
+		}else{
+			detailParam += " Program, ";
+		}
+		detailParam += studentEng.getFacultyName()+","+" Rambhai Barni Rajabhat University. ";
 		param.put("pSequenceReport", "No. "+documentNumEngFormat(map));
 		param.put("pDate", formatter.format(date));
 		param.put("pDetail", detailParam);
@@ -75,7 +85,7 @@ private Connection con = null;
 		param.put("pGarudaSymbol", getAbsulutePath()+StaticValue.GARUDASYMBOL);
 		param.put("pSignature", getAbsulutePath()+StaticValue.SIGNATURE);
 		
-		int reportId = insertReport(studentEng.getStudentCode(),studentEng.getPrefixName()+studentEng.getStudentName()+" "+studentEng.getStudentSurname(),
+		int reportId = insertReport(studentEng.getStudentCode(),studentEng.getPrefixNameThai()+studentEng.getStudentNameThai()+" "+studentEng.getStudentSurnameThai(),
 				request.getParameter("telephoneParam"),request.getParameter("useforParam"),"EN",Integer.parseInt(map.get("docId")),studentEng.getFacultyNameThai(),studentEng.getProgramNameThai(),
 				documentNumEngFormat(map),map.get("reportTypeId"));
 		GenerateReport genReport = new GenerateReport();
@@ -89,6 +99,7 @@ private Connection con = null;
 		SimpleDateFormat simpleDateNumber = new SimpleDateFormat("dd",new Locale("th","th"));
 		SimpleDateFormat simpleDateMounth = new SimpleDateFormat("MMMM",new Locale("th","th"));
 		SimpleDateFormat simpleDateYear = new SimpleDateFormat("yyyy",new Locale("th","th"));
+		FormatNumber formatNumber = new FormatNumber();
 		
 		String stdCode = request.getParameter("studentCode");
 		
@@ -99,34 +110,34 @@ private Connection con = null;
 		int dateNumber = Integer.parseInt(simpleDateNumber.format(date));
 		String mounthName = simpleDateMounth.format(date);
 		int dateYear = Integer.parseInt(simpleDateYear.format(date));
-		String dateParam = thaiNumeral(dateNumber)+"  "+mounthName+"  "+thaiNumeral(dateYear);
+		String dateParam = formatNumber.thaiNumber("##", dateNumber)+"  "+mounthName+"  "+formatNumber.thaiNumber("####", dateYear);
 		HashMap<String, String> map = new GennerateDocumentNum().getDocumentNum("3");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		String pDetail = "	ขอรับรองว่า  "+student.getPrefix()+student.getFirstName()+"  "+student.getLastName()
-				+ "  รหัสประจำตัวนักศึกษา  "+thaiNumeral(Long.parseLong(student.getStudentCode()));
+				+ "  รหัสประจำตัวนักศึกษา  "+formatNumber.thaiNumber("##########", Long.parseLong(student.getStudentCode()));
 				
-				if(request.getParameter("passportNum") != null){
-					pDetail += "  เกิดวันที่  "+thaiNumeral(Integer.parseInt(simpleDateNumber.format(student.getBirthDate())))+"  "
-							+simpleDateMounth.format(student.getBirthDate())+"  "
-							+thaiNumeral(Integer.parseInt(simpleDateYear.format(student.getBirthDate())))+"  "
-							+"เลขที่พาสปอร์ต  "+request.getParameter("passportNum");
-				}
+		if(request.getParameter("passportNum") != null){
+			pDetail += "  เกิดวันที่  "+formatNumber.thaiNumber("##", Integer.parseInt(simpleDateNumber.format(student.getBirthDate())))+"  "
+				+simpleDateMounth.format(student.getBirthDate())+"  "
+				+formatNumber.thaiNumber("####", Integer.parseInt(simpleDateYear.format(student.getBirthDate())))+"  "
+				+"เลขที่พาสปอร์ต  "+request.getParameter("passportNum");
+		}
 				
-				pDetail += "  เป็นนักศึกษา"+student.getPeriod()
-				+ "  ระดับ"+student.getLevelCodeName()
-				+ "  "+student.getDegreeName()
-				+ "  ("+student.getDegreeAbb()+"  "+thaiNumeral(student.getStudyYear())+"  ปี)";
-				
-				if(!((student.getAdmitAcadYear() >= 2555 && student.getDegreeID() == 204) || (student.getAdmitAcadYear() >= 2556 && student.getDegreeID() == 205 ))){
-					pDetail += "  "+student.getProgramName();
-				}
+		pDetail += "  เป็นนักศึกษา"+student.getPeriod()
+		+ "  ระดับ"+student.getLevelCodeName()
+		+ "  "+student.getDegreeName()
+		+ "  ("+student.getDegreeAbb()+"  "+formatNumber.thaiNumber("#", student.getStudyYear())+"  ปี)";
+		
+		if(!((student.getAdmitAcadYear() >= 2555 && student.getDegreeID() == 204) || (student.getAdmitAcadYear() >= 2556 && student.getDegreeID() == 205 ))){
+			pDetail += "  "+student.getProgramName();
+		}
 			
 		if(student.getStudyYear() >= student.getStudentYear()){
-			pDetail += "  กำลังศึกษาอยู่ปี  "+thaiNumeral(student.getStudentYear());
+			pDetail += "  กำลังศึกษาอยู่ปี  "+formatNumber.thaiNumber("##", student.getStudentYear());
 		}
 		pDetail += "  ได้ศึกษาครบหลักสูตรและรอการอนุมัติผลการศึกษาจากสภามหาวิทยาลัยราชภัฏรำไพพรรณี  จริง ";
-		param.put("pSequenceReport", "ที่  "+thaiNumeral(Integer.parseInt(map.get("reportTypeId")))+"."+thaiNumeral3Digit(Integer.parseInt(map.get("docRuningNum")))+" / "+thaiNumeral(Integer.parseInt(map.get("acadYear"))));
+		param.put("pSequenceReport", "ที่  "+formatNumber.thaiNumber("##", Integer.parseInt(map.get("reportTypeId")))+"."+formatNumber.thaiNumber("000", Integer.parseInt(map.get("docRuningNum")))+" / "+formatNumber.thaiNumber("####", Integer.parseInt(map.get("acadYear"))));
 		param.put("pDate", dateParam);
 		
 		//Image for test
@@ -222,43 +233,37 @@ private Connection con = null;
 		return reportId;
 	}
 	
-	//overload method
-	private String thaiNumeral(int number){
-		DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(new Locale("th","TH","TH"));
-		df.applyPattern("####");
-		return df.format(number);
-	}
-	
-	private String thaiNumeral3Digit(int number){
-		DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(new Locale("th","TH","TH"));
-		df.applyPattern("####");
-		String docNum = "";
-		if(df.format(number).length() == 1){
-			docNum = "๐๐"+df.format(number);
-		}else if(df.format(number).length() == 2){
-			docNum = "๐"+df.format(number);
-		}else{
-			docNum = df.format(number);
-		}
-		return docNum;
-	}
-	
-	//overload method
-	private String thaiNumeral(long number){
-		DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(new Locale("th","TH","TH"));
-		df.applyPattern("##########");
-		return df.format(number);
-	}
+//	//overload method
+//	private String thaiNumeral(int number){
+//		DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(new Locale("th","TH","TH"));
+//		df.applyPattern("####");
+//		return df.format(number);
+//	}
+//	
+//	private String thaiNumeral3Digit(int number){
+//		DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(new Locale("th","TH","TH"));
+//		df.applyPattern("####");
+//		String docNum = "";
+//		if(df.format(number).length() == 1){
+//			docNum = "๐๐"+df.format(number);
+//		}else if(df.format(number).length() == 2){
+//			docNum = "๐"+df.format(number);
+//		}else{
+//			docNum = df.format(number);
+//		}
+//		return docNum;
+//	}
+//	
+//	//overload method
+//	private String thaiNumeral(long number){
+//		DecimalFormat df = (DecimalFormat) NumberFormat.getInstance(new Locale("th","TH","TH"));
+//		df.applyPattern("##########");
+//		return df.format(number);
+//	}
 	
 	private String documentNumEngFormat(HashMap<String,String> docNum){
-		String docRunnigNum = "";
-		if(docNum.get("docRuningNum").length() == 1){
-			docRunnigNum = "00"+docNum.get("docRuningNum");
-		}else if(docNum.get("docRuningNum").length() == 2){
-			docRunnigNum = "0"+docNum.get("docRuningNum");
-		}else{
-			docRunnigNum = docNum.get("docRuningNum");
-		}
+		FormatNumber formatNumber = new FormatNumber();
+		String docRunnigNum = formatNumber.EngNumber("000", Integer.parseInt(docNum.get("docRuningNum")));
 		return docNum.get("reportTypeId")+"."+docRunnigNum+" / "+(Integer.parseInt(docNum.get("acadYear"))-543);
 	}
 	
@@ -321,16 +326,21 @@ private Connection con = null;
 	
 	private ResultSet getStudentInfoEng(String stdCode) throws SQLException{
 		String sql = "	SELECT PRE.PREFIXNAMEENG AS PREFIXNAMEENG,	"+
+				"	PRE.PREFIXNAME AS PREFIXNAME,	"+
 				"	NVL(STDM.STUDENTNAMEENG,'NOT SHOW') AS STUDENTNAMEENG,	"+
 				"	NVL(STDM.STUDENTSURNAMEENG,'NOT SHOW') AS STUDENTSURNAMEENG,	"+
+				"	STDM.STUDENTNAME      AS STUDENTNAME,	"+
+				"	STDM.STUDENTSURNAME AS STUDENTSURNAME,	"+
 				"	STDM.STUDENTCODE AS STUDENTCODE,	"+
 				"	STDBIO.BIRTHDATE AS BIRTHDATE, "+
-				"	DE.DEGREECERTIFICATEENG AS DEGREECERTIFICATEENG,	"+
+				"	DE.DEGREENAMEENG AS DEGREENAMEENG,	"+
 				"	  'สาขาวิชา'	||"+
 				"	PRO.PROGRAMNAME AS PROGRAMNAME,	"+
 				"	PRO.PROGRAMNAMEENG AS PROGRAMNAMEENG,	"+
 				"	FAC.FACULTYNAME	AS FACULTYNAMETHAI,"+
-				"	FAC.FACULTYNAMEENG AS FACULTYNAMEENG	"+
+				"	FAC.FACULTYNAMEENG AS FACULTYNAMEENG	,"+
+				"	STDM.ADMITACADYEAR AS ADMITACADYEAR, "+
+				"	DE.DEGREEID AS DEGREEID"+
 				"	FROM STUDENTMASTER STDM,	"+
 				"	STUDENTBIO	STDBIO, "+
 				"	FACULTY FAC,	"+

@@ -76,7 +76,7 @@ public class SearchStudentController extends HttpServlet {
 		StudentStatus stds = stdsMapper.mapRersultSetToObject(getData(sql), StudentStatus.class).get(0);
 		
 		String acadSQL = "	SELECT DFS.SEMESTER,	"+
-				"	TO_CHAR(sysdate,'YYYY','NLS_CALENDAR=''THAI BUDDHA'' NLS_DATE_LANGUAGE=THAI') - DFS.ACADYEARADJ AS ACADYEAR	"+
+				"	TO_CHAR(sysdate,'YYYY','NLS_CALENDAR=''THAI BUDDHA'' NLS_DATE_LANGUAGE=THAI') + DFS.ACADYEARADJ AS ACADYEAR	"+
 				"	FROM DEFAULTSEMESTER DFS	"+
 				"	WHERE DFS.SYSAPPID = 25	"+
 				"	AND DFS.SYSMONTH   = TO_CHAR(SYSDATE,'MM')";
