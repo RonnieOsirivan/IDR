@@ -159,7 +159,12 @@ public class ManagementReportController extends HttpServlet {
 //		response.sendRedirect("./reportFile/"+request.getParameter("reportId")+"after.pdf");
 		
 		markPrint(request.getParameter("reportId"));
-		response.sendRedirect("./reportFile/"+request.getParameter("reportId")+".pdf");
+		
+		if(request.getParameter("type").equalsIgnoreCase("pdf")){
+			response.sendRedirect("./reportFile/"+request.getParameter("reportId")+".pdf");
+		}else{
+			response.sendRedirect("./reportFile/"+request.getParameter("reportId")+".docx");
+		}
 	}
 	
 	private void markPrint(String reportId){
@@ -200,7 +205,11 @@ public class ManagementReportController extends HttpServlet {
 	private List<Report> addLinkPdf(List<Report> reportList){
 		if(reportList !=null){
 			for (Report report : reportList) {
-				report.setReportName("<a class='markPrint' href=./ManagementReportController?reportId="+report.getReportId()+" target=_blank>"+report.getReportName()+"</a>");
+//				report.setReportName("<a class='markPrint' href=./ManagementReportController?reportId="+report.getReportId()+" target=_blank>"+report.getReportName()+"</a>");
+//				report.setReportLink("<a class='markPrint' href=./ManagementReportController?type=pdf&reportId="+report.getReportId()+" target=_blank>PDF</a> "+
+//						"<a class='markPrint' href=./ManagementReportController?type=docx&reportId="+report.getReportId()+" target=_blank>docx</a> ");
+				report.setReportName(report.getReportName()+" <a class='markPrint' href=./ManagementReportController?type=pdf&reportId="+report.getReportId()+" target=_blank>PDF</a> "+
+						"<a class='markPrint' href=./ManagementReportController?type=docx&reportId="+report.getReportId()+" target=_blank>DOCX</a> ");
 			}
 		}
 		return reportList;
@@ -240,7 +249,8 @@ public class ManagementReportController extends HttpServlet {
 				"	RPT.REPORTNAMETHAI AS REPORTNAMETHAI,	"+
 				"	RP.LANGUAGE AS LANGUAGE , "+
 				"	RP.REPORTPRINTSTATUS AS REPORTPRINTSTATUS,	"+
-				"	RP.CREATEDATE AS CREATEDATE	"+
+				"	RP.CREATEDATE AS CREATEDATE,	"+
+				"	RP.TELEPHONENUMBER   AS TELEPHONENUMBER "+
 				"	FROM STUDENT AS STD ,REPORT AS RP , REPORTTYPE AS RPT	"+
 				"	WHERE STD.STUDENTCODE = RP.STUDENTCODE	"+
 				"	AND RP.REPORTTYPEID = RPT.REPORTTYPEID "+

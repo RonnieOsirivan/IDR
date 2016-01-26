@@ -13,5 +13,9 @@ public class ConvertTimstamp {
 		SimpleDateFormat sFormat = new SimpleDateFormat("dd/MM/yyyy",new Locale("th","th"));
 		String sDate = sFormat.format(date);
 		System.out.println(sDate);
+		
+		SimpleDateFormat simpleDateFullDate = new SimpleDateFormat("dd MMMM yyyy",new Locale("th","th"));
+		String sDate2 = simpleDateFullDate.format(date);
+		System.out.println(sDate2);
 	}
 }

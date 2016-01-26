@@ -43,16 +43,17 @@ public class RequestController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException,IOException {
 		try {
-			if("getSemester".equalsIgnoreCase(request.getParameter("method"))){
-				getSemester(request, response);
+			String studentCode = "";
+			if(!request.getParameter("studentCode").equals("null") && !(request.getParameter("studentCode")).isEmpty()){
+				studentCode = request.getParameter("studentCode");
 			}else{
-				String studentCode = "";
-				if(!request.getParameter("studentCode").equals("null") && !(request.getParameter("studentCode")).isEmpty()){
-					studentCode = request.getParameter("studentCode");
-				}else{
-					Principal principal = request.getUserPrincipal();
-					studentCode = principal.getName();
-				}
+				Principal principal = request.getUserPrincipal();
+				studentCode = principal.getName();
+			}
+			
+			if("getSemester".equalsIgnoreCase(request.getParameter("method"))){
+				getSemester(request, response,studentCode);
+			}else{
 				ResultSetMapper<Student> student = new ResultSetMapper<Student>();
 				List<Student> studentList = student.mapRersultSetToObject(getStudentInfo(studentCode), Student.class);
 				String resultJson = ConvertDataType.getInstance().objectToJasonArray(studentList);
@@ -112,9 +113,9 @@ public class RequestController extends HttpServlet {
 		return getData(sql);
 	}
 	
-	private void getSemester(HttpServletRequest request, HttpServletResponse response) throws IOException{
+	private void getSemester(HttpServletRequest request, HttpServletResponse response,String studentCode) throws IOException{
 		ResultSetMapper<Semester> mapper = new ResultSetMapper<Semester>();
-		List<Semester> semList = mapper.mapRersultSetToObject(getSemesterSQL(request.getParameter("studentCode")), Semester.class);
+		List<Semester> semList = mapper.mapRersultSetToObject(getSemesterSQL(studentCode), Semester.class);
 		String resultJson = ConvertDataType.getInstance().objectToJasonArray(semList);
 		sendResponse(request, response, resultJson);
 	}

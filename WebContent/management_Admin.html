@@ -65,7 +65,7 @@
 				data-search="true"
 				data-show-columns="true"
 				data-pagination="true"
-				data-page-list="[5,10,20,25]"
+				data-page-list="[5,10,20,25,30]"
 				data-toolbar="#toolbar"
 				data-cache="false"
 				data-row-style="rowStyle"
@@ -77,6 +77,7 @@
 		        <th data-field="studentName" data-sortable="true">Name</th>
 		        <th data-field="reportName" data-sortable="true" data-events="markPrint">Report Type</th>
 		        <th data-field="createDateString" data-sortable="true">Date</th>
+		        <th data-field="telNum" data-sortable="true">Telephone Number</th>
 		    </tr>
 		    </thead>
 		</table>
@@ -192,6 +193,7 @@
 	    	tr[2].innerHTML = "<th style><div class='th-inner sortable'>"+json.lang008+"</div><div class='fht-cell'></div></th>";
 		    tr[3].innerHTML = "<th style><div class='th-inner sortable'>"+json.lang009+"</div><div class='fht-cell'></div></th>";
 		    tr[4].innerHTML = "<th style><div class='th-inner sortable'>"+json.lang010+"</div><div class='fht-cell'></div></th>";
+		    tr[5].innerHTML = "<th style><div class='th-inner sortable'>"+json.lang060+"</div><div class='fht-cell'></div></th>";
 		    
 		    document.getElementById("menuLabel1").innerHTML = json.lang047;
     		document.getElementById("menuLabel2").innerHTML = json.lang040;

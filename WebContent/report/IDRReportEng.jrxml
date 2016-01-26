@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="IDRReport" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="6" uuid="7420bca3-7e8d-4898-9527-23ca925073ad">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="125"/>
-	<property name="ireport.y" value="464"/>
+	<property name="ireport.y" value="496"/>
 	<parameter name="pSequenceReport" class="java.lang.String"/>
 	<parameter name="pDate" class="java.lang.String"/>
 	<parameter name="pStdName" class="java.lang.String"/>
@@ -131,7 +131,7 @@ Rambhai Barni Rajabhat University]]></text>
 				<textElement>
 					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[Registry Division
+				<text><![CDATA[Registration Unit
 Office of Academic Service
 Tel. 039-319111 Ext. 8404-5
 Fax 039-471070]]></text>

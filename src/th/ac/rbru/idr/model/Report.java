@@ -22,6 +22,11 @@ public class Report {
 	private Timestamp createDate;
 	@Column(name="REPORTPRINTSTATUS")
 	private int reportPrintStatus;
+	@Column(name="TELEPHONENUMBER")
+	private String telNum;
+	@Column(name="USEFOR")
+	private String useFor;
+	private String reportLink;
 	private String createDateString;
 	
 	public int getReportId() {
@@ -65,6 +70,24 @@ public class Report {
 	}
 	public void setReportPrintStatus(int reportPrintStatus) {
 		this.reportPrintStatus = reportPrintStatus;
+	}
+	public String getTelNum() {
+		return telNum;
+	}
+	public void setTelNum(String telNum) {
+		this.telNum = telNum;
+	}
+	public String getUseFor() {
+		return useFor;
+	}
+	public void setUseFor(String useFor) {
+		this.useFor = useFor;
+	}
+	public String getReportLink() {
+		return reportLink;
+	}
+	public void setReportLink(String reportLink) {
+		this.reportLink = reportLink;
 	}
 	public String getCreateDateString() {
 		return createDateString;

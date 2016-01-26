@@ -14,9 +14,13 @@ public class StaticValue implements ServletContextListener{
 	private static Properties prop = new Properties();
 	private static InputStream input = null;
 	public static String REPORT_TYPE_STUDENT_STATUS_THAI;
+	public static String REPORT_TYPE_STUDENT_STATUS_THAI_DOCX;
 	public static String REPORT_TYPE_STUDENT_STATUS_ENG;
+	public static String REPORT_TYPE_STUDENT_STATUS_ENG_DOCX;
 	public static String REPORT_GRADE_EACH_SEMESTER;
+	public static String REPORT_GRADE_EACH_SEMESTER_DOCX;
 	public static String REPORT_GRADE_EACH_SEMESTER_ENG;
+	public static String REPORT_GRADE_EACH_SEMESTER_ENG_DOCX;
 	public static String REPORT_FILE_DIRECTORY;
 	public static String REPORT_TRASH_DIRECTORY;
 	public static String REPORT_LOG_FILE_DIRECTORY;
@@ -35,9 +39,13 @@ public class StaticValue implements ServletContextListener{
 //			input = new FileInputStream("/Users/rattasit/workspace/IDR/fileconf/config.properties");
 			prop.load(input);
 			REPORT_TYPE_STUDENT_STATUS_THAI = prop.getProperty("report_type_student_status_thai");
-			REPORT_TYPE_STUDENT_STATUS_ENG = prop.getProperty("report_type_student_status_Eng");
+			REPORT_TYPE_STUDENT_STATUS_THAI_DOCX = prop.getProperty("report_type_student_status_thai_docx");
+			REPORT_TYPE_STUDENT_STATUS_ENG = prop.getProperty("report_type_student_status_eng");
+			REPORT_TYPE_STUDENT_STATUS_ENG_DOCX = prop.getProperty("report_type_student_status_eng_docx");
 			REPORT_GRADE_EACH_SEMESTER = prop.getProperty("report_type_grade_each_semester");
+			REPORT_GRADE_EACH_SEMESTER_DOCX = prop.getProperty("report_type_grade_each_semester_docx");
 			REPORT_GRADE_EACH_SEMESTER_ENG = prop.getProperty("report_type_grade_each_semester_eng");
+			REPORT_GRADE_EACH_SEMESTER_ENG_DOCX = prop.getProperty("report_type_grade_each_semester_eng_docx");
 			
 			REPORT_FILE_DIRECTORY = prop.getProperty("report_file_directory");
 			REPORT_TRASH_DIRECTORY = prop.getProperty("report_trash_directory");

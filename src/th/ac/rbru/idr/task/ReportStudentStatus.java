@@ -148,9 +148,11 @@ public class ReportStudentStatus {
 		param.put("pGarudaSymbol", getAbsulutePath()+StaticValue.GARUDASYMBOL);
 		param.put("pSignature", getAbsulutePath()+StaticValue.SIGNATURE);
 		
+//		param.put("pDetailMSWord", pDetail);
+		
 		WordDelimiter wdlt = new WordDelimiter();
 		
-		pDetail = wdlt.wordDelimiter(pDetail);
+//		pDetail = wdlt.wordDelimiter(pDetail);
 		
 		param.put("pDetail", pDetail);
 		
@@ -177,7 +179,7 @@ public class ReportStudentStatus {
 	
 	private int insertReport(String stdCode,String stdName,String telephoneNum,String usefor,String language,int docId,String facName,String programName,String docNum,String reportTypeId){
 		String stdInsertSql = "INSERT IGNORE INTO STUDENT(STUDENTCODE,STUDENTNAME,TELEPHONENUMBER) VALUES (?,?,?)";
-		String pdfInsertSql = "INSERT INTO REPORT(STUDENTCODE,REPORTTYPEID,USEFOR,REPORTFILE,LANGUAGE,DOCUMENTID) VALUES(?,?,?,?,?,?)";
+		String pdfInsertSql = "INSERT INTO REPORT(STUDENTCODE,REPORTTYPEID,USEFOR,REPORTFILE,LANGUAGE,DOCUMENTID,TELEPHONENUMBER) VALUES(?,?,?,?,?,?,?)";
 		
 		PreparedStatement stmt = null;
 		ConnectionDB.getInstance();
@@ -198,6 +200,7 @@ public class ReportStudentStatus {
 			stmt.setString(4, programName);
 			stmt.setString(5, language);
 			stmt.setInt(6, docId);
+			stmt.setString(7, telephoneNum);
 			stmt.executeUpdate();
 			
 			ResultSet rs = stmt.getGeneratedKeys();

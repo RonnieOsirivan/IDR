@@ -141,7 +141,7 @@ private Connection con = null;
 //		if(student.getStudyYear() >= student.getStudentYear()){
 //			pDetail += "  กำลังศึกษาอยู่ปี  "+thaiNumeral(student.getStudentYear());
 //		}
-		pDetail += " กำลังศึกษาอยู่ที่มหาลัยราชภัฏรำไพพรรณีและได้รับผลการเรียนในภาคการศึกษาที่  ";
+		pDetail += " กำลังศึกษาอยู่ที่มหาวิทยาลัยราชภัฏรำไพพรรณีและได้รับผลการเรียนในภาคการศึกษาที่  ";
 		pDetail	+= formatNumber.thaiNumber("#", Integer.parseInt(request.getParameter("semesterParam")))+" / "+formatNumber.thaiNumber("####", Integer.parseInt(request.getParameter("acadYearParam")))+"  ดังนี้ ";
 		param.put("pSequenceReport", "ที่  "+formatNumber.thaiNumber("##", Integer.parseInt(map.get("reportTypeId")))+"."+formatNumber.thaiNumber("000", Integer.parseInt(map.get("docRuningNum")))+" / "+formatNumber.thaiNumber("####", Integer.parseInt(map.get("acadYear"))));
 		param.put("pDate", dateParam);
@@ -153,7 +153,7 @@ private Connection con = null;
 		
 		WordDelimiter wdlt = new WordDelimiter();
 		
-		pDetail = wdlt.wordDelimiter(pDetail);
+//		pDetail = wdlt.wordDelimiter(pDetail);
 		
 		param.put("pDetail", pDetail);
 		
@@ -184,7 +184,7 @@ private Connection con = null;
 	
 	private int insertReport(String stdCode,String stdName,String telephoneNum,String usefor,String language,int docId,String facName,String programName,String docNum,String reportTypeId){
 		String stdInsertSql = "INSERT IGNORE INTO STUDENT(STUDENTCODE,STUDENTNAME,TELEPHONENUMBER) VALUES (?,?,?)";
-		String pdfInsertSql = "INSERT INTO REPORT(STUDENTCODE,REPORTTYPEID,USEFOR,REPORTFILE,LANGUAGE,DOCUMENTID) VALUES(?,?,?,?,?,?)";
+		String pdfInsertSql = "INSERT INTO REPORT(STUDENTCODE,REPORTTYPEID,USEFOR,REPORTFILE,LANGUAGE,DOCUMENTID,TELEPHONENUMBER) VALUES(?,?,?,?,?,?,?)";
 		
 		PreparedStatement stmt = null;
 		ConnectionDB.getInstance();
@@ -205,6 +205,7 @@ private Connection con = null;
 			stmt.setString(4, programName);
 			stmt.setString(5, language);
 			stmt.setInt(6, docId);
+			stmt.setString(7, telephoneNum);
 			stmt.executeUpdate();
 			
 			ResultSet rs = stmt.getGeneratedKeys();
