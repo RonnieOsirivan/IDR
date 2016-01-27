@@ -80,7 +80,7 @@ public class ManagementReportController extends HttpServlet {
 		ResultSetMapper<Report> reportResult = new ResultSetMapper<Report>();
 		List<Report> reportList = reportResult.mapRersultSetToObject(getReportListForStudentSql(studentCode), Report.class);
 		reportList = addReportNameLang(reportList);
-//		reportList = addLinkPdf(reportList);
+		reportList = addLinkPdfPayInSlip(reportList);
 		reportList = convertToBuddhistDate(reportList);
 		String resultJson = "";
 		if(reportList != null){
@@ -162,8 +162,10 @@ public class ManagementReportController extends HttpServlet {
 		
 		if(request.getParameter("type").equalsIgnoreCase("pdf")){
 			response.sendRedirect("./reportFile/"+request.getParameter("reportId")+".pdf");
-		}else{
+		}else if(request.getParameter("type").equalsIgnoreCase("docx")){
 			response.sendRedirect("./reportFile/"+request.getParameter("reportId")+".docx");
+		}else{
+			response.sendRedirect("./payInSlipFiles/"+request.getParameter("reportId")+".pdf");
 		}
 	}
 	
@@ -210,6 +212,18 @@ public class ManagementReportController extends HttpServlet {
 //						"<a class='markPrint' href=./ManagementReportController?type=docx&reportId="+report.getReportId()+" target=_blank>docx</a> ");
 				report.setReportName(report.getReportName()+" <a class='markPrint' href=./ManagementReportController?type=pdf&reportId="+report.getReportId()+" target=_blank>PDF</a> "+
 						"<a class='markPrint' href=./ManagementReportController?type=docx&reportId="+report.getReportId()+" target=_blank>DOCX</a> ");
+			}
+		}
+		return reportList;
+	}
+	
+	private List<Report> addLinkPdfPayInSlip(List<Report> reportList){
+		if(reportList !=null){
+			for (Report report : reportList) {
+//				report.setReportName("<a class='markPrint' href=./ManagementReportController?reportId="+report.getReportId()+" target=_blank>"+report.getReportName()+"</a>");
+//				report.setReportLink("<a class='markPrint' href=./ManagementReportController?type=pdf&reportId="+report.getReportId()+" target=_blank>PDF</a> "+
+//						"<a class='markPrint' href=./ManagementReportController?type=docx&reportId="+report.getReportId()+" target=_blank>docx</a> ");
+				report.setReportName(report.getReportName()+" <a class='markPrint' href=./ManagementReportController?type=payInSlip&reportId="+report.getReportId()+" target=_blank>Pay in slip</a> ");
 			}
 		}
 		return reportList;
@@ -282,6 +296,12 @@ public class ManagementReportController extends HttpServlet {
 //			afile.renameTo(new File("/Users/rattasit/workspace/IDR/WebContent/"+StaticValue.REPORT_TRASH_DIRECTORY+afile.getName()));
 			
 			afile = new File(getAbsulutePath()+StaticValue.REPORT_FILE_DIRECTORY+id+".pdf");
+			afile.renameTo(new File(getAbsulutePath()+StaticValue.REPORT_TRASH_DIRECTORY+afile.getName()));
+			
+			afile = new File(getAbsulutePath()+StaticValue.REPORT_FILE_DIRECTORY+id+".docx");
+			afile.renameTo(new File(getAbsulutePath()+StaticValue.REPORT_TRASH_DIRECTORY+afile.getName()));
+			
+			afile = new File(getAbsulutePath()+StaticValue.PAY_IN_SLIP_FILE_DIRECTORY+id+".pdf");
 			afile.renameTo(new File(getAbsulutePath()+StaticValue.REPORT_TRASH_DIRECTORY+afile.getName()));
 		}
 	}

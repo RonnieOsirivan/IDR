@@ -21,7 +21,9 @@ public class StaticValue implements ServletContextListener{
 	public static String REPORT_GRADE_EACH_SEMESTER_DOCX;
 	public static String REPORT_GRADE_EACH_SEMESTER_ENG;
 	public static String REPORT_GRADE_EACH_SEMESTER_ENG_DOCX;
+	public static String PAY_IN_SLIP;
 	public static String REPORT_FILE_DIRECTORY;
+	public static String PAY_IN_SLIP_FILE_DIRECTORY;
 	public static String REPORT_TRASH_DIRECTORY;
 	public static String REPORT_LOG_FILE_DIRECTORY;
 	public static String REPORT_LOG;
@@ -46,8 +48,10 @@ public class StaticValue implements ServletContextListener{
 			REPORT_GRADE_EACH_SEMESTER_DOCX = prop.getProperty("report_type_grade_each_semester_docx");
 			REPORT_GRADE_EACH_SEMESTER_ENG = prop.getProperty("report_type_grade_each_semester_eng");
 			REPORT_GRADE_EACH_SEMESTER_ENG_DOCX = prop.getProperty("report_type_grade_each_semester_eng_docx");
+			PAY_IN_SLIP = prop.getProperty("pay_in_slip");
 			
 			REPORT_FILE_DIRECTORY = prop.getProperty("report_file_directory");
+			PAY_IN_SLIP_FILE_DIRECTORY = prop.getProperty("pay_in_slip_directory");
 			REPORT_TRASH_DIRECTORY = prop.getProperty("report_trash_directory");
 			REPORT_LOG = prop.getProperty("report_log");
 			REPORT_LOG_FILE_DIRECTORY = prop.getProperty("report_log_directory");

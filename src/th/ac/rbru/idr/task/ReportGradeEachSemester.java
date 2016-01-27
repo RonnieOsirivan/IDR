@@ -21,6 +21,7 @@ import th.ac.rbru.idr.model.Student;
 import th.ac.rbru.idr.model.StudentEng;
 import th.ac.rbru.idr.util.ConnectionDB;
 import th.ac.rbru.idr.util.FormatNumber;
+import th.ac.rbru.idr.util.GeneratePayInSlip;
 import th.ac.rbru.idr.util.GenerateReport;
 import th.ac.rbru.idr.util.GennerateDocumentNum;
 import th.ac.rbru.idr.util.ResultSetMapper;
@@ -95,6 +96,12 @@ private Connection con = null;
 				documentNumEngFormat(map),map.get("reportTypeId"));
 		GenerateReport genReport = new GenerateReport();
 		genReport.generarteReport("gradeEachSemesterEng",String.valueOf(reportId), param,getAbsulutePath());
+		
+		ResultSetMapper<Student> resultSet = new ResultSetMapper<Student>();
+		Student student = resultSet.mapRersultSetToObject(getStudentInfoThai(request.getParameter("studentCode")), Student.class).get(0);
+		GeneratePayInSlip generatePayInSlip = new GeneratePayInSlip();
+		generatePayInSlip.genPayInSlip(String.valueOf(reportId), student, getAbsulutePath());
+		
 		sendResponse(request, response, "Done!");
 	}
 	
@@ -167,6 +174,11 @@ private Connection con = null;
 		GenerateReport genReport = new GenerateReport();
 		genReport.generarteReport("gradeEachSemesterThai", String.valueOf(reportId),param,getAbsulutePath());
 //		FileInputStream pdfStream = convertPdfToBinary("/Users/rattasit/workspace/IDR/WebContent/reportFile/test.pdf");
+		
+		//generate pay in slip
+		GeneratePayInSlip generatePayInSlip = new GeneratePayInSlip();
+		generatePayInSlip.genPayInSlip(String.valueOf(reportId), student, getAbsulutePath());
+		
 		sendResponse(request, response, "Done!");
 	}
 	
