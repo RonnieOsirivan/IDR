@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="IDRReport" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="6" uuid="7420bca3-7e8d-4898-9527-23ca925073ad">
 	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="137"/>
-	<property name="ireport.y" value="508"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="565"/>
 	<parameter name="pSequenceReport" class="java.lang.String"/>
 	<parameter name="pDate" class="java.lang.String"/>
 	<parameter name="pDetail" class="java.lang.String"/>
@@ -24,7 +24,7 @@
 				<textElement>
 					<font fontName="TH SarabunPSK" size="24" isBold="true" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[ใบรับรอง]]></text>
+				<text><![CDATA[ ใบรับรอง]]></text>
 			</staticText>
 			<image evaluationTime="Report">
 				<reportElement x="233" y="24" width="84" height="101" uuid="501a5049-f95d-4e82-830d-746ed7d52c94"/>
@@ -61,7 +61,7 @@
 				<textElement textAlignment="Center">
 					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[(ผู้ช่วยศาสตราจารย์  ดร.นาคนิมิตร  อรรคศรีวร)
+				<text><![CDATA[(ผู้ช่วยศาสตราจารย์นาคนิมิตร  อรรคศรีวร)
 ผู้ช่วยอธิการบดี  ปฏิบัติราชการแทน
 รองอธิการบดีมหาวิทยาลัยราชภัฏรำไพพรรณี
 ]]></text>
@@ -128,7 +128,7 @@
 				<textElement>
 					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[หน่วยงานทะเบียนและประมวลผล
+				<text><![CDATA[กลุ่มงานทะเบียนและประมวลผล
 โทร.  ๐-๓๙๔๗-๑๐๗๐  และ  ๐-๓๙๓๑-๙๑๑๑  ต่อ  ๘๔๐๔-๕
 โทรสาร  ๐-๓๙๔๗-๑๐๗๐]]></text>
 			</staticText>

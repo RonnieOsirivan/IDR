@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="IDRRepoertBySemEng" pageWidth="595" pageHeight="842" columnWidth="557" leftMargin="19" rightMargin="19" topMargin="18" bottomMargin="19" uuid="23dd5130-f501-48c8-97fb-9814d745ad1e">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="298"/>
+	<property name="ireport.y" value="507"/>
 	<parameter name="pStudentCode" class="java.lang.String"/>
 	<parameter name="pSemester" class="java.lang.String"/>
 	<parameter name="pAcadYear" class="java.lang.String"/>
@@ -301,7 +301,7 @@ Fax 039-471070]]></text>
 				<textElement textAlignment="Center">
 					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[(Assistant Professor Dr. Naknimit Akkasriworn)
+				<text><![CDATA[(Assistant Professor Naknimit Akkasriworn)
 Assistant to the President
 Acting for Vice President for Academic Affairs
 Rambhai Barni Rajabhat University]]></text>

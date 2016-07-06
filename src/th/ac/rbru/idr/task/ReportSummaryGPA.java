@@ -55,7 +55,7 @@ private Connection con = null;
 		FormatNumber formatNumber = new FormatNumber();
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
-		String detailParam = "	This is to cerify that "+NameFormat(studentEng.getPrefixNameEng())+" "
+		String detailParam = "	This is to certify that "+NameFormat(studentEng.getPrefixNameEng())+" "
 				+NameFormat(request.getParameter("firstName"))+" "
 				+NameFormat(request.getParameter("surName"))+","
 				+" student code number "+studentEng.getStudentCode()+" ";
