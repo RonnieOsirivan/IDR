@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import oracle.jdbc.proxy.annotation.GetDelegate;
 import th.ac.rbru.idr.model.Student;
 import th.ac.rbru.idr.model.StudentStatus;
 import th.ac.rbru.idr.util.ConnectionDB;
@@ -104,6 +103,9 @@ public class SearchStudentController extends HttpServlet {
 		}else{
 			stds.setCanReq("N");
 		}
+		
+		//for test only
+		stds.setCanReq("Y");
 		
 		if(stds.getCanReq().equals("N")){
 			stds.setMsgThai("สถานะ "+stds.getStatusNameThai()+" ในเทอม "+stds.getSemester()+"/"+stds.getAcadYear());

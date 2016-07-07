@@ -3,8 +3,6 @@ package th.ac.rbru.idr.util;
 import java.awt.Canvas;
 import java.awt.Font;
 import java.awt.FontMetrics;
-import java.awt.font.FontRenderContext;
-import java.awt.geom.AffineTransform;
 import java.text.BreakIterator;
 import java.util.Locale;
 

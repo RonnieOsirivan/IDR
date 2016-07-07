@@ -40,6 +40,9 @@ public class GenerateReport {
 		}else if("gradeEachSemesterEng".equalsIgnoreCase(reportTypeResource)){
 			reportTypeResourceFile = abPath+StaticValue.REPORT_GRADE_EACH_SEMESTER_ENG;
 			reportTypeResourceFileDocx = abPath+StaticValue.REPORT_GRADE_EACH_SEMESTER_ENG_DOCX;
+		}else if("completeTech5YearThai".equalsIgnoreCase(reportTypeResource)){
+			reportTypeResourceFile = abPath+StaticValue.REPORT_COMPLETE_TECH_5_YEAR_THAI;
+			reportTypeResourceFileDocx = abPath+StaticValue.REPORT_COMPLETE_TECH_5_YEAR_THAI_DOCX;
 		}
 		
 		reportFileDirectory = abPath+StaticValue.REPORT_FILE_DIRECTORY+reportId+".pdf";

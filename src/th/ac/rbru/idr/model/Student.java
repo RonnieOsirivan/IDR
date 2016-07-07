@@ -44,6 +44,12 @@ public class Student {
 	private int degreeID;
 	@Column(name="GPA")
 	private double gpa;
+	@Column(name="FINISHYEAR")
+	private String finishYear;
+	@Column(name="PROGRAMID")
+	private String programeId;
+	@Column(name="STUDENTID")
+	private String studentId;
 	
 	public String getPrefix() {
 		return prefix;
@@ -152,5 +158,23 @@ public class Student {
 	}
 	public void setGpa(double gpa) {
 		this.gpa = gpa;
+	}
+	public String getFinishYear() {
+		return finishYear;
+	}
+	public void setFinishYear(String finishYear) {
+		this.finishYear = finishYear;
+	}
+	public String getProgrameId() {
+		return programeId;
+	}
+	public void setProgrameId(String programeId) {
+		this.programeId = programeId;
+	}
+	public String getStudentId() {
+		return studentId;
+	}
+	public void setStudentId(String studentId) {
+		this.studentId = studentId;
 	}
 }

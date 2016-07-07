@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import th.ac.rbru.idr.task.ReportCompleteGraduate;
+import th.ac.rbru.idr.task.ReportCompleteTech5Year;
 import th.ac.rbru.idr.task.ReportGradeEachSemester;
 import th.ac.rbru.idr.task.ReportLastSemester;
 import th.ac.rbru.idr.task.ReportStudentStatus;
@@ -51,6 +52,9 @@ public class GenerateReportController extends HttpServlet {
 		}else if("completeGraduate".equalsIgnoreCase(request.getParameter("reportTypeParam"))){
 			ReportCompleteGraduate completeGraduate = new ReportCompleteGraduate();
 			completeGraduate.generateReport(request, response);
+		}else if("completeTech5Year".equalsIgnoreCase(request.getParameter("reportTypeParam"))){
+			ReportCompleteTech5Year completeTech5Year = new ReportCompleteTech5Year();
+			completeTech5Year.generateReport(request, response);
 		}
 	}
 
