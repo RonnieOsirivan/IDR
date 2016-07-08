@@ -43,6 +43,12 @@ public class GenerateReport {
 		}else if("completeTech5YearThai".equalsIgnoreCase(reportTypeResource)){
 			reportTypeResourceFile = abPath+StaticValue.REPORT_COMPLETE_TECH_5_YEAR_THAI;
 			reportTypeResourceFileDocx = abPath+StaticValue.REPORT_COMPLETE_TECH_5_YEAR_THAI_DOCX;
+		}else if("lastSemesterTech5YearThai".equalsIgnoreCase(reportTypeResource)){
+			reportTypeResourceFile = abPath+StaticValue.REPORT_LAST_SEMESTER_TECH_5_YEAR_THAI;
+			reportTypeResourceFile = abPath+StaticValue.REPORT_LAST_SEMESTER_TECH_5_YEAR_THAI_DOCX;
+		}else if("completeTech4YearThai".equalsIgnoreCase(reportTypeResource)){
+			reportTypeResourceFile = abPath+StaticValue.REPORT_COMPLETE_TECH_4_YEAR_THAI;
+			reportTypeResourceFileDocx = abPath+StaticValue.REPORT_COMPLETE_TECH_4_YEAR_THAI_DOCX;
 		}
 		
 		reportFileDirectory = abPath+StaticValue.REPORT_FILE_DIRECTORY+reportId+".pdf";

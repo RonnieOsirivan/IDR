@@ -23,6 +23,10 @@ public class StaticValue implements ServletContextListener{
 	public static String REPORT_GRADE_EACH_SEMESTER_ENG_DOCX;
 	public static String REPORT_COMPLETE_TECH_5_YEAR_THAI;
 	public static String REPORT_COMPLETE_TECH_5_YEAR_THAI_DOCX;
+	public static String REPORT_LAST_SEMESTER_TECH_5_YEAR_THAI;
+	public static String REPORT_LAST_SEMESTER_TECH_5_YEAR_THAI_DOCX;
+	public static String REPORT_COMPLETE_TECH_4_YEAR_THAI;
+	public static String REPORT_COMPLETE_TECH_4_YEAR_THAI_DOCX;
 	
 	public static String PAY_IN_SLIP;
 	public static String REPORT_FILE_DIRECTORY;
@@ -53,6 +57,10 @@ public class StaticValue implements ServletContextListener{
 			REPORT_GRADE_EACH_SEMESTER_ENG_DOCX = prop.getProperty("report_type_grade_each_semester_eng_docx");
 			REPORT_COMPLETE_TECH_5_YEAR_THAI = prop.getProperty("report_complete_tech_5_year_thai");
 			REPORT_COMPLETE_TECH_5_YEAR_THAI_DOCX = prop.getProperty("report_complete_tech_5_year_thai_docx");
+			REPORT_LAST_SEMESTER_TECH_5_YEAR_THAI = prop.getProperty("report_last_semester_tech_5_year_thai");
+			REPORT_LAST_SEMESTER_TECH_5_YEAR_THAI_DOCX = prop.getProperty("report_last_semester_tech_5_year_thai_docx");
+			REPORT_COMPLETE_TECH_4_YEAR_THAI = prop.getProperty("report_complete_tech_4_year_thai");
+			REPORT_COMPLETE_TECH_4_YEAR_THAI_DOCX = prop.getProperty("report_complete_tech_4_year_thai_docx");
 			PAY_IN_SLIP = prop.getProperty("pay_in_slip");
 			
 			REPORT_FILE_DIRECTORY = prop.getProperty("report_file_directory");

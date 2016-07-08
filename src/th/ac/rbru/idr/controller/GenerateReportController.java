@@ -9,9 +9,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import th.ac.rbru.idr.task.ReportCompleteGraduate;
+import th.ac.rbru.idr.task.ReportCompleteTech4Year;
 import th.ac.rbru.idr.task.ReportCompleteTech5Year;
 import th.ac.rbru.idr.task.ReportGradeEachSemester;
 import th.ac.rbru.idr.task.ReportLastSemester;
+import th.ac.rbru.idr.task.ReportLastSemesterTech5Year;
 import th.ac.rbru.idr.task.ReportStudentStatus;
 import th.ac.rbru.idr.task.ReportSummaryGPA;
 
@@ -23,8 +25,6 @@ import th.ac.rbru.idr.task.ReportSummaryGPA;
 public class GenerateReportController extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-//	private String abPath = getServletContext().getRealPath("/");
-
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -55,6 +55,12 @@ public class GenerateReportController extends HttpServlet {
 		}else if("completeTech5Year".equalsIgnoreCase(request.getParameter("reportTypeParam"))){
 			ReportCompleteTech5Year completeTech5Year = new ReportCompleteTech5Year();
 			completeTech5Year.generateReport(request, response);
+		}else if("lastSemesterTech5Year".equalsIgnoreCase(request.getParameter("reportTypeParam"))){
+			ReportLastSemesterTech5Year lastSemesterTech5Year = new ReportLastSemesterTech5Year();
+			lastSemesterTech5Year.generateReport(request, response);
+		}else if("completeTech4Year".equalsIgnoreCase(request.getParameter("reportTypeParam"))){
+			ReportCompleteTech4Year completeTech4Year = new ReportCompleteTech4Year();
+			completeTech4Year.generateReport(request, response);
 		}
 	}
 

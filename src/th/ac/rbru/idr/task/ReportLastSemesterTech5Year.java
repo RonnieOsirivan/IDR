@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import th.ac.rbru.idr.model.Student;
 import th.ac.rbru.idr.model.StudentEng;
+import th.ac.rbru.idr.util.AcadYear;
 import th.ac.rbru.idr.util.ConnectionDB;
 import th.ac.rbru.idr.util.FormatNumber;
 import th.ac.rbru.idr.util.GeneratePayInSlip;
@@ -28,7 +29,7 @@ import th.ac.rbru.idr.util.GennerateDocumentNum;
 import th.ac.rbru.idr.util.ResultSetMapper;
 import th.ac.rbru.idr.util.StaticValue;
 
-public class ReportCompleteTech5Year {
+public class ReportLastSemesterTech5Year {
 private Connection con = null;
 	
 	public void generateReport(HttpServletRequest request,HttpServletResponse response){
@@ -51,7 +52,7 @@ private Connection con = null;
 		SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy",Locale.US);
 		ResultSetMapper<StudentEng> studentResult = new ResultSetMapper<StudentEng>();
 		StudentEng studentEng = (studentResult.mapRersultSetToObject(getStudentInfoEng(request.getParameter("studentCode")), StudentEng.class)).get(0);
-		HashMap<String, String> map = new GennerateDocumentNum().getDocumentNum("7");
+		HashMap<String, String> map = new GennerateDocumentNum().getDocumentNum("6");
 		FormatNumber formatNumber = new FormatNumber();
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
@@ -119,11 +120,12 @@ private Connection con = null;
 		String mounthName = simpleDateMounth.format(date);
 		int dateYear = Integer.parseInt(simpleDateYear.format(date));
 		String dateParam = formatNumber.thaiNumber("##", dateNumber)+"  "+mounthName+"  "+formatNumber.thaiNumber("####", dateYear);
-		HashMap<String, String> map = new GennerateDocumentNum().getDocumentNum("7");
+		String acadYear = formatNumber.thaiNumber("####", new AcadYear().getAcadYear());
+		HashMap<String, String> map = new GennerateDocumentNum().getDocumentNum("6");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		
-		String pDetail = "กลุ่มผู้สำเร็จการศึกษาหลักสูตรผลิตครู  ๕  ปี<br>";
+		String pDetail = "กลุ่มผู้สำเร็จการศึกษาหลักสูตรผลิตครู  ๕  ปี  ที่ศึกษาชั้นปีที่ ๕  ในปีการศึกษา "+acadYear+"<br>";
 		pDetail += "&#09;หนังสือฉบับนี้ให้ไว้เพื่อแสดงว่า  "+student.getPrefix()+student.getFirstName()+"  "+student.getLastName();
 				
 				if(request.getParameter("passportNum") != null){
@@ -133,19 +135,13 @@ private Connection con = null;
 							+"เลขที่พาสปอร์ต  "+request.getParameter("passportNum");
 				}
 				
-				pDetail += "  สำเร็จการศึกษาระดับ"+student.getLevelCodeName()
+				pDetail += "  เป็นนิสิต/นักศึกษาครู ระดับ"+student.getLevelCodeName()
 						+ "  (หลักสูตร "+formatNumber.thaiNumber("#", student.getStudyYear())+"  ปี)"
 						+" "+getCourseYear(student.getAdmitAcadYear(),student.getProgramName())
-						+"  "+student.getProgramName();
-				
-				String finishYear = "-";
-				if(!student.getFinishYear().equals("0")){
-					finishYear = formatNumber.thaiNumber("####",Integer.parseInt(student.getFinishYear()) +543);
-				}
-				
-				pDetail	+= "  ในปี พ.ศ. "+finishYear+" (ตามที่ปรากฏในใบ  Transcript)"
+						+"  "+student.getProgramName()
+						+"  กำลังศึกษาอยู่ชั้นปีที่  ๕  ในปีการศึกษา  "+acadYear
 						+"  คณะ"+student.getFacultyName()
-						+"  มหาวิทยาลัยราชภัฏรำไพพรรณี  โดยมีผลการเรียนเฉลี่ยสะสม (GPAX) ตลอดหลักสูตร  ตามข้อบังคับมหาวิทยาลัย ดังนี้<br>";
+						+"  มหาวิทยาลัยราชภัฏรำไพพรรณี  โดยมีผลการเรียนเฉลี่ยสะสม (GPAX)  (รวมภาคฤดูร้อน)  ตั้งแต่ชั้นปีที่ ๑ - ภาคเรียนที่ ๑ ชั้นปีที่ ๕ ตามข้อบังคับสถาบันอุดมศึกษา ดังนี้<br>";
 				
 				String[] majorPoint = getMajorSubjectPoint(student.getStudentId(),student.getProgrameId());
 				pDetail += "&#09;๑. ผลการเรียนรวมเฉลี่ยสะสมทุกวิชา &#09;&#09; เท่ากับ &#09;&#09;"+formatNumber.thaiNumber("0.00", student.getGpa())+"<br>"
@@ -450,7 +446,7 @@ private Connection con = null;
 	    	return abPath;
 	 }
 	
-//	Calulate acad year
+	//Calulate acad year
 //	private ResultSet getDocumentNumber() throws SQLException{
 //		String sql = " 	SELECT RE.RUNNINGNUMBER+1 AS RUNNINGNUMBER,	"
 //				+" 	  TACADYEAR.ACADYEAR      AS ACADYEAR	"

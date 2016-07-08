@@ -50,6 +50,8 @@ public class Student {
 	private String programeId;
 	@Column(name="STUDENTID")
 	private String studentId;
+	@Column(name="REVISIONCODE")
+	private String revisionCode;
 	
 	public String getPrefix() {
 		return prefix;
@@ -176,5 +178,26 @@ public class Student {
 	}
 	public void setStudentId(String studentId) {
 		this.studentId = studentId;
+	}
+	public String getRevisionCode() {
+		return revisionCode;
+	}
+	public void setRevisionCode(String revisionCode) {
+		this.revisionCode = revisionCode;
+	}
+	@Override
+	public String toString() {
+		return "Student [prefix=" + prefix + ", firstName=" + firstName
+				+ ", lastName=" + lastName + ", firstNameEng=" + firstNameEng
+				+ ", surNameEng=" + surNameEng + ", birthDate=" + birthDate
+				+ ", facultyName=" + facultyName + ", studentCode="
+				+ studentCode + ", period=" + period + ", levelCodeName="
+				+ levelCodeName + ", degreeName=" + degreeName + ", degreeAbb="
+				+ degreeAbb + ", studyYear=" + studyYear + ", programName="
+				+ programName + ", studentYear=" + studentYear
+				+ ", admitAcadYear=" + admitAcadYear + ", degreeID=" + degreeID
+				+ ", gpa=" + gpa + ", finishYear=" + finishYear
+				+ ", programeId=" + programeId + ", studentId=" + studentId
+				+ "]";
 	}
 }

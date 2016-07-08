@@ -28,7 +28,7 @@ import th.ac.rbru.idr.util.GennerateDocumentNum;
 import th.ac.rbru.idr.util.ResultSetMapper;
 import th.ac.rbru.idr.util.StaticValue;
 
-public class ReportCompleteTech5Year {
+public class ReportCompleteTech4Year {
 private Connection con = null;
 	
 	public void generateReport(HttpServletRequest request,HttpServletResponse response){
@@ -51,7 +51,7 @@ private Connection con = null;
 		SimpleDateFormat formatter = new SimpleDateFormat("dd MMMM yyyy",Locale.US);
 		ResultSetMapper<StudentEng> studentResult = new ResultSetMapper<StudentEng>();
 		StudentEng studentEng = (studentResult.mapRersultSetToObject(getStudentInfoEng(request.getParameter("studentCode")), StudentEng.class)).get(0);
-		HashMap<String, String> map = new GennerateDocumentNum().getDocumentNum("7");
+		HashMap<String, String> map = new GennerateDocumentNum().getDocumentNum("8");
 		FormatNumber formatNumber = new FormatNumber();
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
@@ -119,11 +119,11 @@ private Connection con = null;
 		String mounthName = simpleDateMounth.format(date);
 		int dateYear = Integer.parseInt(simpleDateYear.format(date));
 		String dateParam = formatNumber.thaiNumber("##", dateNumber)+"  "+mounthName+"  "+formatNumber.thaiNumber("####", dateYear);
-		HashMap<String, String> map = new GennerateDocumentNum().getDocumentNum("7");
+		HashMap<String, String> map = new GennerateDocumentNum().getDocumentNum("8");
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		
-		String pDetail = "กลุ่มผู้สำเร็จการศึกษาหลักสูตรผลิตครู  ๕  ปี<br>";
+		String pDetail = "กลุ่มผู้สำเร็จการศึกษา  หลักสูตรประกาศนียบัตรบัณฑิตวิชาชีพครู (ผลการเรียนระดับปริญญาตรี)<br>";
 		pDetail += "&#09;หนังสือฉบับนี้ให้ไว้เพื่อแสดงว่า  "+student.getPrefix()+student.getFirstName()+"  "+student.getLastName();
 				
 				if(request.getParameter("passportNum") != null){
@@ -148,9 +148,8 @@ private Connection con = null;
 						+"  มหาวิทยาลัยราชภัฏรำไพพรรณี  โดยมีผลการเรียนเฉลี่ยสะสม (GPAX) ตลอดหลักสูตร  ตามข้อบังคับมหาวิทยาลัย ดังนี้<br>";
 				
 				String[] majorPoint = getMajorSubjectPoint(student.getStudentId(),student.getProgrameId());
-				pDetail += "&#09;๑. ผลการเรียนรวมเฉลี่ยสะสมทุกวิชา &#09;&#09; เท่ากับ &#09;&#09;"+formatNumber.thaiNumber("0.00", student.getGpa())+"<br>"
-						+"&#09;๒. ผลการเรียนเฉลี่ยสะสมในวิชาเอก &#09;&#09; เท่ากับ &#09;&#09;"+majorPoint[0]+"<br>"
-						+"&#09;๓. ผลการเรียนเฉลี่ยสะสมในวิชาชีพครู &#09; เท่ากับ &#09;&#09;"+majorPoint[1];
+				pDetail += "&#09;๑. ผลการเรียนรวมเฉลี่ยสะสมทุกวิชา &#09;&#09; เท่ากับ &#09;&#09;"+formatNumber.thaiNumber("0.00", student.getGpa())+"<br>";
+//						+"&#09;๒. ผลการเรียนเฉลี่ยสะสมในวิชาเอก &#09;&#09; เท่ากับ &#09;&#09;"+majorPoint[0];
 		
 		param.put("pSequenceReport", "ที่  "+formatNumber.thaiNumber("##", Integer.parseInt(map.get("reportTypeId")))+"."+formatNumber.thaiNumber("000", Integer.parseInt(map.get("docRuningNum")))+" / "+formatNumber.thaiNumber("####", Integer.parseInt(map.get("acadYear"))));
 		param.put("pDate", dateParam);
@@ -349,14 +348,11 @@ private Connection con = null;
 			FormatNumber formatNumber = new FormatNumber();
 			resultSet.next();
 			System.out.println(resultSet.getString("DESCRIPTION"));
-			if(resultSet.getString("DESCRIPTION").equalsIgnoreCase("วิชาชีพครู")){
-				majorPoint[0] = formatNumber.thaiNumber("0.00", point22/counter22);
-				majorPoint[1] = formatNumber.thaiNumber("0.00", point21/counter21);
-			}else{
+			if(resultSet.getString("DESCRIPTION").equalsIgnoreCase("วิชาเฉพาะด้าน")){
 				majorPoint[0] = formatNumber.thaiNumber("0.00", point21/counter21);
-				majorPoint[1] = formatNumber.thaiNumber("0.00", point22/counter22);
+			}else{
+				majorPoint[0] = formatNumber.thaiNumber("0.00", point22/counter22);
 			}
-			
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -407,7 +403,6 @@ private Connection con = null;
 				"	AND LE.LEVELCODE   = LC.LEVELCODE	"+
 				"	AND STDM.PROGRAMID = PRO.PROGRAMID	"+
 				"	AND PRO.DEGREEID   = DE.DEGREEID	";
-		System.out.println(sql);
 		return getData(sql);
 	}
 	

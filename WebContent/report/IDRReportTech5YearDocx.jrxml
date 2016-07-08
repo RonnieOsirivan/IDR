@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="IDRReport" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="6" uuid="7420bca3-7e8d-4898-9527-23ca925073ad">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="402"/>
+	<property name="ireport.y" value="160"/>
 	<parameter name="pSequenceReport" class="java.lang.String"/>
 	<parameter name="pDate" class="java.lang.String"/>
 	<parameter name="pDetail" class="java.lang.String"/>
@@ -20,20 +20,20 @@
 	<title>
 		<band height="181" splitType="Stretch">
 			<staticText>
-				<reportElement x="248" y="122" width="68" height="35" uuid="915b67dd-4023-46bb-9948-5c47b0d1c478"/>
+				<reportElement x="243" y="125" width="70" height="28" uuid="915b67dd-4023-46bb-9948-5c47b0d1c478"/>
 				<textElement>
 					<font fontName="TH SarabunPSK" size="24" isBold="true" pdfFontName="THSarabun.ttf" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[ใบรับรอง]]></text>
+				<text><![CDATA[ ใบรับรอง]]></text>
 			</staticText>
 			<image evaluationTime="Report">
-				<reportElement x="233" y="31" width="84" height="101" uuid="501a5049-f95d-4e82-830d-746ed7d52c94"/>
+				<reportElement x="233" y="24" width="84" height="101" uuid="501a5049-f95d-4e82-830d-746ed7d52c94"/>
 				<imageExpression><![CDATA[$P{pGarudaSymbol}]]></imageExpression>
 			</image>
 		</band>
 	</title>
 	<detail>
-		<band height="146" splitType="Stretch">
+		<band height="123" splitType="Stretch">
 			<staticText>
 				<reportElement x="370" y="0" width="154" height="44" uuid="dd1da59e-910d-4967-ab71-01e6fc9c9e97"/>
 				<textElement>
@@ -67,33 +67,56 @@
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="325">
+		<band height="340">
 			<staticText>
-				<reportElement x="243" y="278" width="223" height="22" uuid="c8bc17de-9923-4d78-8415-b5c34b3fcd18"/>
+				<reportElement x="243" y="288" width="223" height="22" uuid="c8bc17de-9923-4d78-8415-b5c34b3fcd18"/>
 				<textElement>
 					<font fontName="TH SarabunPSK" size="18"/>
 				</textElement>
 				<text><![CDATA[“ขุมปัญญาแห่งภูมิภาคตะวันออกและอาเซียน”]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="111" y="281" width="142" height="20" uuid="0843ee29-1b66-45b8-95d6-f97fed0d2a5b"/>
+				<reportElement x="111" y="291" width="132" height="20" uuid="0843ee29-1b66-45b8-95d6-f97fed0d2a5b"/>
 				<textElement>
 					<font fontName="TH SarabunPSK" size="16" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[มหาวิทยาลัยราชภัฏรำไพพรรณี]]></text>
 			</staticText>
 			<line>
-				<reportElement x="109" y="301" width="353" height="1" uuid="3ae09933-4186-441b-8c8f-beac2ab9502c"/>
+				<reportElement x="109" y="311" width="353" height="1" uuid="3ae09933-4186-441b-8c8f-beac2ab9502c"/>
 				<graphicElement>
 					<pen lineWidth="0.75"/>
 				</graphicElement>
 			</line>
 			<staticText>
-				<reportElement x="111" y="302" width="355" height="20" uuid="37629393-2d0e-4279-97d6-d8773a37badb"/>
+				<reportElement x="111" y="312" width="355" height="20" uuid="37629393-2d0e-4279-97d6-d8773a37badb"/>
 				<textElement textAlignment="Center">
 					<font fontName="TH SarabunPSK" size="11" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[RAMBHAI BARNI RAJABHAT UNIVERSITY : THE WISDOM TREASURE TROVE OF THE EAST AND ASEAN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="390" y="227" width="147" height="20" uuid="9d702b7d-59b3-4aef-ae50-905a119d62d4"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="16" isBold="false" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[ผู้ทาน............................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="390" y="192" width="147" height="20" uuid="b740b5cd-48d9-4764-bad2-711112bcb072"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="16" isBold="false" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[ผู้พิมพ์..........................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="58" y="192" width="270" height="60" uuid="b689887e-11ea-44dd-b20c-6e59e530b68f"/>
+				<textElement>
+					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[ กลุ่มงานทะเบียนและประมวลผล
+ โทร.  ๐-๓๙๔๗-๑๐๗๐  และ  ๐-๓๙๓๑-๙๑๑๑  ต่อ  ๘๔๐๔-๕
+ โทรสาร  ๐-๓๙๔๗-๑๐๗๐]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="268" y="51" width="211" height="61" uuid="858af82b-86f3-490b-ac52-3af55bcf591a"/>
@@ -109,29 +132,6 @@
 				<reportElement x="330" y="0" width="100" height="50" uuid="85617fba-5acc-4e21-843b-f1dffcf0b9e0"/>
 				<imageExpression><![CDATA[$P{pSignature}]]></imageExpression>
 			</image>
-			<staticText>
-				<reportElement x="390" y="217" width="147" height="20" uuid="9d702b7d-59b3-4aef-ae50-905a119d62d4"/>
-				<textElement>
-					<font fontName="TH SarabunPSK" size="16" isBold="false" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[ผู้ทาน...........................................]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="390" y="182" width="147" height="20" uuid="b740b5cd-48d9-4764-bad2-711112bcb072"/>
-				<textElement>
-					<font fontName="TH SarabunPSK" size="16" isBold="false" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[ผู้พิมพ์..........................................]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="58" y="182" width="270" height="55" uuid="b689887e-11ea-44dd-b20c-6e59e530b68f"/>
-				<textElement>
-					<font fontName="TH SarabunPSK" size="16" pdfFontName="THSARABUN.TTF" pdfEncoding="Identity-H" isPdfEmbedded="true"/>
-				</textElement>
-				<text><![CDATA[กลุ่มงานทะเบียนและประมวลผล
-โทร.  ๐-๓๙๔๗-๑๐๗๐  และ  ๐-๓๙๓๑-๙๑๑๑  ต่อ  ๘๔๐๔-๕
-โทรสาร  ๐-๓๙๔๗-๑๐๗๐]]></text>
-			</staticText>
 		</band>
 	</pageFooter>
 </jasperReport>
