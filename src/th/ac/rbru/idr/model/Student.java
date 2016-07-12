@@ -52,6 +52,8 @@ public class Student {
 	private String studentId;
 	@Column(name="REVISIONCODE")
 	private String revisionCode;
+	@Column(name="FACULTYID")
+	private int facultyId;
 	
 	public String getPrefix() {
 		return prefix;
@@ -184,6 +186,12 @@ public class Student {
 	}
 	public void setRevisionCode(String revisionCode) {
 		this.revisionCode = revisionCode;
+	}
+	public int getFacultyId() {
+		return facultyId;
+	}
+	public void setFacultyId(int facultyId) {
+		this.facultyId = facultyId;
 	}
 	@Override
 	public String toString() {

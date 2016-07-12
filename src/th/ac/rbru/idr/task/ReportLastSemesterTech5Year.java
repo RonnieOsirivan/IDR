@@ -22,6 +22,7 @@ import th.ac.rbru.idr.model.Student;
 import th.ac.rbru.idr.model.StudentEng;
 import th.ac.rbru.idr.util.AcadYear;
 import th.ac.rbru.idr.util.ConnectionDB;
+import th.ac.rbru.idr.util.CourseName;
 import th.ac.rbru.idr.util.FormatNumber;
 import th.ac.rbru.idr.util.GeneratePayInSlip;
 import th.ac.rbru.idr.util.GenerateReport;
@@ -125,7 +126,7 @@ private Connection con = null;
 		
 		HashMap<String, Object> param = new HashMap<String, Object>();
 		
-		String pDetail = "กลุ่มผู้สำเร็จการศึกษาหลักสูตรผลิตครู  ๕  ปี  ที่ศึกษาชั้นปีที่ ๕  ในปีการศึกษา "+acadYear+"<br>";
+		String pDetail = "<u>กลุ่มนิสิตนักครูศึกษาหลักสูตรระดับปริญญาตรี  (๕ ปี)  ที่ศึกษาชั้นปีที่ ๕  ในปีการศึกษา "+acadYear+"</u> &#09;<br><br>";
 		pDetail += "&#09;หนังสือฉบับนี้ให้ไว้เพื่อแสดงว่า  "+student.getPrefix()+student.getFirstName()+"  "+student.getLastName();
 				
 				if(request.getParameter("passportNum") != null){
@@ -137,11 +138,11 @@ private Connection con = null;
 				
 				pDetail += "  เป็นนิสิต/นักศึกษาครู ระดับ"+student.getLevelCodeName()
 						+ "  (หลักสูตร "+formatNumber.thaiNumber("#", student.getStudyYear())+"  ปี)"
-						+" "+getCourseYear(student.getAdmitAcadYear(),student.getProgramName())
+						+" "+new CourseName().getCourseName(student.getFacultyId(), student.getAdmitAcadYear(), student.getProgramName(),student.getRevisionCode())
 						+"  "+student.getProgramName()
 						+"  กำลังศึกษาอยู่ชั้นปีที่  ๕  ในปีการศึกษา  "+acadYear
 						+"  คณะ"+student.getFacultyName()
-						+"  มหาวิทยาลัยราชภัฏรำไพพรรณี  โดยมีผลการเรียนเฉลี่ยสะสม (GPAX)  (รวมภาคฤดูร้อน)  ตั้งแต่ชั้นปีที่ ๑ - ภาคเรียนที่ ๑ ชั้นปีที่ ๕ ตามข้อบังคับสถาบันอุดมศึกษา ดังนี้<br>";
+						+"  มหาวิทยาลัยราชภัฏรำไพพรรณี  โดยมีผลการเรียนเฉลี่ยสะสม (GPAX)  (รวมภาคฤดูร้อน)  ตั้งแต่ชั้นปีที่ ๑ - ภาคเรียนที่ ๑ ชั้นปีที่ ๕ ตามข้อบังคับสถาบันอุดมศึกษา ดังนี้ &#09;<br>";
 				
 				String[] majorPoint = getMajorSubjectPoint(student.getStudentId(),student.getProgrameId());
 				pDetail += "&#09;๑. ผลการเรียนรวมเฉลี่ยสะสมทุกวิชา &#09;&#09; เท่ากับ &#09;&#09;"+formatNumber.thaiNumber("0.00", student.getGpa())+"<br>"
@@ -326,14 +327,7 @@ private Connection con = null;
 				}
 			}
 			
-			System.out.println("2.1 point :"+point21);
-			System.out.println("2.2 point : "+point22);
-			System.out.println("2.1 number subject : "+counter21);
-			System.out.println("2.2 number subject :"+counter22);
-			
 			DecimalFormat f = new DecimalFormat("##.00");
-			System.out.println("gpa 21 " +f.format((point21/counter21)));
-			System.out.println("gpa 22 " +f.format((point22/counter22)));
 			
 			String sql2 = "	SELECT PST.CONDITIONID AS CONDITIONID, PST.DESCRIPTION	AS DESCRIPTION"+
 					"	FROM PROGRAMSTRUCTURE PST	"+
@@ -344,7 +338,6 @@ private Connection con = null;
 			
 			FormatNumber formatNumber = new FormatNumber();
 			resultSet.next();
-			System.out.println(resultSet.getString("DESCRIPTION"));
 			if(resultSet.getString("DESCRIPTION").equalsIgnoreCase("วิชาชีพครู")){
 				majorPoint[0] = formatNumber.thaiNumber("0.00", point22/counter22);
 				majorPoint[1] = formatNumber.thaiNumber("0.00", point21/counter21);
@@ -386,7 +379,8 @@ private Connection con = null;
 				"	nvl(TO_CHAR(EXTRACT(YEAR FROM STDM.FINISHDATE)),'0')    AS FINISHYEAR,	"+
 				"	TO_CHAR(STDM.PROGRAMID) AS PROGRAMID,	"+
 				"	TO_CHAR(STDM.STUDENTID) AS STUDENTID,	"+
-				"	PRO.REVISIONCODE	AS REVISIONCODE "+
+				"	PRO.REVISIONCODE	AS REVISIONCODE, "+
+				"	FAC.FACULTYID AS FACULTYID	"+
 				"	FROM STUDENTMASTER STDM,	"+
 				"	  STUDENTBIO STDBIO,	"+
 				"	  FACULTY FAC,	"+
@@ -403,7 +397,6 @@ private Connection con = null;
 				"	AND LE.LEVELCODE   = LC.LEVELCODE	"+
 				"	AND STDM.PROGRAMID = PRO.PROGRAMID	"+
 				"	AND PRO.DEGREEID   = DE.DEGREEID	";
-		System.out.println(sql);
 		return getData(sql);
 	}
 	
