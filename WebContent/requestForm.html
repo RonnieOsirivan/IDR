@@ -147,6 +147,21 @@
 	        	}else{
 	        		document.getElementById('semesterDev').style.display='none';
 	        	}
+	        	
+	        	//disable English form
+	        	if(rep === "lastSemesterTech5Year" || rep === "completeTech5Year" || rep === "completeTech4Year" || rep === "completeOtherTech"){
+	        		document.getElementById("checkTypeLangThai").disabled = true;
+	        		document.getElementById("checkTypeLangEng").disabled = true;
+	        		
+	        		document.getElementById("checkTypeLangThai").checked = true;
+	        		document.getElementById("checkTypeLangEng").checked = false;
+	        		
+	        		//disable input English firstname and lastname
+	        		onCheckBoxChange(document.getElementById("checkTypeLangEng"));
+	        	}else{
+	        		document.getElementById("checkTypeLangThai").disabled = false;
+	        		document.getElementById("checkTypeLangEng").disabled = false;
+	        	}
 	        }
 	        
 	        function valthisform(){
@@ -362,9 +377,7 @@
 	        	if(sessionStorage.getItem("studentCode") === null && localStorage.getItem("role") === "admin"){
 	        		window.location.assign("./searchStudent.html");
 	        	}else{
-	        		
 	        		var xmlhttp = loadXMLDoc();
-	        		
 	        		 xmlhttp.onreadystatechange=function(){
 	     				if (xmlhttp.readyState==4 && xmlhttp.status==200){
 	     					json = JSON.parse(xmlhttp.responseText);
@@ -387,9 +400,11 @@
 								//document.getElementById("reportType").remove(1);
 								$("#reportType option[value='lastSemester']").remove();
 								$("#reportType option[value='completeGraduate']").remove();
+								$("#reportType option[value='lastSemesterTech5Year']").remove();
+								$("#reportType option[value='completeTech5Year']").remove();
+								$("#reportType option[value='completeTech4Year']").remove();
+								$("#reportType option[value='completeOtherTech']").remove();
 							}
-							
-							console.log(semesterData);
 							//check student don't havae grade
 							if(semesterData == null){
 								$("#reportType option[value='summaryGPA']").remove();

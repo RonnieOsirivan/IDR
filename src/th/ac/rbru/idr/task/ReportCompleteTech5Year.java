@@ -333,8 +333,6 @@ private Connection con = null;
 				}
 			}
 			
-			DecimalFormat f = new DecimalFormat("##.00");
-			
 			String sql2 = "	SELECT PST.CONDITIONID AS CONDITIONID, PST.DESCRIPTION	AS DESCRIPTION"+
 					"	FROM PROGRAMSTRUCTURE PST	"+
 					"	WHERE (PST.CONDITIONID LIKE '2.1' OR PST.CONDITIONID LIKE '2.2')	"+
@@ -344,15 +342,13 @@ private Connection con = null;
 			
 			FormatNumber formatNumber = new FormatNumber();
 			resultSet.next();
-			if(resultSet.getString("DESCRIPTION").equalsIgnoreCase("วิชาชีพครู")){
+			if(resultSet.getString("DESCRIPTION").contains("วิชาชีพครู")){
 				majorPoint[0] = formatNumber.thaiNumber("0.00", point22/counter22);
 				majorPoint[1] = formatNumber.thaiNumber("0.00", point21/counter21);
 			}else{
 				majorPoint[0] = formatNumber.thaiNumber("0.00", point21/counter21);
 				majorPoint[1] = formatNumber.thaiNumber("0.00", point22/counter22);
 			}
-			
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

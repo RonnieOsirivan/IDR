@@ -93,13 +93,12 @@
 						  <label class="col-md-4 control-label" for="reportType" id="reportTypeLabel">Report type</label>
 						  <div class="col-md-8">
 						    <select id="reportType" name="reportType" class="form-control">
-						      <!--  <option value="0">All</option> -->
-								<option value="studentStatus" selected="selected">ใบรับรองการเป็นนักศึกษา</option>
+								<!-- <option value="studentStatus" selected="selected">ใบรับรองการเป็นนักศึกษา</option>
 								<option value="lastSemester" >ใบรับรองเป็นนักศึกษาภาคเรียนสุดท้าย</option>
 								<option value="completeGraduate" >ใบรับรองครบหลักสูตรและรอการอนุมัติจบการศึกษา</option>
 								<option value="gradeEachSemester" >ใบรับรองผลการเรียน</option>
 								<option value="summaryGPA" >ใบรับรองเกรดเฉลี่ยสะสม</option>
-								<option value="all" >ทั้งหมด</option>
+								<option value="all" >ทั้งหมด</option> -->
 						    </select>
 						  </div>
 						</div>
@@ -216,7 +215,6 @@
 		}
 		
 		function showReport(reportName){
-			console.log(reportName);
 			var xmlhttp = loadXMLDoc();
 			xmlhttp.open("GET","./reportLogFile/"+reportName);
 			xmlhttp.send();
@@ -235,6 +233,22 @@
 			$("#untilDate").val("");
 		});
 		
+		function getDropdown(){
+			var xmlhttp = loadXMLDoc();
+			var json;
+			xmlhttp.open("GET","./ReportLogController?reportType=getDropdown");
+			xmlhttp.send();
+			xmlhttp.onreadystatechange=function(){
+				if (xmlhttp.readyState==4 && xmlhttp.status==200){
+					json=JSON.parse(xmlhttp.responseText);
+					json.forEach(function(t){
+						$("#reportType").append("<option value='"+t.reportId+"' selected='selected'>"+t.reportNameThai+"</option>");			
+					});
+					$("#reportType").append("<option value='all' selected='selected'>ทั้งหมด</option>");
+				}
+			}
+		}
+		
 		function loadXMLDoc(){
 	        var xmlhttp;
 	        if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
@@ -246,12 +260,14 @@
 	        return xmlhttp;
 		}
 		
+		//intial page data
 		(function(){
 			if(localStorage.getItem("lang")==="en_lang"){
 				getLabel("en_lang");
 			}else{
 				getLabel("th_lang");
 			}
+			getDropdown();
 		})();
 		
 		function getLabel(lang){

@@ -2,8 +2,13 @@ package th.ac.rbru.idr.controller;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -20,7 +25,10 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import th.ac.rbru.idr.model.ReportType;
 import th.ac.rbru.idr.util.ConnectionDB;
+import th.ac.rbru.idr.util.ConvertDataType;
+import th.ac.rbru.idr.util.ResultSetMapper;
 import th.ac.rbru.idr.util.StaticValue;
 
 /**
@@ -28,6 +36,7 @@ import th.ac.rbru.idr.util.StaticValue;
  */
 @WebServlet("/ReportLogController")
 public class ReportLogController extends HttpServlet {
+	private Connection con = null;
 	private static final long serialVersionUID = 1L;
        
     /**
@@ -42,7 +51,11 @@ public class ReportLogController extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		getReportLog(request, response);
+		if(request.getParameter("reportType").equalsIgnoreCase("getDropdown")){
+			getDropdown(request, response);
+		}else{
+			getReportLog(request, response);
+		}
 	}
 
 	/**
@@ -56,18 +69,24 @@ public class ReportLogController extends HttpServlet {
 		HashMap<String, Object> param = new HashMap<String,Object>();
 		param.put("sinceDate", request.getParameter("sinceDate"));
 		param.put("untilDate", request.getParameter("untilDate"));
-		if("studentStatus".equals(request.getParameter("reportType"))){
-			param.put("reportType", "AND RL.REPORTTYPEID = 1");
-		}else if("lastSemester".equals(request.getParameter("reportType"))){
-			param.put("reportType", "AND RL.REPORTTYPEID = 2");
-		}else if("completeGraduate".equals(request.getParameter("reportType"))){
-			param.put("reportType", "AND RL.REPORTTYPEID = 3");
-		}else if("gradeEachSemester".equals(request.getParameter("reportType"))){
-			param.put("reportType", "AND RL.REPORTTYPEID = 4");
-		}else if("summaryGPA".equals(request.getParameter("reportType"))){
-			param.put("reportType", "AND RL.REPORTTYPEID = 5");
+//		if("studentStatus".equals(request.getParameter("reportType"))){
+//			param.put("reportType", "AND RL.REPORTTYPEID = 1");
+//		}else if("lastSemester".equals(request.getParameter("reportType"))){
+//			param.put("reportType", "AND RL.REPORTTYPEID = 2");
+//		}else if("completeGraduate".equals(request.getParameter("reportType"))){
+//			param.put("reportType", "AND RL.REPORTTYPEID = 3");
+//		}else if("gradeEachSemester".equals(request.getParameter("reportType"))){
+//			param.put("reportType", "AND RL.REPORTTYPEID = 4");
+//		}else if("summaryGPA".equals(request.getParameter("reportType"))){
+//			param.put("reportType", "AND RL.REPORTTYPEID = 5");
+//		}else{
+//			param.put("reportType", "");
+//		}
+
+		if("all".equalsIgnoreCase(request.getParameter("reportType"))){
+			param.put("reportType", "");
 		}else{
-			param.put("reportType", "AND RL.REPORTTYPEID IN (1,2,3,4,5)");
+			param.put("reportType", "AND RL.REPORTTYPEID = "+request.getParameter("reportType"));
 		}
 		
 		ConnectionDB.getInstance();
@@ -112,9 +131,41 @@ public class ReportLogController extends HttpServlet {
 			e.printStackTrace();
 		}
 		
-//		GenerateReport genReport = new GenerateReport();
-//		String reportName = genReport.generarteReport("reportLog", "reportLog",param,getAbsulutePath());
-//		sendResponse(request, response, reportName);
+	}
+	
+	//get type report for dropdown list
+	private void getDropdown(HttpServletRequest request, HttpServletResponse response){
+		String sql =" SELECT * FROM IDR.REPORTTYPE ";
+		ResultSet resultSet = getData(sql);
+		ResultSetMapper<ReportType> reportTypeMapper = new ResultSetMapper<ReportType>();
+		List<ReportType> reportTypeList = reportTypeMapper.mapRersultSetToObject(resultSet, ReportType.class);
+		String resultJson = ConvertDataType.getInstance().objectToJasonArray(reportTypeList);
+		sendResponse(request, response, resultJson);
+	}
+	
+	private ResultSet getData(String sql) {
+		ResultSet result = null;
+		try {
+			ConnectionDB.getInstance();
+			con = ConnectionDB.getRBRUMySQL();
+			Statement statement = con.createStatement();
+			result = statement.executeQuery(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	private void sendResponse(HttpServletRequest request,HttpServletResponse response,String resultJson){
+		try{
+			response.setCharacterEncoding("utf-8");
+			response.setContentType("application/json;charset=utf-8");
+			PrintWriter out = response.getWriter();
+			out.write(resultJson);
+			out.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 	
 	private String getAbsulutePath(){
