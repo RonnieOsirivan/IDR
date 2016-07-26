@@ -8,7 +8,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -263,48 +262,6 @@ private Connection con = null;
 		out.close();
 		// Release JDBC pool connection after sent result to client
 		releaseConnection();
-	}
-	
-	private String getCourseYear(int admitAcadYear,String programeName){
-		if(admitAcadYear >= 2554){
-			if(programeName.contains("การศึกษาปฐมวัย") || programeName.contains("คณิตศาสตร์") || programeName.contains("คอมพิวเตอร์ศึกษา") 
-					|| programeName.contains("พลศึกษา") || programeName.contains("ภาษาไทย") || programeName.contains("ภาษาอังกฤษ")
-					|| programeName.contains("วิทยาศาสตร์") || programeName.contains("สังคมศึกษา") || programeName.contains("ศึกษาพิเศษ"))
-			{
-				return "(หลักสูตรปรับปรุง พ.ศ. ๒๕๕๔)";
-			}
-		}
-		
-		if(admitAcadYear >= 2552){
-			if(programeName.contains("วิทยาศาสตร์") || programeName.contains("ภาษาอังกฤษ") || programeName.contains("ภาษาไทย") )
-			{
-				return "(หลักสูตร พ.ศ. ๒๕๕๒)";
-			}
-		}
-		
-		if(admitAcadYear >= 2550){
-			if(programeName.contains("การศึกษาพิเศษ") || programeName.contains("สังคมศึกษา") )
-			{
-				return "(หลักสูตร พ.ศ. ๒๕๕๐)";
-			}
-		}
-		
-		if(admitAcadYear >= 2549){
-			if(programeName.contains("การศึกษาปฐมวัย") || programeName.contains("คณิตศาสตร์") 
-					|| programeName.contains("พลศึกษา") || programeName.contains("วิทยาศาสตร์ทั่วไป") )
-			{
-				return "(หลักสูตร พ.ศ. ๒๕๔๙)";
-			}
-		}
-		
-		if(admitAcadYear >= 2546){
-			return "(หลักสูตรใหม่ พ.ศ. ๒๕๔๖)";
-		}
-		
-		if(admitAcadYear >= 2544){
-			return "(หลักสูตรใหม่ พ.ศ. ๒๕๔๓)";
-		}
-		return "";
 	}
 	
 	private String[] getMajorSubjectPoint(String stdId,String programeId){

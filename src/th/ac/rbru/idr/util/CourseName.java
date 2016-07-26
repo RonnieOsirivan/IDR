@@ -81,24 +81,32 @@ public class CourseName {
 		}
 		
 		if(admitAcadYear >= 2552){
-			if(programeName.contains("วิทยาศาสตร์") || programeName.contains("ภาษาอังกฤษ") || programeName.contains("ภาษาไทย") )
+			if(programeName.contains("ภาษาจีน"))
 			{
-				return "(หลักสูตร พ.ศ. ๒๕๕๒)";
-			}
-		}
-		
-		if(admitAcadYear >= 2550){
-			if(programeName.contains("การศึกษาพิเศษ") || programeName.contains("สังคมศึกษา") )
-			{
-				return "(หลักสูตร พ.ศ. ๒๕๕๐)";
+				return "(หลักสูตร (ศศ.บ.) พ.ศ. ๒๕๕๒)";
 			}
 		}
 		
 		if(admitAcadYear >= 2549){
-			if(programeName.contains("การศึกษาปฐมวัย") || programeName.contains("คณิตศาสตร์") 
-					|| programeName.contains("พลศึกษา") || programeName.contains("วิทยาศาสตร์ทั่วไป") )
+			if(programeName.contains("ศิลปกรรม") || programeName.contains("ออกแบบประยุกต์ศิลป์") )
 			{
-				return "(หลักสูตรปรับปรุง พ.ศ. ๒๕๔๙)";
+				return "(หลักสูตร (ศป.บ.) พ.ศ. ๒๕๔๙)";
+			}
+		}
+		
+		if(admitAcadYear >= 2549){
+			if(programeName.contains("รัฐประศาสนศาสตร์") || programeName.contains("ปกครองท้องถิ่น") 
+					|| programeName.contains("จัดการการคลัง"))
+			{
+				return "(หลักสูตร (รป.บ.) พ.ศ. ๒๕๔๙)";
+			}
+		}
+		
+		if(admitAcadYear >= 2549){
+			if(programeName.contains("อังกฤษธุรกิจ") || programeName.contains("พัฒนาชุมชน") 
+					|| programeName.contains("ดนตรี"))
+			{
+				return "(หลักสูตร (ศศ.บ.) พ.ศ. ๒๕๔๙)";
 			}
 		}
 		

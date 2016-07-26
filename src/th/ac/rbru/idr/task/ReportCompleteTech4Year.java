@@ -134,7 +134,7 @@ private Connection con = null;
 							+"เลขที่พาสปอร์ต  "+request.getParameter("passportNum");
 				}
 				
-				pDetail += "  สำเร็จการศึกษาระดับ"+student.getLevelCodeName()
+				pDetail += "  สำเร็จการศึกษาระดับปริญญา"+student.getDegreeName()
 						+ "  (หลักสูตร "+formatNumber.thaiNumber("#", student.getStudyYear())+"  ปี)"
 						+" "+new CourseName().getCourseName(student.getFacultyId(), student.getAdmitAcadYear(), student.getProgramName(),student.getRevisionCode())
 						+"  "+student.getProgramName();
@@ -366,8 +366,7 @@ private Connection con = null;
 				"	    ELSE 'ภาคพิเศษ'	"+
 				"	  END              AS PERIOD,	"+
 				"	  LC.LEVELCODENAME AS LEVELCODENAME,	"+
-				"	  'หลักสูตร'	"+
-				"	  ||DE.DEGREECERTIFICATE AS DEGREECERTIFICATE,	"+
+				"	  DE.DEGREECERTIFICATE AS DEGREECERTIFICATE,	"+
 				"	  DE.DEGREEABB           AS DEGREEABB,	"+
 				"	  PRO.STUDYYEAR          AS STUDYYEAR,	"+
 				"	  'สาขาวิชา'	"+

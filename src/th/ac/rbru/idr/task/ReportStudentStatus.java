@@ -144,9 +144,11 @@ public class ReportStudentStatus {
 		}
 			
 		if(student.getStudyYear() >= student.getStudentYear()){
-			pDetail += "  กำลังศึกษาอยู่ปี  "+formatNumber.thaiNumber("##", student.getStudentYear());
+			pDetail += "  กำลังศึกษาอยู่ปี  "+formatNumber.thaiNumber("##", student.getStudentYear())+"  ";
+		}else{
+			pDetail += "  กำลังศึกษาอยู่";
 		}
-		pDetail += "  ที่มหาวิทยาลัยราชภัฏรำไพพรรณี  จริง ";
+		pDetail += "ที่มหาวิทยาลัยราชภัฏรำไพพรรณี  จริง ";
 		param.put("pSequenceReport", "ที่  "+formatNumber.thaiNumber("##", Integer.parseInt(map.get("reportTypeId")))+"."+formatNumber.thaiNumber("000", Integer.parseInt(map.get("docRuningNum")))+" / "+formatNumber.thaiNumber("####", Integer.parseInt(map.get("acadYear"))));
 		param.put("pDate", dateParam);
 		
