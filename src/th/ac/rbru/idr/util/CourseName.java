@@ -125,14 +125,14 @@ public class CourseName {
 		if(admitAcadYear >= 2552){
 			if(programeName.contains("ภาษาจีน"))
 			{
-				return "(หลักสูตร (ศศ.บ.) พ.ศ. ๒๕๕๒)";
+				return "(หลักสูตร ศศ.บ. พ.ศ. ๒๕๕๒)";
 			}
 		}
 		
 		if(admitAcadYear >= 2549){
 			if(programeName.contains("ศิลปกรรม") || programeName.contains("ออกแบบประยุกต์ศิลป์") )
 			{
-				return "(หลักสูตร (ศป.บ.) พ.ศ. ๒๕๔๙)";
+				return "(หลักสูตร ศป.บ. พ.ศ. ๒๕๔๙)";
 			}
 		}
 		
@@ -140,7 +140,7 @@ public class CourseName {
 			if(programeName.contains("รัฐประศาสนศาสตร์") || programeName.contains("ปกครองท้องถิ่น") 
 					|| programeName.contains("จัดการการคลัง"))
 			{
-				return "(หลักสูตร (รป.บ.) พ.ศ. ๒๕๔๙)";
+				return "(หลักสูตร รป.บ. พ.ศ. ๒๕๔๙)";
 			}
 		}
 		
@@ -148,7 +148,7 @@ public class CourseName {
 			if(programeName.contains("อังกฤษธุรกิจ") || programeName.contains("พัฒนาชุมชน") 
 					|| programeName.contains("ดนตรี"))
 			{
-				return "(หลักสูตร (ศศ.บ.) พ.ศ. ๒๕๔๙)";
+				return "(หลักสูตร ศศ.บ. พ.ศ. ๒๕๔๙)";
 			}
 		}
 		
