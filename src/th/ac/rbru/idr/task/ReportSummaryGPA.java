@@ -134,15 +134,19 @@ private Connection con = null;
 				
 				pDetail += "  เป็นนักศึกษา"+student.getPeriod()
 				+ "  ระดับ"+student.getLevelCodeName()
-				+ "  "+student.getDegreeName()
-				+ "  ("+student.getDegreeAbb()+"  "+formatNumber.thaiNumber("#", student.getStudyYear())+"  ปี)";
+				+ "  "+student.getDegreeName();
+				
+				//Graduate Diplama don't want "(gregree)" string
+				if(!(student.getDegreeID() == 301 || student.getDegreeID() == 404)){
+					pDetail += "  ("+student.getDegreeAbb()+"  "+formatNumber.thaiNumber("#", student.getStudyYear())+"  ปี)";
+				}
 				
 				if(!((student.getAdmitAcadYear() >= 2555 && student.getDegreeID() == 204) || (student.getAdmitAcadYear() >= 2556 && student.getDegreeID() == 205 ))){
 					pDetail += "  "+student.getProgramName();
 				}
 			
 		if(student.getStudyYear() >= student.getStudentYear()){
-			pDetail += "  กำลังศึกษาอยู่ปี  "+formatNumber.thaiNumber("##", student.getStudentYear());
+			pDetail += "  กำลังศึกษาอยู่ชั้นปีที่  "+formatNumber.thaiNumber("##", student.getStudentYear());
 		}
 		
 		pDetail += "  ที่มหาวิทยาลัยราชภัฏรำไพพรรณีและได้รับเกรดเฉลี่ยสะสม  "+formatNumber.thaiNumber("0.00", student.getGpa())+"  จริง ";

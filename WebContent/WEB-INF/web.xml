@@ -28,12 +28,14 @@
     <res-type>javax.sql.DataSource</res-type>
     <res-auth>Container</res-auth>
   </resource-ref>
+  
   <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>/META-INF/spring/applicationContext.xml
 				 /META-INF/spring/applicationContext-security.xml
 	</param-value>
   </context-param>
+ 
   <listener>
     <listener-class>th.ac.rbru.idr.util.ContextBootStrapListener</listener-class>
   </listener>
